@@ -1,0 +1,291 @@
+FORMAT: 1A
+HOST: http://polls.apiblueprint.org/
+
+# 360fly ReST API for Thunderdome
+
+This API document outlines additions or modifications to the base 360fly REST specification that are required to
+achieve full functionality of version 1.5 (Thunderdome).
+
+#Group Camera
+
+Configure and control 360fly media capture
+
+## Camera Formats Collection [/camera/formats]
+
+The available and current encoded media formats on the device. The enumerated list of formats (video and audio) can be selected for recording or photos. The formats are effectively configurations for underlying media encoding applications on the 360fly.
+
++ Attributes (object)
+ + video (array, required) - list of available video formats
+        + Include Camera Video Formats Collection
+ + audio (array, required) - list of available audio formats
+        + Include Camera Audio Formats Collection
+
+### List all camera formats [GET]
++ Response 200 (application/json)
+ + Attributes (Camera Formats Collection)
+
+## Camera Video Formats Collection [/camera/formats/video]
+
+Array of available video encoding formats.
++ Attributes (array)
+ + format0 (object)
+        + id: 0 (number, required)
+        + resolution: 2768x2768 (string, required)
+        + resize: scale (string, required)
+        + codec: h264 (string, required)
+        + framerate: 30 (number, required)
+        + keyinterval: 30 (number, required)
+        + ratecontrol: CVBR (string, required)
+        + bitrate: 60000000 (number, required)
+        + quant: 18 (number, required)
+        + max_quant: 23 (number, required)
+        + min_quant: 0 (number, required)
+        + max_framerate: 30 (number, required)
+        + min_framerate: 30 (number, required)
+ + format1 (object)
+        + id: 1 (number, required)
+        + resolution: 752x752 (string, required)
+        + resize: scale (string, required)
+        + codec: h264 (string, required)
+        + framerate: 30 (number, required)
+        + keyinterval: 30 (number, required)
+        + ratecontrol: CVBR (string, required)
+        + bitrate: 4000000 (number, required)
+        + quant: 23 (number, required)
+        + max_quant: 27 (number, required)
+        + min_quant: 0 (number, required)
+        + max_framerate: 30 (number, required)
+        + min_framerate: 30 (number, required)
+ + format12 (object)
+        + id: 2 (number, required)
+        + resolution: 2816x1584 (string, required)
+        + resize: crop (string, required)
+        + codec: h264 (string, required)
+        + framerate: 30 (number, required)
+        + keyinterval: 30 (number, required)
+        + ratecontrol: CVBR (string, required)
+        + bitrate: 60000000 (number, required)
+        + quant: 18 (number, required)
+        + max_quant: 23 (number, required)
+        + min_quant: 0 (number, required)
+        + max_framerate: 30 (number, required)
+        + min_framerate: 30 (number, required)
+        
+### List all video formats [GET]
++ Response 200 (application/json)
+ + Attributes (Camera Video Formats Collection)
+         
+### Create video format [POST]
++ Attributes (object)
+ + resolution: 2880x2880 (string)
+ + resize: scaling (string)
+ + codec: h264 (string)
+ + framerate: 30 (number)
+ + keyinterval: 30 (number)
+ + ratecontrol: CVBR (string)
+ + bitrate: 60000000 (number)
+ + quant: 18 (number)
+ + max_quant: 23 (number)
+ + min_quant: 0 (number)
+ + max_framerate: 30 (number)
+ + min_framerate: 30 (number)
+ 
++ Request (application/json)
+
++ Response 201 (application/json)
+ + Attributes (Camera Video Format)
+            
+## Camera Video Format [/camera/formats/video/{id}]
+
+Format of encoded video. Effectively a configuration for underlying video encoding application.
+
++ Attributes (object)
+ + id: 3 (number)
+ + resolution: 2880x2880 (string) - resolution of encoded video
+ + resize: scale (string) - resize method. options: none, scale, crop
+ + codec: h264 (string)
+ + framerate: 30 (number) - target framerate of encoded video (FPS). Minimum 15 FPS.
+ + keyinterval: 30 (number) - framecount between keyframes
+ + ratecontrol: CVBR (string) - bit rate control method. options: NONE, VQCB, CQCB, CVBR, ADPT
+ + bitrate: 60000000 (number) - maximum or target bitrate (depending on ratecontrol)
+ + quant: 18 (number) - target quantization. Ranges 0~51. Higher yields more compression.
+ + max_quant: 23 (number) - max quantization
+ + min_quant: 0 (number) - min quantization
+ + max_framerate: 30 (number) max framerate of encoded video (FPS). min 15 FPS
+ + min_framerate: 30 (number) min framerate of encoded video (FPS). min 15 FPS
+
++ Parameters
+ + id (required, number, `3`) `id` of format in question. Has sample value
+ 
+### Retrieve video format details [GET]
+
++ Response 200 (application/json)
+ + Attributes (Camera Video Format)
+
+### Modify video format [PUT]
+
++ Attributes (object)
+ + resolution: "2880x2880" (string)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+ + Attributes (Camera Video Format)
+
+### Remove video format [DELETE]
++ Response 204
+
+## Camera Audio Formats Collection [/camera/formats/audio]
+
+Array of available audio encoding formats.
+
++ Attributes (array)
+ + format0 (object)
+        + id: 0 (number, required)
+        + bitrate: 6400 (number, required)
+        + samplerate: 4800 (number, required)
+        + codec: AAC4 (string, required)
+
+### List all audio formats [GET]
++ Response 200 (application/json)
+ + Attributes (Camera Audio Formats Collection)
+
+### Create audio format [POST]
++ Attributes (object)
+ + bitrate: 64000 (number)
+ + samplerate: 48000 (number)
+ + codec: AAC4 (string)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+ + Attributes (Camera Audio Format)
+
+## Camera Audio Format [/camera/formats/audio/{id}]
+
+Format of encoded audio. Effectively a configuration for underlying audio encoding application.
+
++ Attributes (object)
+ + id: 1 (required, number)
+ + bitrate: 64000 (required, number) - encoded audio bitrate
+ + samplerate: 48000 (required, number) - rate audio is sampled
+ + codec: AAC4 (required, string)
+ 
++ Parameters
+ + id (required, number, `1`)
+ 
+### Retrieve audio format details [GET]
++ Response 200 (application/json)
+ + Attributes (Camera Audio Format)
+
+### Modify audio format [PUT]
++ Attributes (object)
+ + samplerate: 48000 (number)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+ + Attributes (Camera Audio Format)
+
+### Remove audio format [DELETE]
++ Response 204
+
+## Camera Preferences [/camera/preferences]
+
++ Attributes (object)
+ + max_duration: 300 (number) - number of seconds per chapter (0 indicates no max duration)
+ + max_size: 4294967296 (number) - number of bytes per chapter (0 indicates no max file size)
+ + video_format: 0 (number) - id of format per /camera/formats/video.
+ + audio_format: 0 (number) - id of format per /camera/formats/audio
+
+### Retrieve recording preferences [GET]
++ Response 200 (application/json)
+ + Attributes (Camera Preferences)
+
+### Modify recording preferences [PUT]
+
++ Attributes (object)
+ + max_duration: 180 (number) - setting recording chapters to 180 seconds
+ + video_format: 2 (number) - using a "Front-facing" (16x9) mode
+
++ Request (application/json)
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + max_duration: 180 (number)
+        + max_size: 4294967296 (number)
+        + video_format: 2 (number)
+        + audio_format: 0 (number)
+
+## Liveview [/camera/liveview]
+
+Status and settings for the 360fly `rtsp` stream. Enabled only when recording format doesn't use full video encoding capacity.
+
++ Attributes
+ + url: rtsp://fly.local/live1.sdp (string, required) - livestream url
+ + enabled: 1 (boolean, required) - read-only, depends on video formats for recording and liveview
+ + format: 1 (number, required) - id of format per /camera/formats/video
+
+### Retrieve liveview settings [GET]
++ Response 200 (application/json)
+ + Attributes (Liveview)
+ 
+### Modify liveview settings [PUT]
+
++ Attributes (object)
+ + format: 0 (number, required) - changing liveview's encoded video format
+ 
++ Request (application/json)
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + url: rtsp://fly.local/live1.sdp (string, required)
+        + enabled: 0 (number, required) - disabled since new format is disallowed by encoding bandwidth
+        + format: 0 (number, required)
+
+## Tuning [/camera/tuning]
+
++ Attributes (object)
+ + ae_lock: false (boolean, required) - auto exposure lock/unlock
+ + saturation: 100 (number, required) - image saturation. Range 0~200
+ + max_iso_sensitivity: 8000 (number, required) - image iso (which adjusts gain). Range: 1000~64000
+ + awb_lock: false (boolean, required) - auto white balance lock/unlock
+ + brightness: 100 (number, required) - image brightness. Range 0~200
+ + ae_compensation: 100 (number, required) - compensation for auto exposure. Range: 50~200
+ + contrast: 100 (number, required) - image contrast. Range 0~100
+ + max_shutter: 30 (number, required) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds. Must be >= 15
+
+### Retrieve tuning settings [GET]
++ Response 200 (application/json)
+ + Attributes (Tuning)
+
+### Modify tuning settings [PUT]
+
++ Attributes (object)
+ + max_shutter: 15 (number) - Increasing max_shutter from 1/30 to 1/15 to enable "Low-light mode"
+
++ Request (application/json)
+
++ Response 200 (application/json)
++ Attributes (object)
+ + ae_lock: false (boolean, required)
+ + saturation: 100 (number, required)
+ + max_iso_sensitivity: 8000 (number, required)
+ + awb_lock: false (boolean, required)
+ + brightness: 100 (number, required)
+ + ae_compensation: 100 (number, required)
+ + contrast: 100 (number, required)
+ + max_shutter: 15 (number, required)
+ 
+## Projection [/camera/projection]
++ Attributes (object)
+ + type: radial (string, required) - class of projection
+ + radialMapping: ftheta (string) - name of mapping used to map angle to radius on a radial capture image
+ + outerAngle: 120 (number) - Half of the vertical field of view. The max of the radialMapping's domain.
+ + centerRadius: 0.5 0.5 0.5 0.5 (string) - The location and size of radial image in camera's sensor coordinates
+
+### Retrieve projection [GET]
++ Response 200 (application/json)
+ + Attributes (Projection)
+
+
