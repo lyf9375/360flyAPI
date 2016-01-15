@@ -125,7 +125,7 @@ Format of encoded video. Effectively a configuration for underlying video encodi
 ### Modify video format [PUT]
 
 + Attributes (object)
- + resolution: "2880x2880" (string)
+ + resolution: 2880x2880 (string)
 
 + Request (application/json)
 
@@ -195,14 +195,15 @@ Format of encoded audio. Effectively a configuration for underlying audio encodi
 + Attributes (object)
  + max_duration: 300 (number) - number of seconds per chapter (0 indicates no max duration)
  + max_size: 4294967296 (number) - number of bytes per chapter (0 indicates no max file size)
- + video_format: 0 (number) - id of format per /camera/formats/video.
- + audio_format: 0 (number) - id of format per /camera/formats/audio
+ + video_format: 0 (number) - id of recording video format per /camera/formats/video
+ + audio_format: 0 (number) - id of recording audio format per /camera/formats/audio
+ + photo_format: 4 (number) - id of photo format per /camera/formats/photo
 
-### Retrieve recording preferences [GET]
+### Retrieve camera preferences [GET]
 + Response 200 (application/json)
  + Attributes (Camera Preferences)
 
-### Modify recording preferences [PUT]
+### Modify camera preferences [PUT]
 
 + Attributes (object)
  + max_duration: 180 (number) - setting recording chapters to 180 seconds
@@ -216,6 +217,7 @@ Format of encoded audio. Effectively a configuration for underlying audio encodi
         + max_size: 4294967296 (number)
         + video_format: 2 (number)
         + audio_format: 0 (number)
+        + photo_format: 4 (number)
 
 ## Liveview [/camera/liveview]
 
@@ -243,6 +245,24 @@ Status and settings for the 360fly `rtsp` stream. Enabled only when recording fo
         + enabled: 0 (number, required) - disabled since new format is disallowed by encoding bandwidth
         + format: 0 (number, required)
 
+## Photo [/camera/photo]
+
+Photo Capture interface. See /camera/preferences for photo format details.
+
+### Take Photo [POST]
+
+Returns newly taken photo's download link
+
++ Request
+ + Header
+
+            Content-length: 0
+
++ Response 201
+ + Header
+ 
+            Location: /video/file/{photo.jpg}
+
 ## Tuning [/camera/tuning]
 
 + Attributes (object)
@@ -262,7 +282,7 @@ Status and settings for the 360fly `rtsp` stream. Enabled only when recording fo
 ### Modify tuning settings [PUT]
 
 + Attributes (object)
- + max_shutter: 15 (number) - Increasing max_shutter from 1/30 to 1/15 to enable "Low-light mode"
+        + max_shutter: 15 (number) - Increase max shutter speed to 1/15 seconds i.e. low light mode
 
 + Request (application/json)
 
