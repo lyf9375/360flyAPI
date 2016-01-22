@@ -12,7 +12,74 @@ achieve full functionality of version 1.5 (Thunderdome).
 
 Configure and control 360fly media capture
 
-## Camera Formats Collection [/camera/formats]
+
+## Camera Media Profile Collection [/360fly/camera/profiles]
+
+Array of available Media Profiles.
+
++ Attributes (array)
+ + profile0 (object)
+        + id: 0 (number, required)
+        + name: fastmotion_profile (string, required)
+        + video_format_id: 1 (number, required)
+        + audio_format_id: 1 (number, optional)
+        + metadata_format_id: 1 (number, optional)
+ + profile1 (object)
+        + id: 1 (number, required)
+        + name: liveview_profile (string, required)
+        + video_format_id: 2 (number, required)
+        + audio_format_id: 1 (number, optional)
+        + metadata_format_id: 1 (number, optional)
+
+### List all profiles [GET]
++ Response 200 (application/json)
+ + Attributes (Camera Media Profile Collection)
+
+### Create profile [POST]
++ Attributes (object)
+ + name: fastmotion_profile (string)
+ + video_format_id: 1 (number)
+ + audio_format_id: 1 (number)
+ + metadata_format_id: 2 (number)
+ 
++ Request (application/json)
+
++ Response 201 (application/json)
+ + Attributes (Camera Profile Configuration)
+
+
+## Camera Profile Configuration  [/360fly/camera/profile/{id}]
+
+Camera profile contains all configuration for underlying video, audio, metadata.
+
++ Attributes (object)
+ + id: 1 (required, number)
+ + name: fastmotion_profile (required, string)
+ + video_format_id: 2 (required, number)
+ + audio_format_id: 2 (optional, number)
+ + metadata_format_id: 1 (optional, number)
+ 
++ Parameters
+ + id (required, number, `1`)
+ 
+### Retrieve profile details [GET]
++ Response 200 (application/json)
+ + Attributes (Camera Profile Configuration)
+
+### Modify Camera Profile Configuration [PUT]
++ Attributes (object)
+ + video_format_id: 1 (number)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+ + Attributes (Camera Profile Configuration)
+
+### Remove Camera Profile [DELETE]
++ Response 204
+
+
+## Camera Formats Collection [/360fly/camera/formats]
 
 The available and current encoded media formats on the device. The enumerated list of formats (video and audio) can be selected for recording or photos. The formats are effectively configurations for underlying media encoding applications on the 360fly.
 
@@ -28,7 +95,7 @@ The available and current encoded media formats on the device. The enumerated li
 + Response 200 (application/json)
  + Attributes (Camera Formats Collection)
 
-## Camera Video Formats Collection [/camera/formats/video]
+## Camera Video Formats Collection [/360fly/camera/formats/video]
 
 Array of available video encoding formats.
 + Attributes (array)
@@ -103,7 +170,7 @@ Array of available video encoding formats.
 + Response 201 (application/json)
  + Attributes (Camera Video Format)
             
-## Camera Video Format [/camera/formats/video/{id}]
+## Camera Video Format [/360fly/camera/formats/video/{id}]
 
 Format of encoded video. Effectively a configuration for underlying video encoding application.
 
@@ -144,7 +211,7 @@ Format of encoded video. Effectively a configuration for underlying video encodi
 ### Remove video format [DELETE]
 + Response 204
 
-## Camera Audio Formats Collection [/camera/formats/audio]
+## Camera Audio Formats Collection [/360fly/camera/formats/audio]
 
 Array of available audio encoding formats.
 
@@ -172,7 +239,7 @@ Array of available audio encoding formats.
 + Response 201 (application/json)
  + Attributes (Camera Audio Format)
 
-## Camera Audio Format [/camera/formats/audio/{id}]
+## Camera Audio Format [/360fly/camera/formats/audio/{id}]
 
 Format of encoded audio. Effectively a configuration for underlying audio encoding application.
 
@@ -202,7 +269,7 @@ Format of encoded audio. Effectively a configuration for underlying audio encodi
 ### Remove audio format [DELETE]
 + Response 204
 
-## Camera Metadata Formats Collection [/camera/formats/metadata]
+## Camera Metadata Formats Collection [/360fly/camera/formats/metadata]
 
 Array of available Metadata formats.
 
@@ -239,7 +306,7 @@ Array of available Metadata formats.
  + Attributes (Camera Metadata Format)
 
 
-## Camera Metadata Format [/camera/formats/metadata/{id}]
+## Camera Metadata Format [/360fly/camera/formats/metadata/{id}]
 
 Format of metadata. Effectively a configuration for underlying sensors, events, etc.
 
@@ -273,7 +340,7 @@ Format of metadata. Effectively a configuration for underlying sensors, events, 
 ### Remove metadata format [DELETE]
 + Response 204
 
-## Camera Preferences [/camera/preferences]
+## Camera Preferences [/360fly/camera/preferences]
 
 + Attributes (object)
  + max_duration: 300 (number) - number of seconds per chapter (0 indicates no max duration)
@@ -302,7 +369,7 @@ Format of metadata. Effectively a configuration for underlying sensors, events, 
         + audio_format: 0 (number)
         + photo_format: 4 (number)
 
-## Liveview [/camera/liveview]
+## Liveview [/360fly/camera/liveview]
 
 Status and settings for the 360fly `rtsp` stream. Enabled only when recording format doesn't use full video encoding capacity.
 
@@ -328,7 +395,7 @@ Status and settings for the 360fly `rtsp` stream. Enabled only when recording fo
         + enabled: 0 (number, required) - disabled since new format is disallowed by encoding bandwidth
         + format: 0 (number, required)
 
-## Photo [/camera/photo]
+## Photo [/360fly/camera/photo]
 
 Photo Capture interface. See /camera/preferences for photo format details.
 
@@ -346,7 +413,7 @@ Returns newly taken photo's download link
  
             Location: /video/file/{photo.jpg}
 
-## Tuning [/camera/tuning]
+## Tuning [/360fly/camera/tuning]
 
 + Attributes (object)
  + ae_lock: false (boolean, required) - auto exposure lock/unlock
@@ -380,7 +447,7 @@ Returns newly taken photo's download link
  + contrast: 100 (number, required)
  + max_shutter: 15 (number, required)
  
-## Projection [/camera/projection]
+## Projection [/360fly/camera/projection]
 + Attributes (object)
  + type: radial (string, required) - class of projection
  + radialMapping: ftheta (string) - name of mapping used to map angle to radius on a radial capture image
