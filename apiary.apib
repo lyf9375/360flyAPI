@@ -1,7 +1,9 @@
 FORMAT: 1A
 HOST: http://polls.apiblueprint.org/
 
-# 360fly ReST API for Thunderdome
+
+
+# 360fly ReST API for Thunderdome v0.1.0
 
 This API document outlines additions or modifications to the base 360fly REST specification that are required to
 achieve full functionality of version 1.5 (Thunderdome).
@@ -19,6 +21,8 @@ The available and current encoded media formats on the device. The enumerated li
         + Include Camera Video Formats Collection
  + audio (array, required) - list of available audio formats
         + Include Camera Audio Formats Collection
+ + metadata (array, optional) - list of available meta data formats
+        + Include Camera Metadata Formats Collection
 
 ### List all camera formats [GET]
 + Response 200 (application/json)
@@ -188,6 +192,74 @@ Format of encoded audio. Effectively a configuration for underlying audio encodi
  + Attributes (Camera Audio Format)
 
 ### Remove audio format [DELETE]
++ Response 204
+
+## Camera Metadata Formats Collection [/camera/formats/metadata]
+
+Array of available Metadata formats.
+
++ Attributes (array)
+ + format0 (object)
+        + id: 0 (number, required)
+        + accel_mode: 2 (number, optional) - accelerometer mode 2g
+        + accel_rate: 60 (number, optional) - accelerometer sample rate, 60 samples per seconds
+        + gyro_mode: 1 (number, optional) - mode 1
+        + gyro_rate: 60 (number, optional) 
+        + magneto_mode: 1 (number, optional)
+        + magneto_rate: 60 (number, optional)
+        + gps_rate: 1 (number, optional)
+
+### List all metadata formats [GET]
++ Response 200 (application/json)
+ + Attributes (Camera Metadata Formats Collection)
+
+### Create metadata format [POST]
++ Attributes (object)
+ + accel_mode: 2 (number)
+ + accel_rate: 30 (number)
+ + gyro_mode: 1 (number)
+ + gyro_rate: 30 (number)
+ + magneto_mode: 1 (number)
+ + magneto_rate: 30 (number)
+ + gps_rate: 1 (number)
+ 
++ Request (application/json)
+
++ Response 201 (application/json)
+ + Attributes (Camera Metadata Format)
+
+
+## Camera Metadata Format [/camera/formats/metadata/{id}]
+
+Format of metadata. Effectively a configuration for underlying sensors, events, etc.
+
++ Attributes (object)
+ + id: 1 (required, number)
+ + accel_mode: 2 (number)
+ + accel_rate: 30 (number)
+ + gyro_mode: 1 (number)
+ + gyro_rate: 30 (number)
+ + magneto_mode: 1 (number)
+ + magneto_rate: 30 (number)
+ + gps_rate: 1 (number)
+ 
++ Parameters
+ + id (required, number, `1`)
+ 
+### Retrieve metadata format details [GET]
++ Response 200 (application/json)
+ + Attributes (Camera Metadata Format)
+
+### Modify metadata format [PUT]
++ Attributes (object)
+ + accel_rate: 30 (number)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+ + Attributes (Camera Metadata Format)
+
+### Remove metadata format [DELETE]
 + Response 204
 
 ## Camera Preferences [/camera/preferences]
