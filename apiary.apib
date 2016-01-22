@@ -34,6 +34,7 @@ Array of available video encoding formats.
 + Attributes (array)
  + format0 (object)
         + id: 0 (number, required)
+        + name: fullres_video (string, required)
         + resolution: 2768x2768 (string, required)
         + resize: scale (string, required)
         + codec: h264 (string, required)
@@ -48,6 +49,7 @@ Array of available video encoding formats.
         + min_framerate: 30 (number, required)
  + format1 (object)
         + id: 1 (number, required)
+        + name: lowres_video (string, required)
         + resolution: 752x752 (string, required)
         + resize: scale (string, required)
         + codec: h264 (string, required)
@@ -62,6 +64,7 @@ Array of available video encoding formats.
         + min_framerate: 30 (number, required)
  + format12 (object)
         + id: 2 (number, required)
+        + name: face_forward (string, required)
         + resolution: 2816x1584 (string, required)
         + resize: crop (string, required)
         + codec: h264 (string, required)
@@ -81,6 +84,7 @@ Array of available video encoding formats.
          
 ### Create video format [POST]
 + Attributes (object)
+ + name: full_res_video (string)
  + resolution: 2880x2880 (string)
  + resize: scaling (string)
  + codec: h264 (string)
@@ -105,6 +109,7 @@ Format of encoded video. Effectively a configuration for underlying video encodi
 
 + Attributes (object)
  + id: 3 (number)
+ + name: full_res (string) 
  + resolution: 2880x2880 (string) - resolution of encoded video
  + resize: scale (string) - resize method. options: none, scale, crop
  + codec: h264 (string)
@@ -146,6 +151,7 @@ Array of available audio encoding formats.
 + Attributes (array)
  + format0 (object)
         + id: 0 (number, required)
+        + name: 48K_aac4 (string, required)
         + bitrate: 6400 (number, required)
         + samplerate: 4800 (number, required)
         + codec: AAC4 (string, required)
@@ -156,6 +162,7 @@ Array of available audio encoding formats.
 
 ### Create audio format [POST]
 + Attributes (object)
+ + name: 48K_aac4 (string)
  + bitrate: 64000 (number)
  + samplerate: 48000 (number)
  + codec: AAC4 (string)
@@ -171,6 +178,7 @@ Format of encoded audio. Effectively a configuration for underlying audio encodi
 
 + Attributes (object)
  + id: 1 (required, number)
+ + name: 48K_aac4 (required, string)
  + bitrate: 64000 (required, number) - encoded audio bitrate
  + samplerate: 48000 (required, number) - rate audio is sampled
  + codec: AAC4 (required, string)
@@ -201,6 +209,7 @@ Array of available Metadata formats.
 + Attributes (array)
  + format0 (object)
         + id: 0 (number, required)
+        + name: fast_mode (string, required)
         + accel_mode: 2 (number, optional) - accelerometer mode 2g
         + accel_rate: 60 (number, optional) - accelerometer sample rate, 60 samples per seconds
         + gyro_mode: 1 (number, optional) - mode 1
@@ -215,6 +224,7 @@ Array of available Metadata formats.
 
 ### Create metadata format [POST]
 + Attributes (object)
+ + name: fast_mode (string)
  + accel_mode: 2 (number)
  + accel_rate: 30 (number)
  + gyro_mode: 1 (number)
@@ -235,6 +245,7 @@ Format of metadata. Effectively a configuration for underlying sensors, events, 
 
 + Attributes (object)
  + id: 1 (required, number)
+ + name: fast_mode (string)
  + accel_mode: 2 (number)
  + accel_rate: 30 (number)
  + gyro_mode: 1 (number)
