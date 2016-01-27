@@ -31,11 +31,11 @@ Array of available Media Profiles.
         + audio_format_id: 1 (number, optional)
         + metadata_format_id: 1 (number, optional)
 
-### List all profiles [GET]
+### List all media profiles [GET]
 + Response 200 (application/json)
  + Attributes (Camera Media Profile Collection)
 
-### Create profile [POST]
+### Create media profile [POST]
 + Attributes (object)
  + name: fastmotion_profile (string)
  + video_format_id: 1 (number)
@@ -45,12 +45,12 @@ Array of available Media Profiles.
 + Request (application/json)
 
 + Response 201 (application/json)
- + Attributes (Camera Profile Configuration)
+ + Attributes (Camera Media Profile Configuration)
 
 
-## Camera Profile Configuration  [/360fly/camera/profile/{id}]
+## Camera Media Profile Configuration  [/360fly/camera/profile/{id}]
 
-Camera profile contains all configuration for underlying video, audio, metadata.
+Camera media profile contains all configuration for underlying video, audio, metadata.
 
 + Attributes (object)
  + id: 1 (required, number)
@@ -62,20 +62,20 @@ Camera profile contains all configuration for underlying video, audio, metadata.
 + Parameters
  + id (required, number, `1`)
  
-### Retrieve profile details [GET]
+### Retrieve media profile details [GET]
 + Response 200 (application/json)
- + Attributes (Camera Profile Configuration)
+ + Attributes (Camera Media Profile Configuration)
 
-### Modify Camera Profile Configuration [PUT]
+### Modify media profile configuration [PUT]
 + Attributes (object)
  + video_format_id: 1 (number)
 
 + Request (application/json)
 
 + Response 200 (application/json)
- + Attributes (Camera Profile Configuration)
+ + Attributes (Camera Media Profile Configuration)
 
-### Remove Camera Profile [DELETE]
+### Remove media profile [DELETE]
 + Response 204
 
 
@@ -348,6 +348,7 @@ Format of metadata. Effectively a configuration for underlying sensors, events, 
  + video_format: 0 (number) - id of recording video format per /camera/formats/video
  + audio_format: 0 (number) - id of recording audio format per /camera/formats/audio
  + photo_format: 4 (number) - id of photo format per /camera/formats/photo
+ + profile_id: 0 (number) - id of default camera profile per /camera/profiles
 
 ### Retrieve camera preferences [GET]
 + Response 200 (application/json)
@@ -368,6 +369,7 @@ Format of metadata. Effectively a configuration for underlying sensors, events, 
         + video_format: 2 (number)
         + audio_format: 0 (number)
         + photo_format: 4 (number)
+        + profile_id: 0 (number)
 
 ## Liveview [/360fly/camera/liveview]
 
@@ -376,7 +378,7 @@ Status and settings for the 360fly `rtsp` stream. Enabled only when recording fo
 + Attributes
  + url: rtsp://fly.local/live1.sdp (string, required) - livestream url
  + enabled: 1 (boolean, required) - read-only, depends on video formats for recording and liveview
- + format: 1 (number, required) - id of format per /camera/formats/video
+ + profile_id: 1 (number, required) - id of profile per /camera/profiles
 
 ### Retrieve liveview settings [GET]
 + Response 200 (application/json)
@@ -385,7 +387,7 @@ Status and settings for the 360fly `rtsp` stream. Enabled only when recording fo
 ### Modify liveview settings [PUT]
 
 + Attributes (object)
- + format: 0 (number, required) - changing liveview's encoded video format
+ + profile_id: 0 (number, required) - changing liveview's profile id
  
 + Request (application/json)
 
@@ -393,7 +395,7 @@ Status and settings for the 360fly `rtsp` stream. Enabled only when recording fo
  + Attributes (object)
         + url: rtsp://fly.local/live1.sdp (string, required)
         + enabled: 0 (number, required) - disabled since new format is disallowed by encoding bandwidth
-        + format: 0 (number, required)
+        + profile_id: 0 (number, required)
 
 ## Photo [/360fly/camera/photo]
 
