@@ -19,10 +19,10 @@ Default high-level attributes for media capture
 * normal playback: set `frameRateMultiplier` = 1
 
 + Attributes (object)
- + profile: proMode (string, required, sample)
- + maxChapterDuration: 180 (number, required, sample) - Max duration, in seconds, for a chapter in a recording. 
+ + profile: proMode (string, required, default) - Current camera profile. Determines default media formats for recorded and liveview video and audio, sensordata, and photos. 
+ + maxChapterDuration (number, required, sample) - Max duration, in seconds, for a chapter in a recording. 
  + maxChapterFileSize  (number, required, sample) - Max file size, in bytes, for a chapter in a recording
- + frameRateMultiplier: 1 (number, required, sample) - The ratio of frame presentation duration written in video file to the encoded frame rate
+ + frameRateMultiplier: 1 (number, required, default) - The ratio of frame presentation duration written in video file to the encoded frame rate
 
 ### Retrieve camera preferences [GET]
 + Response 200 (application/json)
@@ -30,7 +30,7 @@ Default high-level attributes for media capture
 
 ### Modify camera preferences [PUT]
 + Attributes (object)
- + maxChapterDuration (number, optional, sample, nullable) - set no timed chaptering
+ + maxChapterDuration: 180 (number, optional, sample) - set chapter duration to 180 seconds
  + frameRateMultiplier: .5 (number, optional, sample) - set playback frame rate to half the encoded frame rate. This is essential for slow-motion playback.
  + profile: slowMotion (string, optional, sample) - Use a profile with 60FPS encoded frame-rate. This in combination with frameRateMultiplier=.5 will give quality slow-motion.
 
@@ -39,44 +39,44 @@ Default high-level attributes for media capture
 + Response 200 (application/json)
  + Attributes (object)
         + profile: slowMotion (string, required, sample)
-        + maxChapterDuration (number, required, sample)
+        + maxChapterDuration: 180 (number, required, sample)
         + maxChapterFileSize (number, required, sample)
-        + frameRateMultiplier: .5 (number, optional, sample)
+        + frameRateMultiplier: .5 (number, required, sample)
 
 ## Camera Media Profile Collection [/360fly/camera/profiles]
 
 + Attributes (object)
- + proMode (object, default)
-        + recordingFormat: fullRes30 (string, required)
-        + audioFormat: 48KAAC4 (string, required)
-        + metadataFormat: mode30fps (string, required)
-        + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: default (string, required, default)
- + fullRes24 (object)
+ + proMode (Camera Media Profile, required, default)
+ + fullRes24 (object, required)
         + recordingFormat: fullRes24 (string, required)
         + audioFormat: 48KAAC4 (string, required)
-        + metadataFormat: mode30fps (string, required)
-        + liveviewFormat: 1280sq30 (string, required)
-        + photoFormat: default (string, required, default)
- + almostFullRes (object)
+        + sensordataFormat: mode30fps (string, required)
+        + liveviewFormat: 1424sq24 (string, required)
+        + photoFormat: normal (string, required, default)
+ + almostFullRes (object, required)
         + recordingFormat: 2816sq30 (string,required)
         + audioFormat: 48KAAC4 (string, required)
-        + metadataFormat: mode30fps (string, required)
+        + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: default (string, required, default)
- + frontFacing1584p (object)
+        + photoFormat: normal (string, required, default)
+ + frontFacing1584p (object, required)
         + recordingFormat: 1584p30
         + audioFormat: 48KAAC4 (string, required)
-        + metadataFormat: mode30fps (string, required)
-        + liveviewFormat: 1280sq30 (string, required)
-        + photoFormat: default (string, required, default)
- + frontFacing1440p
+        + sensordataFormat: mode30fps (string, required)
+        + liveviewFormat: 720p15 (string, required)
+        + photoFormat: normal (string, required, default)
+ + frontFacing1440p (object, required)
         + recordingFormat: 1440p30 (string, required)
         + audioFormat: 48KAAC4 (string, required)
-        + metadataFormat: mode30fps (string, required)
-        + liveviewFormat: 1280sq30 (string, required)
-        + photoFormat: default (string, required, default)
- + slowMotion (Camera Media Profile)
+        + sensordataFormat: mode30fps (string, required)
+        + liveviewFormat: 720p15 (string, required)
+        + photoFormat: normal (string, required, default)
+ + slowMotion (object, required)
+        + recordingFormat: 2032sq60 (string, required)
+        + audioFormat: 48KAAC4 (string, required)
+        + sensordataFormat: mode60fps (string, required)
+        + liveviewFormat: 752sq15 (string, required)
+        + photoFormat: normal (string, required)
 
 ### List all media profiles [GET]
 + Response 200 (application/json)
@@ -84,17 +84,17 @@ Default high-level attributes for media capture
 
 ## Camera Media Profile [/360fly/camera/profiles/{name}]
 
-Describes capture/encoding formats for recording, audio, metadata, liveview, and photo.
+Describes capture/encoding formats for recording, audio, sensordata, liveview, and photo.
 
 + Attributes (object)
- + recordingFormat: 2032sq60 (string, required)
- + audioFormat: 48KAAC4 (string, required)
- + metadataFormat: mode60fps (string, required)
- + liveviewFormat: 752sq15 (string, required)
- + photoFormat: default (string, required, default)
+ + recordingFormat: fullRes30 (string, required) - format of recorded video. See /camera/formats/video
+ + audioFormat: 48KAAC4 (string, required) - format of encoded audio. See /camera/formats/audio
+ + sensordataFormat: mode30fps (string, required) - format of sensor data for recordings and (future version) liveview stream. See /camera/formats/sensordata
+ + liveviewFormat: 752sq15 (string, required) - format of liveview video stream. See /camera/formats/video
+ + photoFormat: normal (string, required, default) - format of captured photos. See /camera/formats/photo
  
 + Parameters
- + name (required, string, `slowMotion`)
+ + name (required, string, `proMode`) the relevant profile
  
 ### Retrieve media profile details [GET]
 + Response 200 (application/json)
@@ -102,35 +102,32 @@ Describes capture/encoding formats for recording, audio, metadata, liveview, and
 
 ### Create or modify media profile [PUT]
 + Attributes (object)
- + recordingFormat: 1504sq60 (string, required) - Changing this profile's recording format. In this example, we lower recording resolution to give encoder enough bandwidth to do simultaneous recording and liveview in the slowMotion profile.
+ + photoFormat: burstMode (string, optional, sample)
 
 + Request (application/json)
 
 + Response 200 (application/json)
  + Attributes (object)
-        + recordingFormat: 1504sq60 (string, required)
+        + recordingFormat: fullRes30 (string, required)
         + audioFormat: 48KAAC4 (string, required)
-        + metadataFormat: mode60fps (string, required)
-        + liveviewFormat: 1280sq30 (string, required)
-        + photoFormat: default (string, required, default)
+        + sensordataFormat: mode30fps (string, required)
+        + liveviewFormat: 752sq15 (string, required)
+        + photoFormat: burstMode (string, required, default)
 
 ### Remove media profile [DELETE]
 + Response 204
 
 ## Camera Formats Collection [/360fly/camera/formats]
 
-The available media and metadata formats. The various formats are used to compose a profile (see `/camera/profiles`). The formats are essentially configurations for underlying media/data encoder and capture applications.
+The available media and sensordata formats. The various formats are used to compose a profile (see `/camera/profiles`). The formats are essentially configurations for underlying media/data encoder and capture applications.
 
 *Both recording and liveview use video formats 
 
 + Attributes (object)
- + video (object, required) - list of available video formats
-        + Include Camera Video Formats Collection
- + audio (object, required) - list of available audio formats
-        + Include Camera Audio Formats Collection
- + metadata (object, optional) - list of available meta data formats
-        + Include Camera Metadata Formats Collection
- + photo (object, required) - list of available photo formats
+ + video (Camera Video Formats Collection, required) - list of available video formats
+ + audio (Camera Audio Formats Collection, required) - list of available audio formats
+ + sensordata (Camera Metadata Formats Collection, required) - list of available meta data formats
+ + photo (Camera Photo Formats Collection, required) - list of available photo formats
 
 ### List all camera formats [GET]
 + Response 200 (application/json)
@@ -139,21 +136,8 @@ The available media and metadata formats. The various formats are used to compos
 ## Camera Video Formats Collection [/360fly/camera/formats/video]
 
 + Attributes (object)
- + fullRes30 (object)
-        + resolution: 2880x2880 (string, required)
-        + resize: scale (string, required)
-        + codec: h264 (string, required)
-        + framerate: 30 (number, required)
-        + keyinterval: 30 (number, required)
-        + ratecontrol: CVBR (string, required)
-        + bitrate: 60000000 (number, required)
-        + quant: 18 (number, required)
-        + max_quant: 23 (number, required)
-        + min_quant: 0 (number, required)
-        + max_framerate: 30 (number, required)
-        + min_framerate: 30 (number, required)
-        + frontFacing: false (boolean, required)
- + fullRes24 (object)
+ + fullRes30 (Camera Video Format, required, default) - Default recording video format
+ + fullRes24 (object, required) - Full-res at 24fps. Gives more encoding bandwidth to liveview than fullRes30
         + resolution: 2880x2880 (string, required)
         + resize: scale (string, required)
         + codec: h264 (string, required)
@@ -167,7 +151,7 @@ The available media and metadata formats. The various formats are used to compos
         + max_framerate: 30 (number, required)
         + min_framerate: 30 (number, required)
         + frontFacing: false (boolean, required)
- + 2816sq30 (object)
+ + 2816sq30 (object, required) - Slightly less than full-res video, but gives more encoding bandwidth to liveview than fullRes30
         + resolution: 2816x2816 (string, required)
         + resize: scale (string, required)
         + codec: h264 (string, required)
@@ -181,7 +165,21 @@ The available media and metadata formats. The various formats are used to compos
         + max_framerate: 30 (number, required)
         + min_framerate: 30 (number, required)
         + frontFacing: false (boolean, required)
- + 752sq15 (object)
+ + 1424sq24 (object, required, optional) - A high-res liveview format. Pairs well with fullRes24 recording format.
+        + resolution: 1424x1424 (string, required)
+        + resize: scale (string, required)
+        + codec: h264 (string, required)
+        + framerate: 24 (number, required)
+        + keyinterval: 30 (number, required)
+        + ratecontrol: CVBR (string, required)
+        + bitrate: 11500000 (number, required)
+        + quant: 18 (number, required)
+        + max_quant: 23 (number, required)
+        + min_quant: 0 (number, required)
+        + max_framerate: 30 (number, required)
+        + min_framerate: 30 (number, required)
+        + frontFacing: false (boolean, required)
+ + 752sq15 (object, required) - A low encoding bandwidth liveview format. Yields a large amount of encoding bandwidth to recording.
         + resolution: 752x752 (string, required)
         + resize: scale (string, required)
         + codec: h264 (string, required)
@@ -195,7 +193,7 @@ The available media and metadata formats. The various formats are used to compos
         + max_framerate: 30 (number, required)
         + min_framerate: 30 (number, required)
         + frontFacing: false (boolean, required)
- + 1584p30 (object)
+ + 1584p30 (object, required) - The maximum resolution for a front-facing recording format at 30fps
         + resolution: 2816x1584 (string, required)
         + resize: crop (string, required)
         + codec: h264 (string, required)
@@ -209,7 +207,7 @@ The available media and metadata formats. The various formats are used to compos
         + max_framerate: 30 (number, required)
         + min_framerate: 30 (number, required)
         + frontFacing: true (boolean, required)
- + 1440p30 (object)
+ + 1440p30 (object, required) - Alternative front-facing recording format
         + resolution: 2560x1440 (string, required)
         + resize: crop (string, required)
         + codec: h264 (string, required)
@@ -223,7 +221,7 @@ The available media and metadata formats. The various formats are used to compos
         + max_framerate: 30 (number, required)
         + min_framerate: 30 (number, required)
         + frontFacing: true (boolean, required)
- + 2032sq60 (object)
+ + 2032sq60 (object, required) - The max resolution recording format at 60fps
         + resolution: 2032x2032 (string, required)
         + resize: scale (string, required)
         + codec: h264 (string, required)
@@ -237,9 +235,9 @@ The available media and metadata formats. The various formats are used to compos
         + max_framerate: 30 (number, required)
         + min_framerate: 30 (number, required)
         + frontFacing: false (boolean, required)
- + 720p15 (object)   
+ + 720p15 (object, required) - a front-facing liveview format   
         + resolution: 1280x720
-        + resize: scale (string, required)
+        + resize: crop (string, required)
         + codec: h264 (string, required)
         + framerate: 60 (number, required)
         + keyinterval: 30 (number, required)
@@ -251,7 +249,7 @@ The available media and metadata formats. The various formats are used to compos
         + max_framerate: 30 (number, required)
         + min_framerate: 30 (number, required)
         + frontFacing: true (boolean, required)
- + 1504sq60 (object)
+ + 1504sq60 (object, required) - a lower resolution 60 fps recording format
         + resolution: 1504x1504 (string, required)
         + resize: scale (string, required)
         + codec: h264 (string, required)
@@ -275,21 +273,22 @@ The available media and metadata formats. The various formats are used to compos
 Format of encoded video for recording and liveview
 
 + Attributes (object)
- + resolution: 2880x2880 (string) - resolution of encoded video
- + resize: scale (string) - resize method. options: none, scale, crop
- + codec: h264 (string)
- + framerate: 30 (number) - target framerate of encoded video (FPS)
- + keyinterval: 30 (number) - framecount between keyframes
- + ratecontrol: CVBR (string) - bit rate control method. options: NONE, VQCB, CQCB, CVBR, ADPT
- + bitrate: 60000000 (number) - maximum or target bitrate (depending on ratecontrol)
- + quant: 18 (number) - target quantization. Ranges 0~51. Higher yields more compression.
- + max_quant: 23 (number) - max quantization
- + min_quant: 0 (number) - min quantization
- + max_framerate: 30 (number) max framerate of encoded video (FPS). min 15 FPS
- + min_framerate: 30 (number) min framerate of encoded video (FPS). min 15 FPS
+ + resolution: 2880x2880 (string, required) - resolution of encoded video
+ + resize: scale (string, required) - resize method. options: none, scale, crop
+ + codec: h264 (string, required)
+ + framerate: 30 (number, required) - target framerate of encoded video (FPS)
+ + keyinterval: 30 (number, required) - framecount between keyframes
+ + ratecontrol: CVBR (string, required) - bit rate control method. options: NONE, VQCB, CQCB, CVBR, ADPT
+ + bitrate: 60000000 (number, required) - maximum or target bitrate (depending on ratecontrol)
+ + quant: 18 (number, required) - target quantization. Ranges 0~51. Higher yields more compression.
+ + max_quant: 23 (number, required) - max quantization
+ + min_quant: 0 (number, required) - min quantization
+ + max_framerate: 30 (number, required) - max framerate of encoded video (FPS). min 15 FPS
+ + min_framerate: 30 (number, required) - min framerate of encoded video (FPS). min 15 FPS
+ + frontFacing: false (boolean, required, default) - Front facing mode flag. False implies default projection. True implies planar projection.
 
 + Parameters
- + name (required, string, `fullRes30`)
+ + name (required, string, `fullRes30`) the relevant video format
  
 ### Retrieve video format details [GET]
 
@@ -312,7 +311,7 @@ Format of encoded video for recording and liveview
 ## Camera Audio Formats Collection [/360fly/camera/formats/audio]
 
 + Attributes (object)
- + 48KAAC4 (object)
+ + 48KAAC4 (object, required) - default audio encoding format
         + bitrate: 6400 (number, required)
         + samplerate: 4800 (number, required)
         + codec: AAC4 (string, required)
@@ -329,7 +328,7 @@ Format of encoded video for recording and liveview
  + codec: AAC4 (required, string)
  
 + Parameters
- + name (required, string, `48KAAC4`)
+ + name (required, string, `48KAAC4`) the relevant audio format
  
 ### Retrieve audio format details [GET]
 + Response 200 (application/json)
@@ -337,7 +336,7 @@ Format of encoded video for recording and liveview
 
 ### Modify audio format [PUT]
 + Attributes (object)
- + bitrate: 64000 (number)
+ + bitrate: 64000 (number, optional)
 
 + Request (application/json)
 
@@ -347,59 +346,59 @@ Format of encoded video for recording and liveview
 ### Remove audio format [DELETE]
 + Response 204
 
-## Camera Metadata Formats Collection [/360fly/camera/formats/metadata]
+## Camera Metadata Formats Collection [/360fly/camera/formats/sensordata]
 
 + Attributes (object)
- + mode30fps (Camera Metadata Format)
- + mode60fps (object)
-        + accel_mode: 2 (number, optional) - accelerometer mode 2g
-        + accel_rate: 60 (number, optional) - accelerometer sample rate, 60 samples per seconds
-        + gyro_mode: 1 (number, optional) - mode 1
-        + gyro_rate: 60 (number, optional) 
-        + magneto_mode: 1 (number, optional)
-        + magneto_rate: 60 (number, optional)
-        + gps_rate: 1 (number, optional)
+ + mode30fps (Camera Metadata Format, required, default) - default sensor data capture behavior. Captures most sensors at 30fps
+ + mode60fps (object, required) - capture most sensors at 60fps
+        + accelMode: 2 (number, required)
+        + accelRate: 60 (number, required)
+        + gyroMode: 1 (number, required)
+        + gyroRate: 60 (number, required)
+        + magnetoMode: 1 (number, required)
+        + magnetoRate: 60 (number, required)
+        + gpsRate: 1 (number, required)
 
-### List all metadata formats [GET]
+### List all sensordata formats [GET]
 + Response 200 (application/json)
  + Attributes (Camera Metadata Formats Collection)
 
-## Camera Metadata Format [/360fly/camera/formats/metadata/{name}]
+## Camera Metadata Format [/360fly/camera/formats/sensordata/{name}]
 
-Format of metadata. Effectively a configuration for underlying sensors, events, etc.
+Format of sensordata. Effectively a configuration for underlying sensors, events, etc.
 
 + Attributes (object)
- + accel_mode: 2 (number)
- + accel_rate: 30 (number)
- + gyro_mode: 1 (number)
- + gyro_rate: 30 (number)
- + magneto_mode: 1 (number)
- + magneto_rate: 30 (number)
- + gps_rate: 1 (number)
+ + accelMode: 2 (number, required) -  accelerometer operating mode in g's. In this case: 2g mode
+ + accelRate: 30 (number, required) - accelerometer sample rate, in samples per second
+ + gyroMode: 1 (number, required) - gyroscope operating mode
+ + gyroRate: 30 (number, required) - gyroscope sample rate, in samples per second
+ + magnetoMode: 1 (number, required) - magnetometer operating mode
+ + magnetoRate: 30 (number, required) - magnetometer sample rate, in samples per second
+ + gpsRate: 1 (number, required) - gps sample rate, in samples per second
  
 + Parameters
- + name (required, string, `mode30fps`)
+ + name (required, string, `mode30fps`) the relevant sensordata format
  
-### Retrieve metadata format details [GET]
+### Retrieve sensordata format details [GET]
 + Response 200 (application/json)
  + Attributes (Camera Metadata Format)
 
-### Modify metadata format [PUT]
+### Modify sensordata format [PUT]
 + Attributes (object)
- + accel_rate: 30 (number)
+ + accelRate: 30 (number)
 
 + Request (application/json)
 
 + Response 200 (application/json)
  + Attributes (Camera Metadata Format)
 
-### Remove metadata format [DELETE]
+### Remove sensordata format [DELETE]
 + Response 204
 
-## Camera Photo Formats [/360fly/camera/formats/photo]
+## Camera Photo Formats Collection [/360fly/camera/formats/photo]
 
 + Attributes (object)
- + normalMode (Camera Photo Format)
+ + normal (Camera Photo Format, required, default)
  + burstMode (object, required, sample)
         + resolution: 3456x3456 (string, required, default)
         + burst: true (boolean, required, default)
@@ -417,23 +416,21 @@ Format of metadata. Effectively a configuration for underlying sensors, events, 
  + duration (number, optional, default) - How long, in seconds, to take burst photos. Applies to burst mode only.
 
 + Parameters
- + name (required, string, `normalMode`) name of relevant camera photo format
+ + name (required, string, `normal`) the relevant photo format
 
 ## Liveview [/360fly/camera/liveview]
 
 Status and settings for the 360fly `rtsp` stream.
 
 + Attributes
- + url: rtsp://fly.local/live1.sdp (string, required, sample) - livestream url
- + projection (Projection, required, default)
+ + url: rtsp://fly.local/live1.sdp (string, required, sample) - liveview rtsp url
+ + projection (Projection, required, default) - the projection data of liveview video
 
 ### Retrieve liveview settings [GET]
 + Response 200 (application/json)
  + Attributes (Liveview)
 
 ## Photo [/360fly/camera/photo]
-
-Photo Capture interface. See /camera/preferences for photo format details.
 
 ### Take Photo [POST]
 
@@ -451,14 +448,14 @@ Returns empty response body with new photo's download link in `Location` header
 ## Tuning [/360fly/camera/tuning]
 
 + Attributes (object)
- + ae_lock: false (boolean, required) - auto exposure lock/unlock
- + saturation: 100 (number, required) - image saturation. Range 0~200
- + max_iso_sensitivity: 8000 (number, required) - image iso (which adjusts gain). Range: 1000~64000
- + awb_lock: false (boolean, required) - auto white balance lock/unlock
- + brightness: 100 (number, required) - image brightness. Range 0~200
- + ae_compensation: 100 (number, required) - compensation for auto exposure. Range: 50~200
- + contrast: 100 (number, required) - image contrast. Range 0~100
- + max_shutter: 30 (number, required) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds. Must be >= 15
+ + ae_lock: false (boolean, required, default) - auto exposure lock/unlock
+ + saturation: 100 (number, required, default) - image saturation. Range 0~200
+ + max_iso_sensitivity: 8000 (number, required, default) - image iso (which adjusts gain). Range: 1000~64000
+ + awb_lock: false (boolean, required, default) - auto white balance lock/unlock
+ + brightness: 100 (number, required, default) - image brightness. Range 0~200
+ + ae_compensation: 100 (number, required, default) - compensation for auto exposure. Range: 50~200
+ + contrast: 100 (number, required, default) - image contrast. Range 0~100
+ + max_shutter: 30 (number, required, default) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds. Must be >= 15
 
 ### Retrieve tuning settings [GET]
 + Response 200 (application/json)
@@ -467,20 +464,20 @@ Returns empty response body with new photo's download link in `Location` header
 ### Modify tuning settings [PUT]
 
 + Attributes (object)
-        + max_shutter: 15 (number) - Increase max shutter speed to 1/15 seconds i.e. low light mode
+ + ae_lock: true (boolean, optional) - Lock auto-exposure
 
 + Request (application/json)
 
 + Response 200 (application/json)
 + Attributes (object)
- + ae_lock: false (boolean, required)
+ + ae_lock: true (boolean, required)
  + saturation: 100 (number, required)
  + max_iso_sensitivity: 8000 (number, required)
  + awb_lock: false (boolean, required)
  + brightness: 100 (number, required)
  + ae_compensation: 100 (number, required)
  + contrast: 100 (number, required)
- + max_shutter: 15 (number, required)
+ + max_shutter: 30 (number, required)
  
 ## Projection [/360fly/camera/projection]
 
