@@ -443,16 +443,30 @@ Status and settings for the 360fly `rtsp` stream.
 
 ### Take Photo [POST]
 
-Returns empty response body with new photo's download link in `Location` header
+Returns a JSON array of urls for the newly captured photos
 
-+ Attributes (object)
- + burst: true (boolean, optional, sample) - Override current camera profile for this photo and take burst photo
- + duration: 3 (number, optional, sample) - Take 3 seconds worth of burst photos
++ Request (application/json)
+ + Attributes (object)
+        + burst: true (boolean, optional, sample) - Override current camera profile for this photo and take burst photo
+        + duration: 3 (number, optional, sample) - Take 3 seconds worth of burst photos
 
-+ Response 201
- + Header
- 
-            Location: /video/file/{photo.jpg}
++ Response 201 (application/json)
+ + Attributes (array[string])
+        + /360fly/video/file/{photo0.jpg}
+        + /360fly/video/file/{photo1.jpg}
+        + /360fly/video/file/{photo2.jpg}
+        + /360fly/video/file/{photo3.jpg}
+        + /360fly/video/file/{photo4.jpg}
+        + /360fly/video/file/{photo5.jpg}
+        + /360fly/video/file/{photo6.jpg}
+        + /360fly/video/file/{photo7.jpg}
+        + /360fly/video/file/{photo8.jpg}
+        + /360fly/video/file/{photo9.jpg}
+        + /360fly/video/file/{photo10.jpg}
+        + /360fly/video/file/{photo11.jpg}
+        + /360fly/video/file/{photo12.jpg}
+        + /360fly/video/file/{photo13.jpg}
+        + /360fly/video/file/{photo14.jpg}
 
 ## Tuning [/360fly/camera/tuning]
 
