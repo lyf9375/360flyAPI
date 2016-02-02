@@ -1,12 +1,21 @@
 MAT: 1A
 HOST: http://polls.apiblueprint.org/
 
-# 360fly ReST API for Thunderdome v0.1.0
+# 360fly ReST API for Thunderdome
 
 This API document outlines additions or modifications to the base 360fly REST specification that are required to
 achieve full functionality of version 1.5 (Thunderdome).
 
-#Group Camera
+# Global Response Headers
+
+These response headers are to be included with _every_ response
+
++ Headers
+
+                        X-360fly-API-Version: v0.1.0
+
+
+# Group Camera
 
 Configure and control 360fly media capture
 
@@ -121,7 +130,7 @@ Describes capture/encoding formats for recording, audio, sensordata, liveview, a
 
 The available media and sensordata formats. The various formats are used to compose a profile (see `/camera/profiles`). The formats are essentially configurations for underlying media/data encoder and capture applications.
 
-*Both recording and liveview use video formats 
+* Both recording and liveview use video formats 
 
 + Attributes (object)
  + video (Camera Video Formats Collection, required) - list of available video formats
@@ -146,10 +155,10 @@ The available media and sensordata formats. The various formats are used to comp
         + ratecontrol: CVBR (string, required)
         + bitrate: 48000000 (number, required)
         + quant: 18 (number, required)
-        + max_quant: 23 (number, required)
-        + min_quant: 0 (number, required)
-        + max_framerate: 30 (number, required)
-        + min_framerate: 30 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate: 30 (number, required)
+        + minframerate: 30 (number, required)
         + frontFacing: false (boolean, required)
  + 2816sq30 (object, required) - Slightly less than full-res video, but gives more encoding bandwidth to liveview than fullRes30
         + resolution: 2816x2816 (string, required)
@@ -160,10 +169,10 @@ The available media and sensordata formats. The various formats are used to comp
         + ratecontrol: CVBR (string, required)
         + bitrate: 60000000 (number, required)
         + quant: 18 (number, required)
-        + max_quant: 23 (number, required)
-        + min_quant: 0 (number, required)
-        + max_framerate: 30 (number, required)
-        + min_framerate: 30 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate: 30 (number, required)
+        + minframerate: 30 (number, required)
         + frontFacing: false (boolean, required)
  + 1424sq24 (object, required, optional) - A high-res liveview format. Pairs well with fullRes24 recording format.
         + resolution: 1424x1424 (string, required)
@@ -174,10 +183,10 @@ The available media and sensordata formats. The various formats are used to comp
         + ratecontrol: CVBR (string, required)
         + bitrate: 11500000 (number, required)
         + quant: 18 (number, required)
-        + max_quant: 23 (number, required)
-        + min_quant: 0 (number, required)
-        + max_framerate: 30 (number, required)
-        + min_framerate: 30 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate: 30 (number, required)
+        + minframerate: 30 (number, required)
         + frontFacing: false (boolean, required)
  + 752sq15 (object, required) - A low encoding bandwidth liveview format. Yields a large amount of encoding bandwidth to recording.
         + resolution: 752x752 (string, required)
@@ -188,10 +197,10 @@ The available media and sensordata formats. The various formats are used to comp
         + ratecontrol: CVBR (string, required)
         + bitrate: 2000000 (number, required)
         + quant: 18 (number, required)
-        + max_quant: 23 (number, required)
-        + min_quant: 0 (number, required)
-        + max_framerate: 30 (number, required)
-        + min_framerate: 30 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate: 30 (number, required)
+        + minframerate: 30 (number, required)
         + frontFacing: false (boolean, required)
  + 1584p30 (object, required) - The maximum resolution for a front-facing recording format at 30fps
         + resolution: 2816x1584 (string, required)
@@ -202,10 +211,10 @@ The available media and sensordata formats. The various formats are used to comp
         + ratecontrol: CVBR (string, required)
         + bitrate: 33000000 (number, required)
         + quant: 18 (number, required)
-        + max_quant: 23 (number, required)
-        + min_quant: 0 (number, required)
-        + max_framerate: 30 (number, required)
-        + min_framerate: 30 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate: 30 (number, required)
+        + minframerate: 30 (number, required)
         + frontFacing: true (boolean, required)
  + 1440p30 (object, required) - Alternative front-facing recording format
         + resolution: 2560x1440 (string, required)
@@ -216,10 +225,10 @@ The available media and sensordata formats. The various formats are used to comp
         + ratecontrol: CVBR (string, required)
         + bitrate: 27000000 (number, required)
         + quant: 18 (number, required)
-        + max_quant: 23 (number, required)
-        + min_quant: 0 (number, required)
-        + max_framerate: 30 (number, required)
-        + min_framerate: 30 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate: 30 (number, required)
+        + minframerate: 30 (number, required)
         + frontFacing: true (boolean, required)
  + 2032sq60 (object, required) - The max resolution recording format at 60fps
         + resolution: 2032x2032 (string, required)
@@ -230,10 +239,10 @@ The available media and sensordata formats. The various formats are used to comp
         + ratecontrol: CVBR (string, required)
         + bitrate: 60000000 (number, required)
         + quant: 18 (number, required)
-        + max_quant: 23 (number, required)
-        + min_quant: 0 (number, required)
-        + max_framerate: 30 (number, required)
-        + min_framerate: 30 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate: 30 (number, required)
+        + minframerate: 30 (number, required)
         + frontFacing: false (boolean, required)
  + 720p15 (object, required) - a front-facing liveview format   
         + resolution: 1280x720
@@ -244,10 +253,10 @@ The available media and sensordata formats. The various formats are used to comp
         + ratecontrol: CVBR (string, required)
         + bitrate: 250000 (number, required)
         + quant: 18 (number, required)
-        + max_quant: 23 (number, required)
-        + min_quant: 0 (number, required)
-        + max_framerate: 30 (number, required)
-        + min_framerate: 30 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate: 30 (number, required)
+        + minframerate: 30 (number, required)
         + frontFacing: true (boolean, required)
  + 1504sq60 (object, required) - a lower resolution 60 fps recording format
         + resolution: 1504x1504 (string, required)
@@ -258,10 +267,10 @@ The available media and sensordata formats. The various formats are used to comp
         + ratecontrol: CVBR (string, required)
         + bitrate: 33000000 (number, required)
         + quant: 18 (number, required)
-        + max_quant: 23 (number, required)
-        + min_quant: 0 (number, required)
-        + max_framerate: 30 (number, required)
-        + min_framerate: 30 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate: 30 (number, required)
+        + minframerate: 30 (number, required)
         + frontFacing: false (boolean, required)
         
 ### List all video formats [GET]
@@ -281,10 +290,10 @@ Format of encoded video for recording and liveview
  + ratecontrol: CVBR (string, required) - bit rate control method. options: NONE, VQCB, CQCB, CVBR, ADPT
  + bitrate: 60000000 (number, required) - maximum or target bitrate (depending on ratecontrol)
  + quant: 18 (number, required) - target quantization. Ranges 0~51. Higher yields more compression.
- + max_quant: 23 (number, required) - max quantization
- + min_quant: 0 (number, required) - min quantization
- + max_framerate: 30 (number, required) - max framerate of encoded video (FPS). min 15 FPS
- + min_framerate: 30 (number, required) - min framerate of encoded video (FPS). min 15 FPS
+ + maxquant: 23 (number, required) - max quantization
+ + minquant: 0 (number, required) - min quantization
+ + maxframerate: 30 (number, required) - max framerate of encoded video (FPS). min 15 FPS
+ + minframerate: 30 (number, required) - min framerate of encoded video (FPS). min 15 FPS
  + frontFacing: false (boolean, required, default) - Front facing mode flag. False implies default projection. True implies planar projection.
 
 + Parameters
@@ -406,7 +415,7 @@ Format of sensordata. Effectively a configuration for underlying sensors, events
 
 ### Retrieve Camera Photo Formats [GET]
 + Response 200 (application/json)
- + Attributes (Camera Photo Formats)
+ + Attributes (Camera Photo Formats Collection)
 
 ## Camera Photo Format [/360fly/camera/formats/photo/{name}]
 
@@ -434,28 +443,42 @@ Status and settings for the 360fly `rtsp` stream.
 
 ### Take Photo [POST]
 
-Returns empty response body with new photo's download link in `Location` header
+Returns a JSON array of urls for the newly captured photos
 
-+ Attributes (object)
- + burst: true (boolean, optional, sample) - Override current camera profile for this photo and take burst photo
- + duration: 3 (number, optional, sample) - Take 3 seconds worth of burst photos
++ Request (application/json)
+ + Attributes (object)
+        + burst: true (boolean, optional, sample) - Override current camera profile for this photo and take burst photo
+        + duration: 3 (number, optional, sample) - Take 3 seconds worth of burst photos
 
-+ Response 201
- + Header
- 
-            Location: /video/file/{photo.jpg}
++ Response 201 (application/json)
+ + Attributes (array[string])
+        + /360fly/video/file/{photo0.jpg}
+        + /360fly/video/file/{photo1.jpg}
+        + /360fly/video/file/{photo2.jpg}
+        + /360fly/video/file/{photo3.jpg}
+        + /360fly/video/file/{photo4.jpg}
+        + /360fly/video/file/{photo5.jpg}
+        + /360fly/video/file/{photo6.jpg}
+        + /360fly/video/file/{photo7.jpg}
+        + /360fly/video/file/{photo8.jpg}
+        + /360fly/video/file/{photo9.jpg}
+        + /360fly/video/file/{photo10.jpg}
+        + /360fly/video/file/{photo11.jpg}
+        + /360fly/video/file/{photo12.jpg}
+        + /360fly/video/file/{photo13.jpg}
+        + /360fly/video/file/{photo14.jpg}
 
 ## Tuning [/360fly/camera/tuning]
 
 + Attributes (object)
- + ae_lock: false (boolean, required, default) - auto exposure lock/unlock
+ + aeLock: false (boolean, required, default) - auto exposure lock/unlock
  + saturation: 100 (number, required, default) - image saturation. Range 0~200
- + max_iso_sensitivity: 8000 (number, required, default) - image iso (which adjusts gain). Range: 1000~64000
- + awb_lock: false (boolean, required, default) - auto white balance lock/unlock
+ + maxIsoSensitivity: 8000 (number, required, default) - image iso (which adjusts gain). Range: 1000~64000
+ + awbLock: false (boolean, required, default) - auto white balance lock/unlock
  + brightness: 100 (number, required, default) - image brightness. Range 0~200
- + ae_compensation: 100 (number, required, default) - compensation for auto exposure. Range: 50~200
+ + aeCompensation: 100 (number, required, default) - compensation for auto exposure. Range: 50~200
  + contrast: 100 (number, required, default) - image contrast. Range 0~100
- + max_shutter: 30 (number, required, default) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds. Must be >= 15
+ + maxShutter: 30 (number, required, default) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds. Must be >= 15
 
 ### Retrieve tuning settings [GET]
 + Response 200 (application/json)
@@ -464,20 +487,20 @@ Returns empty response body with new photo's download link in `Location` header
 ### Modify tuning settings [PUT]
 
 + Attributes (object)
- + ae_lock: true (boolean, optional) - Lock auto-exposure
+ + aeLock: true (boolean, optional) - Lock auto-exposure
 
 + Request (application/json)
 
 + Response 200 (application/json)
-+ Attributes (object)
- + ae_lock: true (boolean, required)
- + saturation: 100 (number, required)
- + max_iso_sensitivity: 8000 (number, required)
- + awb_lock: false (boolean, required)
- + brightness: 100 (number, required)
- + ae_compensation: 100 (number, required)
- + contrast: 100 (number, required)
- + max_shutter: 30 (number, required)
+ + Attributes (object)
+        + aeLock: true (boolean, required)
+        + saturation: 100 (number, required)
+        + maxIsoSensitivity: 8000 (number, required)
+        + awbLock: false (boolean, required)
+        + brightness: 100 (number, required)
+        + aeCompensation: 100 (number, required)
+        + contrast: 100 (number, required)
+        + maxShutter: 30 (number, required)
  
 ## Projection [/360fly/camera/projection]
 
