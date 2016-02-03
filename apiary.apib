@@ -427,6 +427,65 @@ Format of sensordata. Effectively a configuration for underlying sensors, events
 + Parameters
  + name (required, string, `normal`) the relevant photo format
 
+## Camera Recording [/360fly/camera/recording]
+
+Start/stop recording and get current recording settings. You can specify settings for a new recording, or if left unspecified, your recording will use settings given by `/360fly/camera/preferences`. A `GET` on an inactive recording gives `204`. A successful `POST` returns a `Location` header for the new recording download url (or the url to first chapter, in the case of chaptered recording)
+
++ Attributes (object)
+ + profile: proMode (string, optional, default) - The profile for the active recording
+ + maxChapterDuration (number, optional, default) - The chapter duration for active recording
+ + maxChapterFileSize (number, optional, default) - The chapter file size for active recording
+ + frameRateMultiplier (number, optional, default) - The ratio of recorded frame rate to encoded frame rate for active recording
+ + hours: 0 (number, required, sample) - duration in hours of active recording
+ + minutes: 4 (number, required, sample) - duration in minutes (modulo hours) of active recording
+ + seconds: 30 (number, required, sample) - duration in seconds (modulo hours and minutes) of active recording
+
+### Retrieve active recording settings [GET]
+
++ Response 200 (application/json)
+ + Attributes (Camera Recording)
+
++ Response 204
+
+### Start Recording [POST]
+
++ Request
+ + Header
+
+                        Content-length: 0
+
++ Response 201 (application/json)
+ + Attributes (object)
+        + Include Camera Preferences
+        + hours: 0 (number, required, default)
+        + minutes: 0 (number, required, default)
+        + seconds: 0 (number, required, default)
+ + Header
+
+                        Location: /360fly/video/file/100_3FLY/FLY00101.mp4
+
++ Request (application/json)
+ + Attributes (object)
+        + profile: slowMotion (string, optional, sample) - use slowMotion profile for this recording, which has a 60 fps encoded frame rate
+        + maxChapterDuration: 180 (number, optional, sample) - this recording will chapter on 180 second intervals
+        + frameRateMultiplier: .5 (number, optional, sample) - recorded frame rate is half the encoded frame rate, giving the slow motion effect
+
++ Response 201 (application/json)
+ + Attributes (object)
+        + profile: slowMotion (string, required, sample) - use slowMotion profile for this recording, which has a 60 fps encoded frame rate
+        + maxChapterDuration: 180 (number, required, sample) - this recording will chapter on 180 second intervals
+        + frameRateMultiplier: .5 (number, required, sample) - recorded frame rate is half the encoded frame rate, giving the slow motion effect
+        + hours: 0 (number, required, default)
+        + minutes: 0 (number, required, default)
+        + seconds: 0 (number, required, default)
+ + Header
+
+                        Location: /360fly/video/file/100_3FLY/FLY00201.mp4
+
+### Stop Recording [DELETE]
++ Response 202
++ Response 204
+
 ## Liveview [/360fly/camera/liveview]
 
 Status and settings for the 360fly `rtsp` stream.
