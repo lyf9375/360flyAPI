@@ -17,27 +17,24 @@ These response headers are to be included with _every_ response
 
 # Group Camera
 
-Configure and control 360fly media capture
+Configure  360fly media capture
 
-## Camera Preferences [/360fly/camera/preferences]
+## Camera Config [/360fly/camera/config]
 
-Default high-level attributes for media capture
+Default high-level configuration for media capture
 
-* slow-motion: set `frameRateMultiplier` < 1
-* time-lapse: set `frameRateMultiplier` > 1
-* normal playback: set `frameRateMultiplier` = 1
 
 + Attributes (object)
  + profile: proMode (string, required, default) - Current camera profile. Determines default media formats for recorded and liveview video and audio, sensordata, and photos. 
  + maxChapterDuration (number, required, sample) - Max duration, in seconds, for a chapter in a recording. 
  + maxChapterFileSize  (number, required, sample) - Max file size, in bytes, for a chapter in a recording
- + frameRateMultiplier: 1 (number, required, default) - The ratio of frame presentation duration written in video file to the encoded frame rate
+ + frameRateMultiplier: 1 (number, required, default) - The ratio of frame presentation duration written in video file to the encoded frame rate. slow-motion: set frameRateMultiplier < 1, time-lapse: set frameRateMultiplier > 1, normal playback: set frameRateMultiplier = 1
 
-### Retrieve camera preferences [GET]
+### Retrieve camera config [GET]
 + Response 200 (application/json)
- + Attributes (Camera Preferences)
+ + Attributes (Camera Config)
 
-### Modify camera preferences [PUT]
+### Modify camera config [PUT]
 + Attributes (object)
  + maxChapterDuration: 180 (number, optional, sample) - set chapter duration to 180 seconds
  + frameRateMultiplier: .5 (number, optional, sample) - set playback frame rate to half the encoded frame rate. This is essential for slow-motion playback.
@@ -427,9 +424,11 @@ Format of sensordata. Effectively a configuration for underlying sensors, events
 + Parameters
  + name (required, string, `normal`) the relevant photo format
 
-## Camera Recording [/360fly/camera/recording]
+## Recording [/360fly/camera/recording]
 
-Start/stop recording and get current recording settings. You can specify settings for a new recording, or if left unspecified, your recording will use settings given by `/360fly/camera/preferences`. A `GET` on an inactive recording gives `204`. A successful `POST` returns a `Location` header for the new recording download url (or the url to first chapter, in the case of chaptered recording)
+* _Extends functionality of 1.0 recording endpoint_
+
+Start/stop recording and get current recording status. You can specify a config for a new recording, or if left unspecified, your recording will use config given by `/360fly/camera/config`. A `GET` on an inactive recording gives `204`. A successful `POST` returns a `Location` header for the new recording download url (or the url to first chapter, in the case of chaptered recording)
 
 + Attributes (object)
  + profile: proMode (string, optional, default) - The profile for the active recording
@@ -440,10 +439,10 @@ Start/stop recording and get current recording settings. You can specify setting
  + minutes: 4 (number, required, sample) - duration in minutes (modulo hours) of active recording
  + seconds: 30 (number, required, sample) - duration in seconds (modulo hours and minutes) of active recording
 
-### Retrieve active recording settings [GET]
+### Retrieve active recording status [GET]
 
 + Response 200 (application/json)
- + Attributes (Camera Recording)
+ + Attributes (Recording)
 
 + Response 204
 
@@ -456,7 +455,7 @@ Start/stop recording and get current recording settings. You can specify setting
 
 + Response 201 (application/json)
  + Attributes (object)
-        + Include Camera Preferences
+        + Include Camera Config
         + hours: 0 (number, required, default)
         + minutes: 0 (number, required, default)
         + seconds: 0 (number, required, default)
@@ -488,7 +487,7 @@ Start/stop recording and get current recording settings. You can specify setting
 
 ## Liveview [/360fly/camera/liveview]
 
-Status and settings for the 360fly `rtsp` stream.
+Settings for the 360fly `rtsp` stream.
 
 + Attributes
  + url: rtsp://fly.local/live1.sdp (string, required, sample) - liveview rtsp url
