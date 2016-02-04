@@ -29,6 +29,7 @@ Default high-level configuration for media capture
  + maxChapterDuration (number, required, sample) - Max duration, in seconds, for a chapter in a recording. 
  + maxChapterFileSize  (number, required, sample) - Max file size, in bytes, for a chapter in a recording
  + frameRateMultiplier: 1 (number, required, default) - The ratio of frame presentation duration written in video file to the encoded frame rate. slow-motion: set frameRateMultiplier < 1, time-lapse: set frameRateMultiplier > 1, normal playback: set frameRateMultiplier = 1
+ + scene (string, required, default) - the current default scene (see /360fly/camera/scenes). A null value implies a custom tuning (see /360fly/camera/tuning). Changing the scene will change current tuning to match the new scene; likewise, changing the current tuning will set this field to null. 
 
 ### Retrieve camera config [GET]
 + Response 200 (application/json)
@@ -48,6 +49,7 @@ Default high-level configuration for media capture
         + maxChapterDuration: 180 (number, required, sample)
         + maxChapterFileSize (number, required, sample)
         + frameRateMultiplier: .5 (number, required, sample)
+        + scene (string, required, default)
 
 ## Camera Media Profile Collection [/360fly/camera/profiles]
 
@@ -580,6 +582,62 @@ Returns a JSON array of urls for the newly captured photos
         + aeCompensation: 100 (number, required)
         + contrast: 100 (number, required)
         + maxShutter: 30 (number, required)
+
+### Reset to default [DELETE]
++ Response 200 (application/json)
+ + Attributes (Tuning)
+
+## Scenes Collection [/360fly/camera/scenes]
++ Attributes (object)
+ + normal (Tuning, required, default)
+ + lowLight (Scene, required)
+
+### Retrieve scenes [GET]
++ Response 200 (application/json)
+ + Attributes (Scenes Collection)
+
+## Scene [/360fly/camera/scenes/{name}]
+
+A camera tuning configuration. Scenes are useful for applying and saving combinations of tuning settings. When a scene is applied, the tuning is modified accordingly (see `/360fly/camera/tuning`). A scene is applied via `/360fly/camera/preferences`
+
++ Attributes (object)
+ + aeLock: false (boolean, required)
+ + saturation: 100 (number, required)
+ + maxIsoSensitivity: 8000 (number, required)
+ + contrast: 100 (number, required)
+ + awbLock: false (boolean, required)
+ + brightness: 100 (number, required)
+ + aeCompensation: 100 (number, required)
+ + maxShutter: 15 (number, required)
+
++ Parameters
+ + name (required, string, `lowLight`) the relevant scene
+
+### Retrieve scene [GET]
+
++ Response 200 (application/json)
+ + Attributes (Scene)
+
+### Create or modify scene [PUT]
+
++ Request (application/json)
+ + Attributes (object)
+        + aeLock: true (boolean, optional)
+        + awbLock: true (boolean, optional)
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + aeLock: true (boolean, required)
+        + saturation: 100 (number, required)
+        + maxIsoSensitivity: 8000 (number, required)
+        + contrast: 100 (number, required)
+        + awbLock: true (boolean, required)
+        + brightness: 100 (number, required)
+        + aeCompensation: 100 (number, required)
+        + maxShutter: 15 (number, required)
+
+### Delete scene [DELETE]
++ Response 204
  
 ## Projection [/360fly/camera/projection]
 
@@ -600,6 +658,4 @@ For setting projection at manufacturing. Can only be done once.
 
 + Response 200 (application/json)
  + Attributes (Projection)
-
-
 
