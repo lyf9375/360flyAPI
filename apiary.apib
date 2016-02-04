@@ -52,35 +52,41 @@ Default high-level configuration for media capture
 ## Camera Media Profile Collection [/360fly/camera/profiles]
 
 + Attributes (object)
- + proMode (Camera Media Profile, required, default)
- + fullRes24 (object, required)
+ + proMode (Camera Media Profile, required, default) - Uses recording format for full resolution recording at 30fps
+ + fullRes24 (object, required) - Uses recording format for full resolution at 24 fps. Allows bandwidth for liveview
         + recordingFormat: fullRes24 (string, required)
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 1424sq24 (string, required)
         + photoFormat: normal (string, required, default)
- + almostFullRes (object, required)
+ + almostFullRes (object, required) - Almost full resolution at 30 fps. Allow some bandwidth for liveview
         + recordingFormat: 2816sq30 (string,required)
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
         + photoFormat: normal (string, required, default)
- + frontFacing1584p (object, required)
+ + frontFacing1584p (object, required) - 1584p at 30 fps in front facing mode
         + recordingFormat: 1584p30
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 720p15 (string, required)
         + photoFormat: normal (string, required, default)
- + frontFacing1440p (object, required)
+ + frontFacing1440p (object, required) - 1440p at 30 fps in front facing mode
         + recordingFormat: 1440p30 (string, required)
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 720p15 (string, required)
         + photoFormat: normal (string, required, default)
- + slowMotion (object, required)
+ + slowMotion (object, required) - 2032x2032 resolution at 60 fps. Recommended profile for slow motion recording
         + recordingFormat: 2032sq60 (string, required)
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode60fps (string, required)
+        + liveviewFormat: 752sq15 (string, required)
+        + photoFormat: normal (string, required)
+ + timeLapse (object, required) - Uses recording format for full resolution at 1 fps. Suitable for time lapse recording
+        + recordingFormat: 2880sq1 (string, required)
+        + audioFormat: 48KAAC4 (string, required)
+        + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
         + photoFormat: normal (string, required)
 
@@ -148,14 +154,14 @@ The available media and sensordata formats. The various formats are used to comp
         + resize: scale (string, required)
         + codec: h264 (string, required)
         + framerate: 24 (number, required)
-        + keyinterval: 30 (number, required)
+        + keyinterval: 24 (number, required)
         + ratecontrol: CVBR (string, required)
         + bitrate: 48000000 (number, required)
         + quant: 18 (number, required)
         + maxquant: 23 (number, required)
         + minquant: 0 (number, required)
-        + maxframerate: 30 (number, required)
-        + minframerate: 30 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
         + frontFacing: false (boolean, required)
  + 2816sq30 (object, required) - Slightly less than full-res video, but gives more encoding bandwidth to liveview than fullRes30
         + resolution: 2816x2816 (string, required)
@@ -168,36 +174,36 @@ The available media and sensordata formats. The various formats are used to comp
         + quant: 18 (number, required)
         + maxquant: 23 (number, required)
         + minquant: 0 (number, required)
-        + maxframerate: 30 (number, required)
-        + minframerate: 30 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
         + frontFacing: false (boolean, required)
  + 1424sq24 (object, required, optional) - A high-res liveview format. Pairs well with fullRes24 recording format.
         + resolution: 1424x1424 (string, required)
         + resize: scale (string, required)
         + codec: h264 (string, required)
         + framerate: 24 (number, required)
-        + keyinterval: 30 (number, required)
+        + keyinterval: 24 (number, required)
         + ratecontrol: CVBR (string, required)
         + bitrate: 11500000 (number, required)
         + quant: 18 (number, required)
         + maxquant: 23 (number, required)
         + minquant: 0 (number, required)
-        + maxframerate: 30 (number, required)
-        + minframerate: 30 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
         + frontFacing: false (boolean, required)
  + 752sq15 (object, required) - A low encoding bandwidth liveview format. Yields a large amount of encoding bandwidth to recording.
         + resolution: 752x752 (string, required)
         + resize: scale (string, required)
         + codec: h264 (string, required)
         + framerate: 15 (number, required)
-        + keyinterval: 30 (number, required)
+        + keyinterval: 15 (number, required)
         + ratecontrol: CVBR (string, required)
         + bitrate: 2000000 (number, required)
         + quant: 18 (number, required)
         + maxquant: 23 (number, required)
         + minquant: 0 (number, required)
-        + maxframerate: 30 (number, required)
-        + minframerate: 30 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
         + frontFacing: false (boolean, required)
  + 1584p30 (object, required) - The maximum resolution for a front-facing recording format at 30fps
         + resolution: 2816x1584 (string, required)
@@ -210,8 +216,8 @@ The available media and sensordata formats. The various formats are used to comp
         + quant: 18 (number, required)
         + maxquant: 23 (number, required)
         + minquant: 0 (number, required)
-        + maxframerate: 30 (number, required)
-        + minframerate: 30 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
         + frontFacing: true (boolean, required)
  + 1440p30 (object, required) - Alternative front-facing recording format
         + resolution: 2560x1440 (string, required)
@@ -224,8 +230,8 @@ The available media and sensordata formats. The various formats are used to comp
         + quant: 18 (number, required)
         + maxquant: 23 (number, required)
         + minquant: 0 (number, required)
-        + maxframerate: 30 (number, required)
-        + minframerate: 30 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
         + frontFacing: true (boolean, required)
  + 2032sq60 (object, required) - The max resolution recording format at 60fps
         + resolution: 2032x2032 (string, required)
@@ -238,8 +244,8 @@ The available media and sensordata formats. The various formats are used to comp
         + quant: 18 (number, required)
         + maxquant: 23 (number, required)
         + minquant: 0 (number, required)
-        + maxframerate: 30 (number, required)
-        + minframerate: 30 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
         + frontFacing: false (boolean, required)
  + 720p15 (object, required) - a front-facing liveview format   
         + resolution: 1280x720
@@ -252,8 +258,8 @@ The available media and sensordata formats. The various formats are used to comp
         + quant: 18 (number, required)
         + maxquant: 23 (number, required)
         + minquant: 0 (number, required)
-        + maxframerate: 30 (number, required)
-        + minframerate: 30 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
         + frontFacing: true (boolean, required)
  + 1504sq60 (object, required) - a lower resolution 60 fps recording format
         + resolution: 1504x1504 (string, required)
@@ -266,9 +272,24 @@ The available media and sensordata formats. The various formats are used to comp
         + quant: 18 (number, required)
         + maxquant: 23 (number, required)
         + minquant: 0 (number, required)
-        + maxframerate: 30 (number, required)
-        + minframerate: 30 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
         + frontFacing: false (boolean, required)
+ + 2880sq1 (object, required) - full resolution at one frame per second
+        + resolution: 2880x2880 (string, required)
+        + resize: scale (string, required)
+        + codec: h264 (string, required)
+        + framerate: 1 (number, required)
+        + keyinterval: 1 (number, required)
+        + ratecontrol: CVBR (string, required)
+        + bitrate: 2000000 (number, required)
+        + quant: 18 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
+        + frontFacing: false (boolean, required)
+        
         
 ### List all video formats [GET]
 + Response 200 (application/json)
@@ -289,8 +310,8 @@ Format of encoded video for recording and liveview
  + quant: 18 (number, required) - target quantization. Ranges 0~51. Higher yields more compression.
  + maxquant: 23 (number, required) - max quantization
  + minquant: 0 (number, required) - min quantization
- + maxframerate: 30 (number, required) - max framerate of encoded video (FPS). min 15 FPS
- + minframerate: 30 (number, required) - min framerate of encoded video (FPS). min 15 FPS
+ + maxframerate (number, required) - max framerate of encoded video (FPS). min 15 FPS. Only appliapple for relevant rate controls
+ + minframerate (number, required) - min framerate of encoded video (FPS). min 15 FPS. Only appliapple for relevant rate controls
  + frontFacing: false (boolean, required, default) - Front facing mode flag. False implies default projection. True implies planar projection.
 
 + Parameters
