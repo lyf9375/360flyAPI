@@ -548,12 +548,12 @@ Returns a JSON array of urls for the newly captured photos
 ## Tuning [/360fly/camera/tuning]
 
 + Attributes (object)
- + aeLock: false (boolean, required, default) - auto exposure lock/unlock
+ + ae_lock: false (boolean, required, default) - auto exposure lock/unlock
  + saturation: 100 (number, required, default) - image saturation. Range 0~200
- + maxIsoSensitivity: 8000 (number, required, default) - image iso (which adjusts gain). Range: 1000~64000
- + awbLock: false (boolean, required, default) - auto white balance lock/unlock
+ + max_iso_sensitivity: 8000 (number, required, default) - image iso (which adjusts gain). Range: 1000~64000
+ + awb_lock: false (boolean, required, default) - auto white balance lock/unlock
  + brightness: 100 (number, required, default) - image brightness. Range 0~200
- + aeCompensation: 100 (number, required, default) - compensation for auto exposure. Range: 50~200
+ + ae_compensation: 100 (number, required, default) - compensation for auto exposure. Range: 50~200
  + contrast: 100 (number, required, default) - image contrast. Range 0~100
  + maxShutter: 30 (number, required, default) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds.
 
@@ -562,16 +562,13 @@ Returns a JSON array of urls for the newly captured photos
  + Attributes (Tuning)
 
 ### Modify tuning settings [PUT]
-
-+ Attributes (Scene)
-
 + Request (application/json)
+ + Attributes (Scene)
 
 + Response 200 (application/json)
  + Attributes (Scene)
 
 ### Reset to default tuning [DELETE]
-
 + Response 200 (application/json)
  + Attributes (Tuning)
 
@@ -589,14 +586,14 @@ Returns a JSON array of urls for the newly captured photos
 A camera tuning configuration. 
 
 + Attributes (object)
- + aeLock: false (boolean, required)  - auto exposure lock/unlock  
- + saturation: 100 (number, required) - image saturation. Range 0~200
- + maxIsoSensitivity: 6400 (number, required) - image iso (which adjusts gain). Range: 1000~64000
- + awbLock: false (boolean, required) - auto white balance lock/unlock
- + brightness: 100 (number, required) - image brightness. Range 0~200
- + aeCompensation: 100 (number, required) - compensation for auto exposure. Range: 50~200
- + contrast: 100 (number, required) - image contrast. Range 0~100
- + maxShutter: 15 (number, required) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds.
+ + ae_lock: false (boolean, required)
+ + saturation: 100 (number, required)
+ + max_iso_sensitivity: 6400 (number, required)
+ + contrast: 100 (number, required)
+ + awb_lock: false (boolean, required)
+ + brightness: 100 (number, required)
+ + ae_compensation: 100 (number, required)
+ + max_shutter: 15 (number, required)
 
 + Parameters
  + name (required, string, `lowLight`) the relevant scene
@@ -610,23 +607,23 @@ A camera tuning configuration.
 
 + Request (application/json)
  + Attributes (object)
-        + aeLock: true (boolean, optional)
-        + awbLock: true (boolean, optional)
+        + ae_lock: true (boolean, optional)
+        + awb_lock: true (boolean, optional)
 
 + Response 200 (application/json)
  + Attributes (object)
-        + aeLock: true (boolean, required)
+        + ae_lock: true (boolean, required)
         + saturation: 100 (number, required)
-        + maxIsoSensitivity: 6400 (number, required)
+        + max_iso_sensitivity: 8000 (number, required)
         + contrast: 100 (number, required)
-        + awbLock: true (boolean, required)
+        + awb_lock: true (boolean, required)
         + brightness: 100 (number, required)
-        + aeCompensation: 100 (number, required)
-        + maxShutter: 15 (number, required)
+        + ae_compensation: 100 (number, required)
+        + max_shutter: 15 (number, required)
 
 ### Delete scene [DELETE]
 + Response 204
- 
+
 ## Projection [/360fly/camera/projection]
 
 Camera's default projection
@@ -646,4 +643,44 @@ For setting projection at manufacturing. Can only be done once.
 
 + Response 200 (application/json)
  + Attributes (Projection)
+
+
+
+# Group USB
+
+## USB Configuration [/360fly/usb]
+
++ Attributes (object)
+ + mode: 1 (number, required, default) - USB mode: 0 - disabled; 1 - mass storage mode; 2 - USB video streaming
+ + persistentMode: 1 (number, required) - default USB mode after reboot
+
+### Retrieve USB Configuration [GET]
+
++ Response 200 (application/json)
+ + Attributes (USB Configuration)
+
+### Modify USB Configuration [PUT]
+
++ Request (application/json)
+ + Attributes (object)
+        + mode: 2 (number, required) - Enabling USB video streaming
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + mode: 2 (number, required)
+        + persistentMode: 1 (number, required)
+
++ Request (application/json)
+ + Attributes (object)
+        + persistentMode: 2 (number, required) - USB video streaming mode will persist after reboot
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + persistentMode: 2 (number, required)
+
+### Reset USB Configuration to default [DELETE]
++ Response 204
+ + Attributes (USB Configuration)
+
+
 
