@@ -658,3 +658,34 @@ For setting projection at manufacturing. Can only be done once.
 + Response 200 (application/json)
  + Attributes (Projection)
 
+
+
+# Group USB
+
+## USB Configuration [/360fly/usb]
+
++ Attributes (object)
+ + mode: 1 (number, required, default) - USB mode: 0 - disabled; 1 - mass storage mode; 2 - USB video streaming
+ + persistentMode: 1 (number, required) - default USB mode after reboot
+
+### Retrieve USB Configuration [GET]
+
++ Response 200 (application/json)
+ + Attributes (USB Configuration)
+
+### Modify USB Configuration [PUT]
+
++ Request (application/json)
+ + Attributes (object)
+    + mode: 2 (number, required)
+    + persistent: false (boolean, optional)
+
++ Response 200 (application/json)
+ + Attributes (USB Configuration)
+
+### Delete USB Configuration [DELETE]
++ Response 204
+ + Attributes (USB Configuration)
+
+
+
