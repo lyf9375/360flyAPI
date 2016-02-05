@@ -47,15 +47,13 @@ Configure  360fly media capture
 
 ## Camera Config [/360fly/camera/config]
 
-Default high-level configuration for media capture
-
+Default high-level configuration for media capture. These settings persist across boots.
 
 + Attributes (object)
- + profile: proMode (string, required, default) - Current camera profile. Determines default media formats for recorded and liveview video and audio, sensordata, and photos. 
+ + profile: proMode (string, required, default) - Default camera profile. Determines media formats for recorded and liveview video and audio, sensordata, and photos. 
  + maxChapterDuration (number, required, sample) - Max duration, in seconds, for a chapter in a recording. 
  + maxChapterFileSize  (number, required, sample) - Max file size, in bytes, for a chapter in a recording
  + frameRateMultiplier: 1 (number, required, default) - The ratio of frame presentation duration written in video file to the encoded frame rate. slow-motion: set frameRateMultiplier < 1, time-lapse: set frameRateMultiplier > 1, normal playback: set frameRateMultiplier = 1
- + scene (string, required, default) - the current default scene (see /360fly/camera/scenes). A null value implies a custom tuning (see /360fly/camera/tuning). Changing the scene will change current tuning to match the new scene; likewise, changing the current tuning will set this field to null. 
 
 ### Retrieve camera config [GET]
 + Response 200 (application/json)
@@ -75,7 +73,6 @@ Default high-level configuration for media capture
         + maxChapterDuration: 180 (number, required, sample)
         + maxChapterFileSize (number, required, sample)
         + frameRateMultiplier: .5 (number, required, sample)
-        + scene (string, required, default)
 
 ## Camera Media Profile Collection [/360fly/camera/profiles]
 
@@ -585,31 +582,20 @@ Returns a JSON array of urls for the newly captured photos
  + brightness: 100 (number, required, default) - image brightness. Range 0~200
  + ae_compensation: 100 (number, required, default) - compensation for auto exposure. Range: 50~200
  + contrast: 100 (number, required, default) - image contrast. Range 0~100
- + max_shutter: 30 (number, required, default) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds. Must be >= 15
+ + maxShutter: 30 (number, required, default) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds.
 
 ### Retrieve tuning settings [GET]
 + Response 200 (application/json)
  + Attributes (Tuning)
 
 ### Modify tuning settings [PUT]
-
-+ Attributes (object)
- + ae_lock: true (boolean, optional) - Lock auto-exposure
-
 + Request (application/json)
+ + Attributes (Scene)
 
 + Response 200 (application/json)
- + Attributes (object)
-        + ae_lock: true (boolean, required)
-        + saturation: 100 (number, required)
-        + max_iso_sensitivity: 8000 (number, required)
-        + awb_lock: false (boolean, required)
-        + brightness: 100 (number, required)
-        + ae_compensation: 100 (number, required)
-        + contrast: 100 (number, required)
-        + max_shutter: 30 (number, required)
+ + Attributes (Scene)
 
-### Reset to default [DELETE]
+### Reset to default tuning [DELETE]
 + Response 200 (application/json)
  + Attributes (Tuning)
 
@@ -624,12 +610,12 @@ Returns a JSON array of urls for the newly captured photos
 
 ## Scene [/360fly/camera/scenes/{name}]
 
-A camera tuning configuration. Scenes are useful for applying and saving combinations of tuning settings. When a scene is applied, the tuning is modified accordingly (see `/360fly/camera/tuning`). A scene is applied via `/360fly/camera/preferences`
+A camera tuning configuration. 
 
 + Attributes (object)
  + ae_lock: false (boolean, required)
  + saturation: 100 (number, required)
- + max_iso_sensitivity: 8000 (number, required)
+ + max_iso_sensitivity: 6400 (number, required)
  + contrast: 100 (number, required)
  + awb_lock: false (boolean, required)
  + brightness: 100 (number, required)
@@ -664,7 +650,7 @@ A camera tuning configuration. Scenes are useful for applying and saving combina
 
 ### Delete scene [DELETE]
 + Response 204
- 
+
 ## Projection [/360fly/camera/projection]
 
 Camera's default projection
