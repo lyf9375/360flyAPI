@@ -677,13 +677,22 @@ For setting projection at manufacturing. Can only be done once.
 
 + Request (application/json)
  + Attributes (object)
-    + mode: 2 (number, required)
-    + persistent: false (boolean, optional)
+        + mode: 2 (number, required) - Enabling USB video streaming
 
 + Response 200 (application/json)
- + Attributes (USB Configuration)
+ + Attributes (object)
+        + mode: 2 (number, required)
+        + persistentMode: 1 (number, required)
 
-### Delete USB Configuration [DELETE]
++ Request (application/json)
+ + Attributes (object)
+        + persistentMode: 2 (number, required) - USB video streaming mode will persist after reboot
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + persistentMode: 2 (number, required)
+
+### Reset USB Configuration to default [DELETE]
 + Response 204
  + Attributes (USB Configuration)
 
