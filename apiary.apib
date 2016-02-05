@@ -14,6 +14,33 @@ These response headers are to be included with _every_ response
                         X-360fly-API-Version: v0.1.0
 
 
+# Group Device Preferences
+ 
+(modified from fly1.0 Device Preferences)
+Remove 'UMS' preferences since it is not in use and we introduced '/360fly/usb' interface
+
+## Device Preferences [/360fly/preferences]
+
++ Attributes (object)
+  + IsActivated: 0 (boolean, required, default)  - Is device activated
+  + Registration: 0 (boolean, required, default) - Is device registered in 360fly
+
+
+### Retrieve device preferences [GET]
++ Response 200 (application/json)
+ + Attributes (Device Preferences)
+
+### Modify device preferences [PUT]
++ Attributes (object)
+ + IsActivated: 1 (number, required, sample) - activate device
+
++ Request (application/json)
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + IsActivated: 1 (number, required, sample)
+
+
 # Group Camera
 
 Configure  360fly media capture
