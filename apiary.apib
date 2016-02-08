@@ -556,14 +556,14 @@ Returns a JSON array of urls for the newly captured photos
 ## Tuning [/360fly/camera/tuning]
 
 + Attributes (object)
- + aeLock: false (boolean, required, default) - auto exposure lock/unlock
+ + ae_lock: false (boolean, required, default) - auto exposure lock/unlock
  + saturation: 100 (number, required, default) - image saturation. Range 0~200
- + maxIsoSensitivity: 8000 (number, required, default) - image iso (which adjusts gain). Range: 1000~64000
- + awbLock: false (boolean, required, default) - auto white balance lock/unlock
+ + max_iso_sensitivity: 8000 (number, required, default) - image iso (which adjusts gain). Range: 1000~64000
+ + awb_lock: false (boolean, required, default) - auto white balance lock/unlock
  + brightness: 100 (number, required, default) - image brightness. Range 0~200
- + aeCompensation: 100 (number, required, default) - compensation for auto exposure. Range: 50~200
+ + ae_compensation: 100 (number, required, default) - compensation for auto exposure. Range: 50~200
  + contrast: 100 (number, required, default) - image contrast. Range 0~100
- + maxShutter: 30 (number, required, default) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds. Must be >= 15
+ + max_shutter: 30 (number, required, default) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds. Must be >= 15
 
 ### Retrieve tuning settings [GET]
 + Response 200 (application/json)
@@ -572,20 +572,20 @@ Returns a JSON array of urls for the newly captured photos
 ### Modify tuning settings [PUT]
 
 + Attributes (object)
- + aeLock: true (boolean, optional) - Lock auto-exposure
+ + ae_lock: true (boolean, optional) - Lock auto-exposure
 
 + Request (application/json)
 
 + Response 200 (application/json)
  + Attributes (object)
-        + aeLock: true (boolean, required)
+        + ae_lock: true (boolean, required)
         + saturation: 100 (number, required)
-        + maxIsoSensitivity: 8000 (number, required)
-        + awbLock: false (boolean, required)
+        + max_iso_sensitivity: 8000 (number, required)
+        + awb_lock: false (boolean, required)
         + brightness: 100 (number, required)
-        + aeCompensation: 100 (number, required)
+        + ae_compensation: 100 (number, required)
         + contrast: 100 (number, required)
-        + maxShutter: 30 (number, required)
+        + max_shutter: 30 (number, required)
 
 ### Reset to default [DELETE]
 + Response 200 (application/json)
@@ -605,14 +605,14 @@ Returns a JSON array of urls for the newly captured photos
 A camera tuning configuration. Scenes are useful for applying and saving combinations of tuning settings. When a scene is applied, the tuning is modified accordingly (see `/360fly/camera/tuning`). A scene is applied via `/360fly/camera/preferences`
 
 + Attributes (object)
- + aeLock: false (boolean, required)
+ + ae_lock: false (boolean, required)
  + saturation: 100 (number, required)
- + maxIsoSensitivity: 8000 (number, required)
+ + max_iso_sensitivity: 8000 (number, required)
  + contrast: 100 (number, required)
- + awbLock: false (boolean, required)
+ + awb_lock: false (boolean, required)
  + brightness: 100 (number, required)
- + aeCompensation: 100 (number, required)
- + maxShutter: 15 (number, required)
+ + ae_compensation: 100 (number, required)
+ + max_shutter: 15 (number, required)
 
 + Parameters
  + name (required, string, `lowLight`) the relevant scene
@@ -626,19 +626,19 @@ A camera tuning configuration. Scenes are useful for applying and saving combina
 
 + Request (application/json)
  + Attributes (object)
-        + aeLock: true (boolean, optional)
-        + awbLock: true (boolean, optional)
+        + ae_lock: true (boolean, optional)
+        + awb_lock: true (boolean, optional)
 
 + Response 200 (application/json)
  + Attributes (object)
-        + aeLock: true (boolean, required)
+        + ae_lock: true (boolean, required)
         + saturation: 100 (number, required)
-        + maxIsoSensitivity: 8000 (number, required)
+        + max_iso_sensitivity: 8000 (number, required)
         + contrast: 100 (number, required)
-        + awbLock: true (boolean, required)
+        + awb_lock: true (boolean, required)
         + brightness: 100 (number, required)
-        + aeCompensation: 100 (number, required)
-        + maxShutter: 15 (number, required)
+        + ae_compensation: 100 (number, required)
+        + max_shutter: 15 (number, required)
 
 ### Delete scene [DELETE]
 + Response 204
