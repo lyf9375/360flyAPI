@@ -514,15 +514,22 @@ Settings for the 360fly `rtsp` stream.
 + Attributes
  + url: rtsp://fly.local/live1.sdp (string, required, sample) - liveview rtsp url
  + projection (Projection, required, default) - the projection data of liveview video
- + transport: UDP (string, required, default) - the transport protocol of streams. Options: UDP, RTP_TCP, RTP_RTSP_TCP, RTP_RTSP_HTTP_TCP
+ + transport: UDP (string, required, default) - the transport protocol of streams. Future possible options: UDP, RTP_TCP, RTP_RTSP_TCP, RTP_RTSP_HTTP_TCP
 
 ### Retrieve liveview URL [GET]
-+ Request (application/json)
- + Attributes (object)
-        + transport (string, optional) - use this transport protocol for streaming
-
 + Response 200 (application/json)
  + Attributes (Liveview)
+
+### Modify tuning settings [PUT]
++ Attributes (object)
+        + transport (string, optional) - use this transport protocol for streaming
+
++ Request (application/json)
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + transport (string, required)
+
 
 ## Photo [/360fly/camera/photo]
 
