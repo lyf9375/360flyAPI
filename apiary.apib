@@ -43,17 +43,16 @@ Remove 'UMS' preferences since it is not in use and we introduced '/360fly/usb' 
 
 # Group Camera
 
-Configure  360fly media capture
+Configure 360fly media capture
 
 ## Camera Config [/360fly/camera/config]
 
-Default high-level configuration for media capture. These settings persist across boots.
+Operating mode of the camera
 
 + Attributes (object)
  + profile: proMode (string, required, default) - Default camera profile. Determines media formats for recorded and liveview video and audio, sensordata, and photos. 
  + maxChapterDuration (number, required, sample) - Max duration, in seconds, for a chapter in a recording. 
  + maxChapterFileSize  (number, required, sample) - Max file size, in bytes, for a chapter in a recording
- + frameDuration: 30 (number, required, default) - The duration of each frame that is written into the movie container of recordings. Value represents denominator e.g. 30 implies a frame duration of 1/30 seconds
 
 ### Retrieve camera config [GET]
 + Response 200 (application/json)
@@ -81,73 +80,85 @@ Default high-level configuration for media capture. These settings persist acros
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 1424sq24 (string, required)
-        + photoFormat: normal (string, required, default)
+        + projection: radial (string, required)
+        + frameDuration: 24 (string, required)
  + almostFullRes (object, required) - Almost full resolution at 30 fps. Allow some bandwidth for liveview
         + recordingFormat: 2816sq30 (string,required)
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: normal (string, required, default)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
  + frontFacing1584p (object, required) - 1584p at 30 fps in front facing mode
         + recordingFormat: 1584p30
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 720p15 (string, required)
-        + photoFormat: normal (string, required, default)
+        + projection: planar (string, required)
+        + frameDuration: 30 (string, required)
  + frontFacing1440p (object, required) - 1440p at 30 fps in front facing mode
         + recordingFormat: 1440p30 (string, required)
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 720p15 (string, required)
-        + photoFormat: normal (string, required, default)
+        + projection: planar (string, required)
+        + frameDuration: 30 (string, required)
  + slowMotion (object, required) - 2032x2032 resolution at 60 fps. Recommended profile for slow motion recording
         + recordingFormat: 2032sq60 (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode60fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: normal (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
  + timeLapseHalfSec (object, required) - Uses recording format for full resolution at 2 fps. Suitable for time lapse recording where each frame represents a half second interval
         + recordingFormat: 2880sq2 (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode2fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: normal (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
  + timeLapse1sec (object, required) - Uses recording format for full resolution at 1 fps. Suitable for time lapse recording where each frame represents a 1 second interval
         + recordingFormat: 2880sq1 (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode1fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: normal (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
  + timeLapse2sec (object, required) - Suitable for time lapse recording where each frame represents a 2 second interval
         + recordingFormat: 2880sq2sec (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode2sec (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: normal (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
  + timeLapse5sec (object, required) - Suitable for time lapse recording where each frame represents a 5 second interval
         + recordingFormat: 2880sq5sec (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode5sec (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: normal (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
  + timeLapse10sec (object, required) - Suitable for time lapse recording where each frame represents a 10 second interval
         + recordingFormat: 2880sq10sec (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode10sec (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: normal (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
  + timeLapse30sec (object, required) - Suitable for time lapse recording where each frame represents a 30 second interval
         + recordingFormat: 2880sq30sec (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode30sec (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: normal (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
  + timeLapse60sec (object, required) - Suitable for time lapse recording where each frame represents a 60 second interval
         + recordingFormat: 2880sq60sec (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode60sec (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: normal (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
 
 ### List all media profiles [GET]
 + Response 200 (application/json)
@@ -162,7 +173,8 @@ Describes capture/encoding formats for recording, audio, sensordata, liveview, a
  + audioFormat: 48KAAC4 (string, required) - format of encoded audio. See /camera/formats/audio
  + sensordataFormat: mode30fps (string, required) - format of sensor data for recordings and (future version) liveview stream. See /camera/formats/sensordata
  + liveviewFormat: 752sq15 (string, required) - format of liveview video stream. See /camera/formats/video
- + photoFormat: normal (string, required, default) - format of captured photos. See /camera/formats/photo
+ + projection: radial (string, required, default) - name of projection metadata embedded in recordings
+ + frameDuration: 30 (string, required, default) - frame playback duration of recordings, represented as the denominator e.g. 30 implies 1/30seconds
  
 + Parameters
  + name (required, string, `proMode`) the relevant profile
@@ -173,7 +185,7 @@ Describes capture/encoding formats for recording, audio, sensordata, liveview, a
 
 ### Create or modify media profile [PUT]
 + Attributes (object)
- + photoFormat: burstMode (string, optional, sample)
+ + sensordataFormat: mode60fps (string, optional, sample)
 
 + Request (application/json)
 
@@ -181,9 +193,10 @@ Describes capture/encoding formats for recording, audio, sensordata, liveview, a
  + Attributes (object)
         + recordingFormat: fullRes30 (string, required)
         + audioFormat: 48KAAC4 (string, required)
-        + sensordataFormat: mode30fps (string, required)
+        + sensordataFormat: mode60fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: burstMode (string, required, default)
+        + projection: radial (string, required)
+        + frameDuration: 30 (number, required)
 
 ### Remove media profile [DELETE]
 + Response 204
@@ -220,7 +233,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 2816sq30 (object, required) - Slightly less than full-res video, but gives more encoding bandwidth to liveview than fullRes30
         + resolution: 2816x2816 (string, required)
         + resize: scale (string, required)
@@ -234,7 +246,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 1424sq24 (object, required, optional) - A high-res liveview format. Pairs well with fullRes24 recording format.
         + resolution: 1424x1424 (string, required)
         + resize: scale (string, required)
@@ -248,7 +259,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 752sq15 (object, required) - A low encoding bandwidth liveview format. Yields a large amount of encoding bandwidth to recording.
         + resolution: 752x752 (string, required)
         + resize: scale (string, required)
@@ -262,7 +272,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 1584p30 (object, required) - The maximum resolution for a front-facing recording format at 30fps
         + resolution: 2816x1584 (string, required)
         + resize: crop (string, required)
@@ -276,7 +285,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: true (boolean, required)
  + 1440p30 (object, required) - Alternative front-facing recording format
         + resolution: 2560x1440 (string, required)
         + resize: crop (string, required)
@@ -290,7 +298,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: true (boolean, required)
  + 2032sq60 (object, required) - The max resolution recording format at 60fps
         + resolution: 2032x2032 (string, required)
         + resize: scale (string, required)
@@ -304,7 +311,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 720p15 (object, required) - a front-facing liveview format   
         + resolution: 1280x720
         + resize: crop (string, required)
@@ -318,7 +324,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: true (boolean, required)
  + 1504sq60 (object, required) - a lower resolution 60 fps recording format
         + resolution: 1504x1504 (string, required)
         + resize: scale (string, required)
@@ -332,7 +337,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 2880sq1 (object, required) - full resolution at one frame per second
         + resolution: 2880x2880 (string, required)
         + resize: scale (string, required)
@@ -346,7 +350,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 2880sq2 (object, required) - full resolution at 2 frames per second
         + resolution: 2880x2880 (string, required)
         + resize: scale (string, required)
@@ -360,7 +363,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 2880sq2sec (object, required) - full resolution. Captures every 2 seconds
         + resolution: 2880x2880 (string, required)
         + resize: scale (string, required)
@@ -374,7 +376,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 2880sq5sec (object, required) - full resolution. Captures every 5 seconds
         + resolution: 2880x2880 (string, required)
         + resize: scale (string, required)
@@ -388,7 +389,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 2880sq10sec (object, required) - full resolution. Captures every 10 seconds
         + resolution: 2880x2880 (string, required)
         + resize: scale (string, required)
@@ -402,7 +402,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 2880sq30sec (object, required) - full resolution. Captures every 30 seconds
         + resolution: 2880x2880 (string, required)
         + resize: scale (string, required)
@@ -416,7 +415,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 2880sq60sec (object, required) - full resolution. Captures every 60 seconds
         + resolution: 2880x2880 (string, required)
         + resize: scale (string, required)
@@ -430,7 +428,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
         
         
 ### List all video formats [GET]
@@ -454,7 +451,6 @@ Format of encoded video for recording and liveview
  + minquant: 0 (number, required) - min quantization
  + maxframerate (number, required) - max framerate of encoded video (FPS). min 15 FPS. Only appliapple for relevant rate controls
  + minframerate (number, required) - min framerate of encoded video (FPS). min 15 FPS. Only appliapple for relevant rate controls
- + frontFacing: false (boolean, required, default) - Front facing mode flag. False implies default projection. True implies planar projection.
 
 + Parameters
  + name (required, string, `fullRes30`) the relevant video format
@@ -631,7 +627,6 @@ Start/stop recording and get current recording status. You can specify a config 
  + profile: proMode (string, optional, default) - The profile for the active recording
  + maxChapterDuration (number, optional, default) - The chapter duration for active recording
  + maxChapterFileSize (number, optional, default) - The chapter file size for active recording
- + frameDuration (number, optional, default) - The duration of each frame that is written into the movie container of the active recording. Value represents denominator e.g. 30 implies a frame duration of 1/30 seconds
  + hours: 0 (number, required, sample) - duration in hours of active recording
  + minutes: 4 (number, required, sample) - duration in minutes (modulo hours) of active recording
  + seconds: 30 (number, required, sample) - duration in seconds (modulo hours and minutes) of active recording
