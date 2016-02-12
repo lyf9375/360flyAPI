@@ -1,0 +1,256 @@
+{
+	"id": "f6302eeb-aeb5-9cae-16d4-f2330a3109b0",
+	"name": "File Handling",
+	"description": "Manage video data on the 360Fly device.\n\n",
+	"order": [],
+	"folders": [
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132638,
+			"id": "ff87c966-b420-5d28-28be-8f4578dbf784",
+			"name": "Delete Video Files",
+			"description": "",
+			"order": []
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132635,
+			"id": "f7f6d92b-56b1-e1cd-2bef-78d11be47535",
+			"name": "Retrieve Video Metadata - Method 1",
+			"description": "",
+			"order": [
+				"4c6eedee-654a-0341-47cc-a28d7a5641ac"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132636,
+			"id": "e272993a-f138-2037-23ff-3a6f7f99b9d1",
+			"name": "Retrieve Video Metadata - Method 2",
+			"description": "",
+			"order": [
+				"61905df1-5e65-473e-aa9c-0aa1c61e57d0"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132637,
+			"id": "20e8c6cf-0fff-d044-199e-6f30edac467e",
+			"name": "Retrieve Video Metadata - Method 3",
+			"description": "",
+			"order": [
+				"d1e1ccd6-c1b1-d868-a1f9-ea87dc91acd3"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132641,
+			"id": "f8aff0d5-fdf0-ff61-878a-3f8e484e7700",
+			"name": "Video Clips",
+			"description": "",
+			"order": [
+				"adaa3042-f823-3e50-eaa4-bb9c859557a3"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132639,
+			"id": "93f7623a-39a1-e434-5632-f444a4ee3577",
+			"name": "Video File Retrieval",
+			"description": "This section provides commands for downloading, renaming or deleting a video file on the 360Fly device.\n\n",
+			"order": [
+				"e52f7576-fbc1-133e-7de7-488ddd39b873"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132640,
+			"id": "b0827291-10dd-cc7b-837d-e5f77e4ed8c8",
+			"name": "Video Related Files",
+			"description": "",
+			"order": [
+				"f04694d2-a056-91e5-7a82-57ffab46d449"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132642,
+			"id": "35e4a0b5-9a99-6ff4-fd60-3e0c36dd1208",
+			"name": "Video Thumbnails",
+			"description": "",
+			"order": [
+				"5eca0ee8-f1c4-7e51-af51-9d8eb73f226a"
+			]
+		}
+	],
+	"timestamp": 0,
+	"owner": "315812",
+	"remoteLink": null,
+	"public": false,
+	"requests": [
+		{
+			"id": "4c6eedee-654a-0341-47cc-a28d7a5641ac",
+			"headers": "Accept: application/json\nAuthorization: Basic YWRtaW46MDAwMDAwMDA=\n",
+			"url": "{{HOST}}/360fly/video/file?offset=10&limit=20",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Response 200\"] = responseCode.code === 200;\n\nif (responseCode.code === 200) {\n    var correctType = \"application/json\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1;\n        \n        if (null !== responseBody && responseBody !== \"\") {\n            var obj = JSON.parse(responseBody);\n            \n            tests[\"Offset/Limit Test\"] = obj.itemCount === 20 && obj.offset === 10;\n        }\n    } else {\n        tests[\"Content-Type is absent\"] = false;\n    }\n}\n\n",
+			"currentHelper": "basicAuth",
+			"helperAttributes": {
+				"username": "admin",
+				"password": "00000000",
+				"saveToRequest": true,
+				"id": "basic",
+				"timestamp": 1454678087782
+			},
+			"time": 1454700253313,
+			"name": "List Video File Information Command",
+			"description": "Retrieves a list of available video files (and metadata) on the 360Fly device.\n\n* The _list video file information_ command requires **authentication**.\n\n* Device _cannot_ be in UMS mode to retrieve this information.\n\n##### __Command Parameters__\n\nCharacteristic | Value (Range)\n--- | ---\n_offset_    |   0 to (total number videos on 360Fly device)\n_limit_     |   0 to (total number videos on 360Fly device)\n\n##### __Response Data__\n\nCharacteristic | Definition | Return Value\n--- | --- | ---\n_type_              |   File type                                           |   \"video\"\n_modified_          |   Time & date of last modification to video (ISO 8601)|   \"2016-01-18T09:00:00Z\"\n_duration_          |   Duration of video (time & scale)                    |   [clip time, timescale]\n_fileSize_          |   File size (in bytes)                                |   1234567890\n_modification_      |   Timestamp of when file was modified (in seconds)    |   1234567890\n_name_              |   Name of video file                                  |   Record_0000001_000.mp4\n_id_                |   Document ID of video file                           |   00000000-0000-0000-0000-000000000000\n_download_          |   Download URL on the 360Fly device                   |   \"\\/360fly\\/video\\/file\\/Record_0000001_000.mp4\"\n_durationSeconds_   |   Duration of video (in seconds)                      |   1234567890\n_instanceID_        |   Instance ID of video                                |   00000000-0000-0000-0000-000000000000\n_hasduration_       |   Video has a duration                                |   true\n                    |   Video has no duration                               |   false\n_itemCount_         |   Number of videos on the 360Fly device               |   1\n_offset_            |   Offset into video file listing                      |   Min = 0\n                    |                                                       |   Max = total number of videos on 360Fly device - 1\n\n",
+			"collectionId": "f6302eeb-aeb5-9cae-16d4-f2330a3109b0"
+		},
+		{
+			"id": "5eca0ee8-f1c4-7e51-af51-9d8eb73f226a",
+			"headers": "Accept: application/octet-stream\nAuthorization: Basic YWRtaW46MDAwMDAwMDA=\n",
+			"url": "{{HTTP_ONLY}}/360fly/video/thumbnail/{{FILE_TO_DOWNLOAD}}",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"This Implementation Will Be Different For Thunderdome\"] = false",
+			"currentHelper": "basicAuth",
+			"helperAttributes": {
+				"username": "admin",
+				"password": "00000000",
+				"saveToRequest": true,
+				"id": "basic",
+				"timestamp": 1454678087782
+			},
+			"time": 1454705697435,
+			"name": "Create And Download A Thumbnail Command",
+			"description": "Returns a thumbnail for a specified recording, clip or image. Depending upon implementation,\na thumbnail may be a JPEG image or a video file containing a single frame.\n\n* The _create and download a thumbnail_ command requires **NO authentication**. _Authenticated requests_ **ARE NOT SUPPORTED.**\n\n* Device _cannot_ be in UMS mode to perform this action.\n\n* The thumbprint file is downloaded and stored in user's root directory.\n\n* Note: returns 404 (No Content) if the original video does not exist.\n\n##### __Command Parameters__\n\nCharacteristic | Definition |   Value (Range)\n--- | --- | ---\n_time_      |   Number of seconds into a video to grab thumbnail image  |   0 to (length of video in seconds)\n_timescale_ |   Timescale used for sampling                             |  _**???**_\n\n\n",
+			"collectionId": "f6302eeb-aeb5-9cae-16d4-f2330a3109b0"
+		},
+		{
+			"id": "61905df1-5e65-473e-aa9c-0aa1c61e57d0",
+			"headers": "Range: files 0-3\nAuthorization: Basic YWRtaW46MDAwMDAwMDA=\n",
+			"url": "{{HOST}}/360fly/video/meta",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Response 200\"] = responseCode.code === 200;\n\nif (responseCode.code === 200) {\n    var correctType = \"application/json\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1;\n    } else {\n        tests[\"Content-Type is absent\"] = false;\n    }\n}\n\n",
+			"currentHelper": "basicAuth",
+			"helperAttributes": {
+				"username": "admin",
+				"password": "00000000",
+				"saveToRequest": true,
+				"id": "basic",
+				"timestamp": 1454704005767
+			},
+			"time": 1454705096943,
+			"name": "List Video File Information Command",
+			"description": "Retrieves the same _response data_ information as the _**Retrieve Video Metadata - Method 1**_ section, \nbut also retrieves a JSON-encoded list of video/image files with metadata without concern for timeout.\n\n* The _list video file information_ command requires **authentication**.\n\n* Device _cannot_ be in UMS mode to retrieve this information.\n\n* Note: returns \"itemCount\":0 and \"offset\":0 if no videos present.\n\n##### __Command Parameters__\n\nCharacteristic | Format |   Value (Range)\n--- | --- | ---\n_Range_ |   \"Range: files 0-3\"  |   0 to (total number videos on 360Fly device)\n\n",
+			"collectionId": "f6302eeb-aeb5-9cae-16d4-f2330a3109b0"
+		},
+		{
+			"id": "adaa3042-f823-3e50-eaa4-bb9c859557a3",
+			"headers": "Accept: application/octet-stream\nAccept: text/html\n",
+			"url": "{{HOST}}/360fly/video/clip/{{FILE_TO_DOWNLOAD}}?start=0&duration=1000&timescale=1000",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "/*Connection → close\nContent-Disposition → attachment; filename=\"flyv0100-s0-d1000.mp4\"\nContent-type → video/mp4\nDate → Wed, 13 Jan 2016 18:09:26 GMT\nEtag → \"56969258.12180027.0-1000\"\nLast-Modified → Wed, 13 Jan 2016 18:07:20 GMT\nTransfer-Encoding → chunked\nX-Content-length-expected → 2772948\nX-Time-duration → 1000\nX-Time-scale → 1000\nX-Time-start → 0*/\n\ntests[\"Response 200\"] = responseCode.code === 200;\n\nvar correctType = \"video/mp4\";\nvar returnedType = postman.getResponseHeader(\"Content-Type\");\nif (null !== returnedType) {\n    tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1;\n} else {\n    tests[\"Content-Type is absent\"] = false;\n}\n\ntests[\"Etag Header Present\"] = null !== postman.getResponseHeader(\"Etag\");\ntests[\"Duration Tag Present\"] = null !== postman.getResponseHeader(\"X-Time-duration\");\ntests[\"Scale Tag Present\"] = null !== postman.getResponseHeader(\"X-Time-scale\");\ntests[\"Start Tag Present\"] = null !== postman.getResponseHeader(\"X-Time-start\");",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1454705038667,
+			"name": "Extract And Download A Video Clip Command",
+			"description": "A video clip is a specific segment of a video file with defined starting/ending boundaries. \nThis service creates a video clip from a specific video file on the 360Fly device.\n\n* The _extract and download a video clip_ command requires **authentication**.\n\n* Device _cannot_ be in UMS mode to retrieve this information.\n\n* The video clip is downloaded and stored in user's root directory.\n\n##### __Command Parameters__\n\nCharacteristic | Definition |   Value (Range)\n--- | --- | ---\n_start_     |   Number of seconds into a video to begin clipping    |   0 to (length of video in seconds)\n_duration_  |   Duration of video clip                              |   0 to (length of video in seconds)\n_timescale_ |   Timescale used for sampling                         |  _**???**_\n\n",
+			"collectionId": "f6302eeb-aeb5-9cae-16d4-f2330a3109b0"
+		},
+		{
+			"id": "d1e1ccd6-c1b1-d868-a1f9-ea87dc91acd3",
+			"headers": "Accept: application/json\nAuthorization: Basic YWRtaW46MDAwMDAwMDA=\n",
+			"url": "{{HOST}}/360fly/video/meta/{{FILE_TO_DOWNLOAD}}",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Response 200\"] = responseCode.code === 200\n\nif (responseCode.code === 200) {\n    var correctType = \"application/json\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1\n    } else {\n        tests[\"Content-Type is absent\"] = false;\n    }\n}",
+			"currentHelper": "basicAuth",
+			"helperAttributes": {
+				"username": "admin",
+				"password": "00000000",
+				"saveToRequest": true,
+				"id": "basic",
+				"timestamp": 1454704005767
+			},
+			"time": 1454705594039,
+			"name": "List Specific Video File Information Command",
+			"description": "Retrieves the same _response data_ information as the _**Retrieve Video Metadata - Method 1**_ section.\nOnly the metadata for the _**specified**_ video file is retrieved.\n\n* The _list specific video file information_ command requires **authentication**.\n\n* Device _cannot_ be in UMS mode to retrieve this information.\n\n* Note: returns 404 (Not Found) if no videos present.\n\n",
+			"collectionId": "f6302eeb-aeb5-9cae-16d4-f2330a3109b0"
+		},
+		{
+			"id": "e52f7576-fbc1-133e-7de7-488ddd39b873",
+			"headers": "Accept: application/octet-stream\n",
+			"url": "{{HTTP_ONLY}}/360fly/video/file/{{FILE_TO_DOWNLOAD}}",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "/* Accept-Ranges → bytes\nConnection → keep-alive\nContent-Length → 2498104\nContent-Type → video/mp4\nDate → Wed, 13 Jan 2016 17:41:58 GMT\nEtag → \"5697c260.2498104\"\nLast-Modified → Thu, 14 Jan 2016 15:44:32 GMT\n*/\n\ntests[\"Response 200\"] = responseCode.code === 200;\n\nvar correctType = \"video/mp4\";\nvar returnedType = postman.getResponseHeader(\"Content-Type\");\nif (null !== returnedType) {\n    tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1;\n} else {\n    tests[\"Content-Type is absent\"] = false;\n}\n\ntests[\"Server Supports Range Requests\"] = null !== postman.getResponseHeader(\"Accept-Ranges\");\n\ntests[\"Etag Header Present\"] = null !== postman.getResponseHeader(\"Etag\");\n",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1454704869567,
+			"name": "Download/Rename A Specific Video File Command",
+			"description": "* The _download/rename a specific video file_ command requires **NO authentication**. _Authenticated requests_ **ARE NOT SUPPORTED.**\n\n* Device _cannot_ be in UMS mode to perform this action.\n\n* A single byte-range request is supported per http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35. The ability to request byte ranges is required by this endpoint for progressive downloading.\n\n* The video file is downloaded and stored in user's root directory.\n\n",
+			"collectionId": "f6302eeb-aeb5-9cae-16d4-f2330a3109b0"
+		},
+		{
+			"id": "f04694d2-a056-91e5-7a82-57ffab46d449",
+			"headers": "Accept: application/json\nAuthorization: Basic YWRtaW46MDAwMDAwMDA=\n",
+			"url": "{{HOST}}/360fly/video/related/{{FILE_TO_DOWNLOAD}}",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Response 200\"] = responseCode.code === 200\n\nif (responseCode.code === 200) {\n    var correctType = \"application/json\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1\n    } else {\n        tests[\"Content-Type is absent\"] = false;\n    }\n}",
+			"currentHelper": "basicAuth",
+			"helperAttributes": {
+				"username": "admin",
+				"password": "00000000",
+				"saveToRequest": true,
+				"id": "basic",
+				"timestamp": 1454704005767
+			},
+			"time": 1454705478746,
+			"name": "Locate Files Related To A Specific Video Command",
+			"description": "Retrieve 360Fly device directory path to files related to a specific video.\n\n* The _locate files related to a specific video_ command requires **authentication**.\n\n* Device _cannot_ be in UMS mode to retrieve this information.\n\n* Note: returns 404 (No Content) if the video does not exist.\n\n##### __Response Data__\n\nCharacteristic | Definition | Return Value\n--- | --- | ---\n_recording_ |   Path to the specified video file.   |   \"\\/360fly\\/video\\/file\\/VideoFile_xxx.mp4\"\n_thumbnail_ |   Path to the specified video thumbnail file.   |   \"\\/360fly\\/video\\/file\\/Thumbnail_xxx.mp4\"\n\n",
+			"collectionId": "f6302eeb-aeb5-9cae-16d4-f2330a3109b0"
+		}
+	]
+}
