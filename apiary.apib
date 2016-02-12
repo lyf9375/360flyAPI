@@ -164,7 +164,6 @@ The available media and sensordata formats. The various formats are used to comp
  + video (Camera Video Formats Collection, required) - list of available video formats
  + audio (Camera Audio Formats Collection, required) - list of available audio formats
  + sensordata (Camera Metadata Formats Collection, required) - list of available meta data formats
- + photo (Camera Photo Formats Collection, required) - list of available photo formats
 
 ### List all camera formats [GET]
 + Response 200 (application/json)
@@ -524,62 +523,27 @@ Settings for the 360fly `rtsp` stream.
 
 
 ## Photo [/360fly/camera/photo]
++ Attributes (object)
+ + projection: radial (string, required) - one of the supported projections (see '/360fly/camera/projections')
+ + resolution: 3456x3456 (string, required, default) - resolution of photo
+ + interval (number, optional, default) - Interval between taking burst photo (in milliseconds). Ignored for single shot
+ + duration: 0 (number, optional, default) - Duration of time (in milliseconds) to take burst photos. 0 implies single shot
 
 ### Take Photo [POST]
 
 Returns location of the captured photo (for single shot), or the first one of the burst photo
 
 + Request (application/json)
- + Attributes (Camera Photo Format)
++ Attributes (object)
+ + projection: radial (string, required)
+ + resolution: 3456x3456 (string, required)
+ + interval: 200 (number, required) - Capture 5 photos in 1 second
+ + duration: 1000 (number,required) - Capture photos for 1000ms
 
 + Response 201 (application/json)
- + Attributes (Camera Photo Format)
  + Header
 
-                        Location: /360fly/photo/file/100_3FLY/FLY00801.jpg
-
-
-## Camera Photo Formats Collection [/360fly/camera/formats/photo]
-
-+ Attributes (object)
- + fullResSingle (Camera Photo Format, required, default)
- + fullResBurst5fps (object, required, sample)
-        + projection: radial (string, optional, default)
-        + resolution: 3456x3456 (string, required, default)
-        + delay: 0 (number, optional)
-        + step: 200 (number, optional, default)
-        + count: 10 (number, optional, default)
- + frontFacingSingle (object, required, sample)
-        + resolution: 2560x1440 (string, required, default)
-        + projection: planar (string, required, default)
-        + delay: 0 (number, optional)
-        + step: 1 (number, optional, default)
-        + count: 1 (number, optional, default)
- + frontFacingBurst2fps (object, required, sample)
-        + resolution: 2560x1440 (string, required, default)
-        + projection: planar (string, required, default)
-        + delay: 0 (number, optional)
-        + step: 500 (number, optional, default)
-        + count: 10 (number, optional, default)
-
-
-### Retrieve Camera Photo Formats [GET]
-+ Response 200 (application/json)
- + Attributes (Camera Photo Formats Collection)
-
-## Camera Photo Format [/360fly/camera/formats/photo/{name}]
-
-+ Attributes (object)
- + projection: radial0 (string, required) - one of the supported projections (see '/360fly/camera/projections')
- + resolution: 3456x3456 (string, required, default) - resolution of photo
- + delay: 0 (number, optional) -  Initial delay to start taking photo (in milliseconds)
- + step: 1 (number, optional, default) - Step of taking photo (in milliseconds)
- + count: 1 (number, optional, default) - How many photos to take. If more than 1, burst mode
-
-
-+ Parameters
- + name (required, string, `normal`) the relevant photo format
-
+                        Location: /360fly/media/file/100_3FLY/FLY00801.jpg
 
 ## Tuning [/360fly/camera/tuning]
 
@@ -660,16 +624,16 @@ A camera tuning configuration.
 ### Delete scene [DELETE]
 + Response 204
 
-## Projection list [/360fly/camera/projections]
+## Projection List [/360fly/camera/projections]
++ Attributes (object)
+ + radial (Projection, required, default) - the default fisheye projection
+ + planar (object, required) - standard playback
+        + type: planar (string, required)
 
 ### Retrieve projection list [GET]
 
 + Response 200 (application/json)
-+ Attributes (object)
- + radial (Projection, required, default)
- + planar (object)
-         + type: planar (string, required)
-
+ + Attributes (Projection List, required, default)
 
 ## Projection [/360fly/camera/projection]
 
