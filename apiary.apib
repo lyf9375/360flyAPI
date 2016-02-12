@@ -447,28 +447,6 @@ Format of sensordata. Effectively a configuration for underlying sensors, events
 ### Remove sensordata format [DELETE]
 + Response 204
 
-## Camera Photo Formats Collection [/360fly/camera/formats/photo]
-
-+ Attributes (object)
- + normal (Camera Photo Format, required, default)
- + burstMode (object, required, sample)
-        + resolution: 3456x3456 (string, required, default)
-        + burst: true (boolean, required, default)
-        + duration: 1 (number, required, default)
-
-### Retrieve Camera Photo Formats [GET]
-+ Response 200 (application/json)
- + Attributes (Camera Photo Formats Collection)
-
-## Camera Photo Format [/360fly/camera/formats/photo/{name}]
-
-+ Attributes (object)
- + resolution: 3456x3456 (string, required, default) - resolution of photo
- + burst: false (boolean, required, default) - Toggle burst mode
- + duration (number, optional, default) - How long, in seconds, to take burst photos. Applies to burst mode only.
-
-+ Parameters
- + name (required, string, `normal`) the relevant photo format
 
 ## Recording [/360fly/camera/recording]
 
@@ -543,34 +521,65 @@ Settings for the 360fly `rtsp` stream.
 + Response 200 (application/json)
  + Attributes (Liveview)
 
+
+
 ## Photo [/360fly/camera/photo]
 
 ### Take Photo [POST]
 
-Returns a JSON array of urls for the newly captured photos
+Returns location of the captured photo (for single shot), or the first one of the burst photo
 
 + Request (application/json)
- + Attributes (object)
-        + burst: true (boolean, optional, sample) - Override current camera profile for this photo and take burst photo
-        + duration: 3 (number, optional, sample) - Take 3 seconds worth of burst photos
+ + Attributes (Camera Photo Format)
 
 + Response 201 (application/json)
- + Attributes (array[string])
-        + /360fly/video/file/{photo0.jpg}
-        + /360fly/video/file/{photo1.jpg}
-        + /360fly/video/file/{photo2.jpg}
-        + /360fly/video/file/{photo3.jpg}
-        + /360fly/video/file/{photo4.jpg}
-        + /360fly/video/file/{photo5.jpg}
-        + /360fly/video/file/{photo6.jpg}
-        + /360fly/video/file/{photo7.jpg}
-        + /360fly/video/file/{photo8.jpg}
-        + /360fly/video/file/{photo9.jpg}
-        + /360fly/video/file/{photo10.jpg}
-        + /360fly/video/file/{photo11.jpg}
-        + /360fly/video/file/{photo12.jpg}
-        + /360fly/video/file/{photo13.jpg}
-        + /360fly/video/file/{photo14.jpg}
+ + Attributes (Camera Photo Format)
+ + Header
+
+                        Location: /360fly/photo/file/100_3FLY/FLY00801.jpg
+
+
+## Camera Photo Formats Collection [/360fly/camera/formats/photo]
+
++ Attributes (object)
+ + fullResSingle (Camera Photo Format, required, default)
+ + fullResBurst5fps (object, required, sample)
+        + projection: radial0 (string, optional, default)
+        + resolution: 3456x3456 (string, required, default)
+        + delay: 0 (number, optional)
+        + step: 200 (number, optional, default)
+        + count: 10 (number, optional, default)
+ + frontFacingSingle (object, required, sample)
+        + resolution: 2560x1440 (string, required, default)
+        + projection: planar0 (string, required, default)
+        + delay: 0 (number, optional)
+        + step: 1 (number, optional, default)
+        + count: 1 (number, optional, default)
+ + frontFacingBurst2fps (object, required, sample)
+        + resolution: 2560x1440 (string, required, default)
+        + projection: planar0 (string, required, default)
+        + delay: 0 (number, optional)
+        + step: 500 (number, optional, default)
+        + count: 10 (number, optional, default)
+
+
+### Retrieve Camera Photo Formats [GET]
++ Response 200 (application/json)
+ + Attributes (Camera Photo Formats Collection)
+
+## Camera Photo Format [/360fly/camera/formats/photo/{name}]
+
++ Attributes (object)
+ + projection: radial0 (string, required) - one of the supported projections (see '/360fly/camera/projections')
+ + resolution: 3456x3456 (string, required, default) - resolution of photo
+ + delay: 0 (number, optional) -  Initial delay to start taking photo (in milliseconds)
+ + step: 1 (number, optional, default) - Step of taking photo (in milliseconds)
+ + count: 1 (number, optional, default) - How many photos to take. If more than 1, burst mode
+
+
++ Parameters
+ + name (required, string, `normal`) the relevant photo format
+
 
 ## Tuning [/360fly/camera/tuning]
 
@@ -651,15 +660,33 @@ A camera tuning configuration.
 ### Delete scene [DELETE]
 + Response 204
 
+## Projection list [/360fly/camera/projections]
+
+### Retrieve projection list [GET]
+
++ Response 200 (application/json)
++ Attributes (object)
+ + radial0 (Projection, required, default)
+ + planar0 (object)
+         + type: planar (string, required)
+         + panMin: 0 (number, optional)
+         + panMax: 120  (number, optional)
+         + panRange: 120 (number, optional)
+         + tiltMin: 0 (number, optional)
+         + tiltMax: 60 (number, optional)
+         + tiltRange: 60 (number, optional)
+
+
+
 ## Projection [/360fly/camera/projection]
 
 Camera's default projection
 
 + Attributes (object)
  + type: radial (string, required, default) - class of projection
- + radialMapping: ftheta (string, required, default) - name of mapping used to map angle to radius on a radial capture image
- + outerAngle: 120 (number, required, default) - Half of the vertical field of view. The max of the radialMapping's domain.
- + centerRadius: 0.5 0.5 0.5 0.5 (string, required, default) - The location and size of radial image in camera's normalized sensor coordinates
+ + radialMapping: ftheta (string, optional, default) - name of mapping used to map angle to radius on a radial capture image
+ + outerAngle: 120 (number, optional, default) - Half of the vertical field of view. The max of the radialMapping's domain.
+ + centerRadius: 0.5 0.5 0.5 0.5 (string, optional, default) - The location and size of radial image in camera's normalized sensor coordinates
 
 ### Set Projection [PUT]
 
