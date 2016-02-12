@@ -544,20 +544,20 @@ Returns location of the captured photo (for single shot), or the first one of th
 + Attributes (object)
  + fullResSingle (Camera Photo Format, required, default)
  + fullResBurst5fps (object, required, sample)
-        + projection: radial0 (string, optional, default)
+        + projection: radial (string, optional, default)
         + resolution: 3456x3456 (string, required, default)
         + delay: 0 (number, optional)
         + step: 200 (number, optional, default)
         + count: 10 (number, optional, default)
  + frontFacingSingle (object, required, sample)
         + resolution: 2560x1440 (string, required, default)
-        + projection: planar0 (string, required, default)
+        + projection: planar (string, required, default)
         + delay: 0 (number, optional)
         + step: 1 (number, optional, default)
         + count: 1 (number, optional, default)
  + frontFacingBurst2fps (object, required, sample)
         + resolution: 2560x1440 (string, required, default)
-        + projection: planar0 (string, required, default)
+        + projection: planar (string, required, default)
         + delay: 0 (number, optional)
         + step: 500 (number, optional, default)
         + count: 10 (number, optional, default)
@@ -666,27 +666,26 @@ A camera tuning configuration.
 
 + Response 200 (application/json)
 + Attributes (object)
- + radial0 (Projection, required, default)
- + planar0 (object)
+ + radial (Projection, required, default)
+ + planar (object)
          + type: planar (string, required)
-         + panMin: 0 (number, optional)
-         + panMax: 120  (number, optional)
-         + panRange: 120 (number, optional)
-         + tiltMin: 0 (number, optional)
-         + tiltMax: 60 (number, optional)
-         + tiltRange: 60 (number, optional)
-
 
 
 ## Projection [/360fly/camera/projection]
 
-Camera's default projection
+Camera's default projection 
 
 + Attributes (object)
  + type: radial (string, required, default) - class of projection
  + radialMapping: ftheta (string, optional, default) - name of mapping used to map angle to radius on a radial capture image
  + outerAngle: 120 (number, optional, default) - Half of the vertical field of view. The max of the radialMapping's domain.
  + centerRadius: 0.5 0.5 0.5 0.5 (string, optional, default) - The location and size of radial image in camera's normalized sensor coordinates
+ + panMin (number, optional)
+ + panMax (number, optional)
+ + panRange (number, optional)
+ + tiltMin (number, optional)
+ + tiltMax (number, optional)
+ + tiltRange  (number, optional)
 
 ### Set Projection [PUT]
 
