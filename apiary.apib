@@ -43,17 +43,16 @@ Remove 'UMS' preferences since it is not in use and we introduced '/360fly/usb' 
 
 # Group Camera
 
-Configure  360fly media capture
+Configure 360fly media capture
 
 ## Camera Config [/360fly/camera/config]
 
-Default high-level configuration for media capture. These settings persist across boots.
+Operating mode of the camera
 
 + Attributes (object)
  + profile: proMode (string, required, default) - Default camera profile. Determines media formats for recorded and liveview video and audio, sensordata, and photos. 
  + maxChapterDuration (number, required, sample) - Max duration, in seconds, for a chapter in a recording. 
  + maxChapterFileSize  (number, required, sample) - Max file size, in bytes, for a chapter in a recording
- + frameRateMultiplier: 1 (number, required, default) - The ratio of frame presentation duration written in video file to the encoded frame rate. slow-motion: set frameRateMultiplier < 1, time-lapse: set frameRateMultiplier > 1, normal playback: set frameRateMultiplier = 1
 
 ### Retrieve camera config [GET]
 + Response 200 (application/json)
@@ -62,8 +61,7 @@ Default high-level configuration for media capture. These settings persist acros
 ### Modify camera config [PUT]
 + Attributes (object)
  + maxChapterDuration: 180 (number, optional, sample) - set chapter duration to 180 seconds
- + frameRateMultiplier: .5 (number, optional, sample) - set playback frame rate to half the encoded frame rate. This is essential for slow-motion playback.
- + profile: slowMotion (string, optional, sample) - Use a profile with 60FPS encoded frame-rate. This in combination with frameRateMultiplier=.5 will give quality slow-motion.
+ + profile: slowMotion (string, optional, sample) - Use a profile with 60FPS encoded frame-rate for a slow motion effect
 
 + Request (application/json)
 
@@ -72,7 +70,6 @@ Default high-level configuration for media capture. These settings persist acros
         + profile: slowMotion (string, required, sample)
         + maxChapterDuration: 180 (number, required, sample)
         + maxChapterFileSize (number, required, sample)
-        + frameRateMultiplier: .5 (number, required, sample)
 
 ## Camera Media Profile Collection [/360fly/camera/profiles]
 
@@ -83,37 +80,85 @@ Default high-level configuration for media capture. These settings persist acros
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 1424sq24 (string, required)
-        + photoFormat: normal (string, required, default)
+        + projection: radial (string, required)
+        + frameDuration: 24 (string, required)
  + almostFullRes (object, required) - Almost full resolution at 30 fps. Allow some bandwidth for liveview
         + recordingFormat: 2816sq30 (string,required)
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: normal (string, required, default)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
  + frontFacing1584p (object, required) - 1584p at 30 fps in front facing mode
         + recordingFormat: 1584p30
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 720p15 (string, required)
-        + photoFormat: normal (string, required, default)
+        + projection: planar (string, required)
+        + frameDuration: 30 (string, required)
  + frontFacing1440p (object, required) - 1440p at 30 fps in front facing mode
         + recordingFormat: 1440p30 (string, required)
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 720p15 (string, required)
-        + photoFormat: normal (string, required, default)
+        + projection: planar (string, required)
+        + frameDuration: 30 (string, required)
  + slowMotion (object, required) - 2032x2032 resolution at 60 fps. Recommended profile for slow motion recording
         + recordingFormat: 2032sq60 (string, required)
-        + audioFormat: 48KAAC4 (string, required)
+        + audioFormat (string, required)
         + sensordataFormat: mode60fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: normal (string, required)
- + timeLapse (object, required) - Uses recording format for full resolution at 1 fps. Suitable for time lapse recording
-        + recordingFormat: 2880sq1 (string, required)
-        + audioFormat: 48KAAC4 (string, required)
-        + sensordataFormat: mode30fps (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
+ + timeLapseHalfSec (object, required) - Uses recording format for full resolution at 2 fps. Suitable for time lapse recording where each frame represents a half second interval
+        + recordingFormat: 2880sq2 (string, required)
+        + audioFormat (string, required)
+        + sensordataFormat: mode2fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: normal (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
+ + timeLapse1sec (object, required) - Uses recording format for full resolution at 1 fps. Suitable for time lapse recording where each frame represents a 1 second interval
+        + recordingFormat: 2880sq1 (string, required)
+        + audioFormat (string, required)
+        + sensordataFormat: mode1fps (string, required)
+        + liveviewFormat: 752sq15 (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
+ + timeLapse2sec (object, required) - Suitable for time lapse recording where each frame represents a 2 second interval
+        + recordingFormat: 2880sq2sec (string, required)
+        + audioFormat (string, required)
+        + sensordataFormat: mode2sec (string, required)
+        + liveviewFormat: 752sq15 (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
+ + timeLapse5sec (object, required) - Suitable for time lapse recording where each frame represents a 5 second interval
+        + recordingFormat: 2880sq5sec (string, required)
+        + audioFormat (string, required)
+        + sensordataFormat: mode5sec (string, required)
+        + liveviewFormat: 752sq15 (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
+ + timeLapse10sec (object, required) - Suitable for time lapse recording where each frame represents a 10 second interval
+        + recordingFormat: 2880sq10sec (string, required)
+        + audioFormat (string, required)
+        + sensordataFormat: mode10sec (string, required)
+        + liveviewFormat: 752sq15 (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
+ + timeLapse30sec (object, required) - Suitable for time lapse recording where each frame represents a 30 second interval
+        + recordingFormat: 2880sq30sec (string, required)
+        + audioFormat (string, required)
+        + sensordataFormat: mode30sec (string, required)
+        + liveviewFormat: 752sq15 (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
+ + timeLapse60sec (object, required) - Suitable for time lapse recording where each frame represents a 60 second interval
+        + recordingFormat: 2880sq60sec (string, required)
+        + audioFormat (string, required)
+        + sensordataFormat: mode60sec (string, required)
+        + liveviewFormat: 752sq15 (string, required)
+        + projection: radial (string, required)
+        + frameDuration: 30 (string, required)
 
 ### List all media profiles [GET]
 + Response 200 (application/json)
@@ -128,7 +173,8 @@ Describes capture/encoding formats for recording, audio, sensordata, liveview, a
  + audioFormat: 48KAAC4 (string, required) - format of encoded audio. See /camera/formats/audio
  + sensordataFormat: mode30fps (string, required) - format of sensor data for recordings and (future version) liveview stream. See /camera/formats/sensordata
  + liveviewFormat: 752sq15 (string, required) - format of liveview video stream. See /camera/formats/video
- + photoFormat: normal (string, required, default) - format of captured photos. See /camera/formats/photo
+ + projection: radial (string, required, default) - name of projection metadata embedded in recordings
+ + frameDuration: 30 (string, required, default) - frame playback duration of recordings, represented as the denominator e.g. 30 implies 1/30seconds
  
 + Parameters
  + name (required, string, `proMode`) the relevant profile
@@ -139,7 +185,7 @@ Describes capture/encoding formats for recording, audio, sensordata, liveview, a
 
 ### Create or modify media profile [PUT]
 + Attributes (object)
- + photoFormat: burstMode (string, optional, sample)
+ + sensordataFormat: mode60fps (string, optional, sample)
 
 + Request (application/json)
 
@@ -147,9 +193,10 @@ Describes capture/encoding formats for recording, audio, sensordata, liveview, a
  + Attributes (object)
         + recordingFormat: fullRes30 (string, required)
         + audioFormat: 48KAAC4 (string, required)
-        + sensordataFormat: mode30fps (string, required)
+        + sensordataFormat: mode60fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
-        + photoFormat: burstMode (string, required, default)
+        + projection: radial (string, required)
+        + frameDuration: 30 (number, required)
 
 ### Remove media profile [DELETE]
 + Response 204
@@ -186,7 +233,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 2816sq30 (object, required) - Slightly less than full-res video, but gives more encoding bandwidth to liveview than fullRes30
         + resolution: 2816x2816 (string, required)
         + resize: scale (string, required)
@@ -200,7 +246,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 1424sq24 (object, required, optional) - A high-res liveview format. Pairs well with fullRes24 recording format.
         + resolution: 1424x1424 (string, required)
         + resize: scale (string, required)
@@ -214,7 +259,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 752sq15 (object, required) - A low encoding bandwidth liveview format. Yields a large amount of encoding bandwidth to recording.
         + resolution: 752x752 (string, required)
         + resize: scale (string, required)
@@ -228,7 +272,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 1584p30 (object, required) - The maximum resolution for a front-facing recording format at 30fps
         + resolution: 2816x1584 (string, required)
         + resize: crop (string, required)
@@ -242,7 +285,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: true (boolean, required)
  + 1440p30 (object, required) - Alternative front-facing recording format
         + resolution: 2560x1440 (string, required)
         + resize: crop (string, required)
@@ -256,7 +298,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: true (boolean, required)
  + 2032sq60 (object, required) - The max resolution recording format at 60fps
         + resolution: 2032x2032 (string, required)
         + resize: scale (string, required)
@@ -270,7 +311,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 720p15 (object, required) - a front-facing liveview format   
         + resolution: 1280x720
         + resize: crop (string, required)
@@ -284,7 +324,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: true (boolean, required)
  + 1504sq60 (object, required) - a lower resolution 60 fps recording format
         + resolution: 1504x1504 (string, required)
         + resize: scale (string, required)
@@ -298,7 +337,6 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
  + 2880sq1 (object, required) - full resolution at one frame per second
         + resolution: 2880x2880 (string, required)
         + resize: scale (string, required)
@@ -312,7 +350,84 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        + frontFacing: false (boolean, required)
+ + 2880sq2 (object, required) - full resolution at 2 frames per second
+        + resolution: 2880x2880 (string, required)
+        + resize: scale (string, required)
+        + codec: h264 (string, required)
+        + framerate: 2 (number, required)
+        + keyinterval: 2 (number, required)
+        + ratecontrol: CVBR (string, required)
+        + bitrate: 4000000 (number, required)
+        + quant: 18 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
+ + 2880sq2sec (object, required) - full resolution. Captures every 2 seconds
+        + resolution: 2880x2880 (string, required)
+        + resize: scale (string, required)
+        + codec: h264 (string, required)
+        + framerate: 0.5 (number, required)
+        + keyinterval: 1 (number, required)
+        + ratecontrol: CVBR (string, required)
+        + bitrate: 1000000 (number, required)
+        + quant: 18 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
+ + 2880sq5sec (object, required) - full resolution. Captures every 5 seconds
+        + resolution: 2880x2880 (string, required)
+        + resize: scale (string, required)
+        + codec: h264 (string, required)
+        + framerate: 0.2 (number, required)
+        + keyinterval: 1 (number, required)
+        + ratecontrol: CVBR (string, required)
+        + bitrate: 400000 (number, required)
+        + quant: 18 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
+ + 2880sq10sec (object, required) - full resolution. Captures every 10 seconds
+        + resolution: 2880x2880 (string, required)
+        + resize: scale (string, required)
+        + codec: h264 (string, required)
+        + framerate: .1 (number, required)
+        + keyinterval: 1 (number, required)
+        + ratecontrol: CVBR (string, required)
+        + bitrate: 200000 (number, required)
+        + quant: 18 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
+ + 2880sq30sec (object, required) - full resolution. Captures every 30 seconds
+        + resolution: 2880x2880 (string, required)
+        + resize: scale (string, required)
+        + codec: h264 (string, required)
+        + framerate: 0.033 (number, required)
+        + keyinterval: 1 (number, required)
+        + ratecontrol: CVBR (string, required)
+        + bitrate: 67000 (number, required)
+        + quant: 18 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
+ + 2880sq60sec (object, required) - full resolution. Captures every 60 seconds
+        + resolution: 2880x2880 (string, required)
+        + resize: scale (string, required)
+        + codec: h264 (string, required)
+        + framerate: 0.0167 (number, required)
+        + keyinterval: 1 (number, required)
+        + ratecontrol: CVBR (string, required)
+        + bitrate: 34000 (number, required)
+        + quant: 18 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
         
         
 ### List all video formats [GET]
@@ -336,7 +451,6 @@ Format of encoded video for recording and liveview
  + minquant: 0 (number, required) - min quantization
  + maxframerate (number, required) - max framerate of encoded video (FPS). min 15 FPS. Only appliapple for relevant rate controls
  + minframerate (number, required) - min framerate of encoded video (FPS). min 15 FPS. Only appliapple for relevant rate controls
- + frontFacing: false (boolean, required, default) - Front facing mode flag. False implies default projection. True implies planar projection.
 
 + Parameters
  + name (required, string, `fullRes30`) the relevant video format
@@ -409,6 +523,62 @@ Format of encoded video for recording and liveview
         + magnetoMode: 1 (number, required)
         + magnetoRate: 60 (number, required)
         + gpsRate: 1 (number, required)
+ + mode2fps (object, required) - capture most sensors at 2 fps
+        + accelMode: 2 (number, required)
+        + accelRate: 2 (number, required)
+        + gyroMode: 1 (number, required)
+        + gyroRate: 2 (number, required)
+        + magnetoMode: 1 (number, required)
+        + magnetoRate: 2 (number, required)
+        + gpsRate: 1 (number, required)
+ + mode1fps (object, required) - capture sensors at 1 fps
+        + accelMode: 2 (number, required)
+        + accelRate: 1 (number, required)
+        + gyroMode: 1 (number, required)
+        + gyroRate: 1 (number, required)
+        + magnetoMode: 1 (number, required)
+        + magnetoRate: 1 (number, required)
+        + gpsRate: 1 (number, required)
+ + mode2sec (object, required) - capture sensor data in 2 second intervals
+        + accelMode: 2 (number, required)
+        + accelRate: 0.5 (number, required)
+        + gyroMode: 1 (number, required)
+        + gyroRate: 0.5 (number, required)
+        + magnetoMode: 1 (number, required)
+        + magnetoRate: 0.5 (number, required)
+        + gpsRate: 0.5 (number, required)
+ + mode5sec (object, required) - capture sensor data in 5 second intervals
+        + accelMode: 2 (number, required)
+        + accelRate: 0.2 (number, required)
+        + gyroMode: 1 (number, required)
+        + gyroRate: 0.2 (number, required)
+        + magnetoMode: 1 (number, required)
+        + magnetoRate: 0.2 (number, required)
+        + gpsRate: 0.2 (number, required)
+ + mode10sec (object, required) - capture sensor data in 10 second intervals
+        + accelMode: 2 (number, required)
+        + accelRate: 0.1 (number, required)
+        + gyroMode: 1 (number, required)
+        + gyroRate: 0.1 (number, required)
+        + magnetoMode: 1 (number, required)
+        + magnetoRate: 0.1 (number, required)
+        + gpsRate: 0.1 (number, required)
+ + mode30sec (object, required) - capture sensor data in 30 second intervals
+        + accelMode: 2 (number, required)
+        + accelRate: 0.033 (number, required)
+        + gyroMode: 1 (number, required)
+        + gyroRate: 0.033 (number, required)
+        + magnetoMode: 1 (number, required)
+        + magnetoRate: 0.033 (number, required)
+        + gpsRate: 0.033 (number, required)
+ + mode60sec (object, required) - capture sensor data in 60 second intervals
+        + accelMode: 2 (number, required)
+        + accelRate: 0.0167 (number, required)
+        + gyroMode: 1 (number, required)
+        + gyroRate: 0.0167 (number, required)
+        + magnetoMode: 1 (number, required)
+        + magnetoRate: 0.0167 (number, required)
+        + gpsRate: 0.0167 (number, required)
 
 ### List all sensordata formats [GET]
 + Response 200 (application/json)
@@ -457,7 +627,6 @@ Start/stop recording and get current recording status. You can specify a config 
  + profile: proMode (string, optional, default) - The profile for the active recording
  + maxChapterDuration (number, optional, default) - The chapter duration for active recording
  + maxChapterFileSize (number, optional, default) - The chapter file size for active recording
- + frameRateMultiplier (number, optional, default) - The ratio of recorded frame rate to encoded frame rate for active recording
  + hours: 0 (number, required, sample) - duration in hours of active recording
  + minutes: 4 (number, required, sample) - duration in minutes (modulo hours) of active recording
  + seconds: 30 (number, required, sample) - duration in seconds (modulo hours and minutes) of active recording
@@ -488,15 +657,13 @@ Start/stop recording and get current recording status. You can specify a config 
 
 + Request (application/json)
  + Attributes (object)
-        + profile: slowMotion (string, optional, sample) - use slowMotion profile for this recording, which has a 60 fps encoded frame rate
-        + maxChapterDuration: 180 (number, optional, sample) - this recording will chapter on 180 second intervals
-        + frameRateMultiplier: .5 (number, optional, sample) - recorded frame rate is half the encoded frame rate, giving the slow motion effect
+        + profile: slowMotion (string, optional, sample) - request slowMotion profile for this recording, which has a 60 fps encoded frame rate. 
+        + maxChapterDuration: 180 (number, optional, sample) - request for recording to chapter on 180 second intervals
 
 + Response 201 (application/json)
  + Attributes (object)
-        + profile: slowMotion (string, required, sample) - use slowMotion profile for this recording, which has a 60 fps encoded frame rate
-        + maxChapterDuration: 180 (number, required, sample) - this recording will chapter on 180 second intervals
-        + frameRateMultiplier: .5 (number, required, sample) - recorded frame rate is half the encoded frame rate, giving the slow motion effect
+        + profile: slowMotion (string, required, sample) - active recording uses slowMotion profile
+        + maxChapterDuration: 180 (number, required, sample) - active recording chapters on 180 second intervals
         + hours: 0 (number, required, default)
         + minutes: 0 (number, required, default)
         + seconds: 0 (number, required, default)
