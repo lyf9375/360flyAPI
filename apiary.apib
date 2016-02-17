@@ -13,34 +13,6 @@ These response headers are to be included with _every_ response
 
                         X-360fly-API-Version: v0.1.0
 
-
-# Group Device Preferences
- 
-(modified from fly1.0 Device Preferences)
-Remove 'UMS' preferences since it is not in use and we introduced '/360fly/usb' interface
-
-## Device Preferences [/360fly/preferences]
-
-+ Attributes (object)
-  + IsActivated: 0 (boolean, required, default)  - Is device activated
-  + Registration: 0 (boolean, required, default) - Is device registered in 360fly
-
-
-### Retrieve device preferences [GET]
-+ Response 200 (application/json)
- + Attributes (Device Preferences)
-
-### Modify device preferences [PUT]
-+ Attributes (object)
- + IsActivated: 1 (number, required, sample) - activate device
-
-+ Request (application/json)
-
-+ Response 200 (application/json)
- + Attributes (object)
-        + IsActivated: 1 (number, required, sample)
-
-
 # Group Camera
 
 Configure 360fly media capture
@@ -210,7 +182,7 @@ The available media and sensordata formats. The various formats are used to comp
 + Attributes (object)
  + video (Camera Video Formats Collection, required) - list of available video formats
  + audio (Camera Audio Formats Collection, required) - list of available audio formats
- + sensordata (Camera Metadata Formats Collection, required) - list of available meta data formats
+ + sensordata (Camera Sensordata Formats Collection, required) - list of available meta data formats
 
 ### List all camera formats [GET]
 + Response 200 (application/json)
@@ -511,10 +483,10 @@ Format of encoded video for recording and liveview
 ### Remove audio format [DELETE]
 + Response 204
 
-## Camera Metadata Formats Collection [/360fly/camera/formats/sensordata]
+## Camera Sensordata Formats Collection [/360fly/camera/formats/sensordata]
 
 + Attributes (object)
- + mode30fps (Camera Metadata Format, required, default) - default sensor data capture behavior. Captures most sensors at 30fps
+ + mode30fps (Camera Sensordata Format, required, default) - default sensor data capture behavior. Captures most sensors at 30fps
  + mode60fps (object, required) - capture most sensors at 60fps
         + accelMode: 2 (number, required)
         + accelRate: 60 (number, required)
@@ -582,9 +554,9 @@ Format of encoded video for recording and liveview
 
 ### List all sensordata formats [GET]
 + Response 200 (application/json)
- + Attributes (Camera Metadata Formats Collection)
+ + Attributes (Camera Sensordata Formats Collection)
 
-## Camera Metadata Format [/360fly/camera/formats/sensordata/{name}]
+## Camera Sensordata Format [/360fly/camera/formats/sensordata/{name}]
 
 Format of sensordata. Effectively a configuration for underlying sensors, events, etc.
 
@@ -602,7 +574,7 @@ Format of sensordata. Effectively a configuration for underlying sensors, events
  
 ### Retrieve sensordata format details [GET]
 + Response 200 (application/json)
- + Attributes (Camera Metadata Format)
+ + Attributes (Camera Sensordata Format)
 
 ### Modify sensordata format [PUT]
 + Attributes (object)
@@ -611,15 +583,14 @@ Format of sensordata. Effectively a configuration for underlying sensors, events
 + Request (application/json)
 
 + Response 200 (application/json)
- + Attributes (Camera Metadata Format)
+ + Attributes (Camera Sensordata Format)
 
 ### Remove sensordata format [DELETE]
 + Response 204
 
-
 ## Recording [/360fly/camera/recording]
 
-* _Extends functionality of 1.0 recording endpoint_
+* _Supercedes functionality of 1.0 recording endpoint_
 
 Start/stop recording and get current recording status. You can specify a config for a new recording, or if left unspecified, your recording will use config given by `/360fly/camera/config`. A `GET` on an inactive recording gives `204`. A successful `POST` returns a `Location` header for the new recording download url (or the url to first chapter, in the case of chaptered recording)
 
@@ -690,11 +661,15 @@ Settings for the 360fly `rtsp` stream.
 
 
 ## Photo [/360fly/camera/photo]
+* Note: A single shot photo, or the first photo in a burst session, is taken immediately (at 0ms), so total photos taken is given by duration/interval + 1 e.g. duration = 400ms and interval = 200ms, then 3 photos will be taken at 0ms, 200ms, and 400ms.
+
 + Attributes (object)
  + projection: radial (string, required) - one of the supported projections (see '/360fly/camera/projections')
  + resolution: 3456x3456 (string, required, default) - resolution of photo
- + interval (number, optional, default) - Interval between taking burst photo (in milliseconds). Ignored for single shot
- + duration: 0 (number, optional, default) - Duration of time (in milliseconds) to take burst photos. 0 implies single shot
+ + interval (number, optional, default) - Interval between burst photos (in milliseconds). Ignored for single shot
+ + duration: 0 (number, optional, default) - Duration of time (in milliseconds) to take burst photos. 0 implies single shot.
+ 
+
 
 ### Take Photo [POST]
 
@@ -704,7 +679,7 @@ Returns location of the captured photo (for single shot), or the first one of th
 + Attributes (object)
  + projection: radial (string, required)
  + resolution: 3456x3456 (string, required)
- + interval: 200 (number, required) - Capture 5 photos in 1 second
+ + interval: 200 (number, required) - Capture photo every 200ms
  + duration: 1000 (number,required) - Capture photos for 1000ms
 
 + Response 201 (application/json)
@@ -865,6 +840,3 @@ For setting projection at manufacturing. Can only be done once.
 ### Reset USB Configuration to default [DELETE]
 + Response 204
  + Attributes (USB Configuration)
-
-
-
