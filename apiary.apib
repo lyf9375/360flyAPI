@@ -711,3 +711,235 @@ For setting projection at manufacturing. Can only be done once.
 
 
 
+
+# Group File Handling - extended from Fly1.0
+
+* New attribute: __sessionCount__ in media metadata. It represents the total number of burst photos or chaptering videos in the same session
+* All `/360fly/video/file` requests should be mapped to `/360fly/media/file`
+
+
+## Media Metadata [/360fly/media/meta/{mediaFile}]
+
++ Parameters
+    + mediaFile (required, string, `FLY00201.jpg`)
+    
++ Attributes (object)
+ + type: photo (string, required) - media file types: video, photo
+ + modified: `2014-05-18T00:09:16Z` (string, required) - Time & date of last modification to media file (ISO 8601)
+ + duration (array[number]) - [clip time, timescale] of duration
+ + fileSize: 123490357 (number, required) - File size (in bytes)
+ + modification (number, required) - Timestamp of when file was modified (in seconds)
+ + name: FLY00101.jpg (string, required) - Name of media file
+ + id (string, required) - Document ID of media file
+ + download (string, required) - Download URL on the 360Fly device
+ + durationSeconds (number, required) - duration in seconds
+ + instanceID (string, required) - instance ID of media file
+ + hasDuration: true (boolean, optional) - whether its duration is zero or not
+ + sessionCount: 1 (number, optional) - the total number of burst photos, or the total number of chaptering videos
+
+### Retrieve Media File Information [GET]
+
+* The _retrieve specific media file information_ command requires **authentication**.
+* Device _cannot_ be in UMS mode to retrieve this information.
+* Note: returns 404 (Not Found) if no media file present.
+
++ Response 200 (application/json)
+ + Attributes (Media Metadata)
+ 
+
+### Delete Media File [DELETE]
+
+Delete media file, and its Thumbnail.
+
+* The _delete media file_ command requires **authentication**.
+* Device _cannot_ be in UMS mode to perform this action.
+* Successful file deletion results in a 204 (No Content) response.
+
++ Response 204
+
+
+
+## Media File Collection - Method 1 [/360fly/media/file{?type,offset,limit}]
+
+##### __Command Parameters__
+Characteristic | Value (Range)
+---|---
+_type_      |   Media type: video, photo, all
+_offset_    |   0 to (total number videos on 360Fly device)
+_limit_     |   0 to (total number videos on 360Fly device)
+
++ Parameters
+    + type (optional, string, `all`) ... Media file type: video, photo, all
+    + offset (optional, integer, `0`) ... Zero-based offset into the list of files to return.
+    + limit (optional, integer, `50`) ... Maximum number of files to return per request.
+ 
+### Retrieve All Media Files [GET]
+
+
++ Response 200
+    + Body
+    
+            {
+                "items": [
+                    {
+                        "type": "video"
+                        "modified": "2014-05-18T00:09:16Z", 
+                        "duration": [
+                            12012120, 
+                            1000000
+                        ], 
+                        "fileSize": 21074620, 
+                        "modification": 1400371756, 
+                        "name": "FLY00201.mp4", 
+                        "id": "cc35a69c-db7b-4141-9cd0-e7b11e0e853c", 
+                        "download": "/360fly/media/file/100_2FLY/FLY00201.mp4", 
+                        "durationSeconds": 12.01212, 
+                        "instanceID": "36e1aa83-b186-4421-95d1-0029dbe96566", 
+                        "hasduration": true, 
+                        "sessionCount": 1
+                    }
+                    {
+                        "type": "photo"
+                        "modified": "2014-05-18T00:09:19Z", 
+                        "fileSize": 1104620, 
+                        "modification": 1400371759, 
+                        "name": "FLY00101.jpg", 
+                        "id": "cc35a69c-db7b-4141-9cd0-e7b11e0e853c", 
+                        "download": "/360fly/media/file/100_2FLY/FLY00101.jpg", 
+                        "instanceID": "36e1aa83-b186-4421-95d1-0029dbe96566", 
+                        "hasduration": false, 
+                        "sessionCount": 1
+                    }
+                ]
+                "offset": 0,
+                "itemCount": 2
+            }
+
+
+### Delete All Media Files [DELETE]
+
+Delete all media files, related files and empty DCIM folders on the 360Fly device.
+
+* The _delete all media files_ command requires **authentication**.
+* Device _cannot_ be in UMS mode to perform this action.
+* Successful file deletion results in a 204 (No Content) response.
+
++ Response 204
+
+
+## Media File Collection - Method 2 [/360fly/media/meta]
+
+##### __Command Parameters__
+Characteristic | Format |   Value (Range)
+---|---|---
+_Range_ |   "Range: files 0-3"  |   0 to (total number media files on 360Fly device)
+
+
+### Retrieve All Media File Information [GET]
+
+Retrieves the same _response data_ information as the _**Media File Collection - Method 1**_ section, 
+but also retrieves a JSON-encoded list of media files with metadata without concern for timeout.
+
+* The _list media file information_ command requires **authentication**.
+* Device _cannot_ be in UMS mode to retrieve this information.
+* Note: returns "itemCount":0 and "offset":0 if no media files present.
+
++ Request
+
+    + Header
+    
+            Range: files 0-3
+
++ Response 200
+
+
+## Related Media File Collection [/360fly/media/related/{mediaFile}{?relation}]
+
+
+##### __Command Parameters__
+Characteristic | Format |   Value (Range)
+---|---|---
+_mediaFile_ |   "FLY00201.jpg"  |  the media file
+_relation_  |   ""  |   the relation type: "thumbnail", "session". If not specified, all (default)
+
+
++ Parameters
+     + mediaFile (required, string, `FLY00201.jpg`) ... Media file
+     + relation (optional, string, `thumbnail`) ... Relation type: thumbnail, session
+
+### Retrieve Related Media Files [GET]
++ Request (application/json)
+
++ Response 200
+    + Body
+    
+               {
+                       "photo": "/360fly/media/file/100_2FLY/FLY00201.jpg", 
+                       "thumbnail": "/360fly/media/thumbnail/100_2FLY/FLY00501.jpg",
+                       "session": [
+                        {
+                         "photo": "/360fly/media/file/100_2FLY/FLY00201.jpg", 
+                         "thumbnail": "/360fly/media/thumbnail/100_2FLY/FLY00501.jpg"
+                        },
+                        {
+                         "photo": "/360fly/media/file/100_2FLY/FLY00202.jpg", 
+                         "thumbnail": "/360fly/media/thumbnail/100_2FLY/FLY00502.jpg"
+                        },
+                        {
+                         "photo": "/360fly/media/file/100_2FLY/FLY00203.jpg", 
+                         "thumbnail": "/360fly/media/thumbnail/100_2FLY/FLY00503.jpg"
+                        }
+                       ],
+                       "sessionCount":3
+               }
+
+
++ Request (application/json)
+
++ Response 200
+    + Body
+    
+               {
+                       "recording": "/360fly/media/file/100_2FLY/FLY00201.mp4", 
+                       "thumbnail": "/360fly/media/file/100_2FLY/FLY00201.thm",
+                       "session": [
+                        {
+                         "recording": "/360fly/media/file/100_2FLY/FLY00201.mp4", 
+                         "thumbnail": "/360fly/media/file/100_2FLY/FLY00201.thm"
+                        },
+                        {
+                         "recording": "/360fly/media/file/100_2FLY/FLY00202.mp4", 
+                         "thumbnail": "/360fly/media/file/100_2FLY/FLY00202.thm"
+                        },
+                        {
+                         "recording": "/360fly/media/file/100_2FLY/FLY00203.mp4", 
+                         "thumbnail": "/360fly/media/file/100_2FLY/FLY00203.thm"
+                        }
+                       ],
+                       "sessionCount":3
+               }
+               
+
+### Delete Related Media Files [DELETE]
+
+Delete media file and all its related files, if relation is not specified or equal to session
+Delete media file and only its thumbnail, if relation is specified as thumbnail.
+
+* The _Delete Related Media Files_ command requires **authentication**.
+* Device _cannot_ be in UMS mode to perform this action.
+* Successful file deletion results in a 204 (No Content) response.
+
++ Response 204
+
+
+
+
+
+ 
+
+
+
+
+
+
+
