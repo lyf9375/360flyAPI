@@ -1,0 +1,397 @@
+{
+	"id": "d6240b8f-4c5c-fab6-9335-03bffe924fc3",
+	"name": "General Device Control and Status",
+	"description": "",
+	"order": [],
+	"folders": [
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132666,
+			"id": "f2dcb413-d4fa-10f6-c84c-dd52bc56add7",
+			"name": "Battery",
+			"description": "",
+			"order": [
+				"7158f7c4-2d66-a9fe-8ba1-33f2a466961e"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132665,
+			"id": "9c61c24e-fc89-2e52-98b6-6ef201ffb418",
+			"name": "Device Storage",
+			"description": "",
+			"order": [
+				"c64d5381-5dfc-6141-a9c9-051fdc08bcd8"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132664,
+			"id": "307bb632-02d2-d45c-684e-5ff0f5d226a0",
+			"name": "Firmware",
+			"description": "",
+			"order": [
+				"7e57191f-6814-3781-3c10-3e25e26ce380",
+				"ff4a2c62-2458-ba06-9c93-ac5702753bb0"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132660,
+			"id": "47368bb9-b315-d776-09f8-53d7d3208ed0",
+			"name": "Info",
+			"description": "",
+			"order": [
+				"445e522f-3d01-930a-fb14-830b95cd9023"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132661,
+			"id": "77757990-bcbd-e8a7-d5ae-a4c5e56f1d06",
+			"name": "Name",
+			"description": "",
+			"order": [
+				"aa40cf27-db98-244d-e380-cafc5edeaf3c",
+				"cde12ce3-942e-4c1d-cb3a-43dc88719939"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132668,
+			"id": "a17f399b-4f08-3549-f11c-50b00df51379",
+			"name": "Ping",
+			"description": "",
+			"order": [
+				"5fa563c8-aa40-c2f3-6540-372218771c4d"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132662,
+			"id": "5bb360e6-a00e-b4ac-d5f0-bed431f31cea",
+			"name": "Power Mode",
+			"description": "",
+			"order": [
+				"9207d329-19ca-8ae4-0d10-23161b0cf0cf",
+				"1a62645c-4eca-3268-2e5d-67d4a1d9fdce"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132659,
+			"id": "3dd1bd97-d1e3-75b2-783a-a54d3629a918",
+			"name": "Status",
+			"description": "",
+			"order": [
+				"ddd3189b-31a1-5ff3-ba11-b3b35c1ae09c"
+			]
+		},
+		{
+			"owner": "315812",
+			"lastUpdatedBy": "315812",
+			"lastRevision": 136132663,
+			"id": "764a17c0-d50b-9342-8cf8-8b131af2e63f",
+			"name": "Time",
+			"description": "",
+			"order": [
+				"88c0682e-3d63-ef33-9c69-0f4c85af8d07",
+				"3e551cb7-71c8-9bd6-9941-cacd5c3f14dd"
+			]
+		}
+	],
+	"timestamp": 0,
+	"owner": "315812",
+	"remoteLink": null,
+	"public": false,
+	"requests": [
+		{
+			"id": "1a62645c-4eca-3268-2e5d-67d4a1d9fdce",
+			"headers": "Content-Type: application/json\n",
+			"url": "{{HOST}}/360fly/power",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "tests[\"Manual Test Required\"] = false",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1454693468212,
+			"name": "Set Power Mode Command",
+			"description": "This command is used to shutdown or reset the 360Fly device. \n\n* The _set power mode_ command requires **authentication**.\n\n* Successful shutdowns and resets result in a 204 ( _No Content_ ) response.\n\n#### __Command Data__\n\nCommand | Action\n--- | ---\n`\"mode\":0`  | _Shutdown_ the 360Fly device.\n`\"mode\":1`  | _Reset_ the 360Fly device.\n\n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3",
+			"rawModeData": "{\n    \"mode\":2\n}\n"
+		},
+		{
+			"id": "3e551cb7-71c8-9bd6-9941-cacd5c3f14dd",
+			"headers": "Content-Type: application/json\nAuthorization: Basic YWRtaW46MDAwMDAwMDA=\n",
+			"url": "{{HOST}}/360fly/time",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "tests[\"Response 204\"] = responseCode.code === 204\n\nif (responseCode.code === 204) {\n    var correctType = null;\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = false\n    }\n}\n\ntests[\"Response Body is Empty\"] = responseBody === \"\";",
+			"currentHelper": "basicAuth",
+			"helperAttributes": {
+				"username": "admin",
+				"password": "00000000",
+				"saveToRequest": true,
+				"id": "basic",
+				"timestamp": 1454678087782
+			},
+			"time": 1454693970784,
+			"name": "Set Device Time Command",
+			"description": "Sets the 360Fly device clock to the specified time.\n\n* The _set device time_ command requires **authentication**.\n\n* The _time_ field must comply with the ISO 8601 format.\n\n#### __Command Data__\n\nCommand | Action\n--- | ---\n`\"value\":2016-01-12T11:20:10Z`  |   Sets _date_ to 2016-01-12.\n                                |   Sets _time_ to 11:20:10.\n\n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3",
+			"rawModeData": "{\n    \"value\":\"2016-01-13T15:09:10Z\"\n}\n"
+		},
+		{
+			"id": "445e522f-3d01-930a-fb14-830b95cd9023",
+			"headers": "Accept: application/json\n",
+			"url": "{{HOST}}/360fly/info",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Response 200\"] = responseCode.code === 200\n\nif (responseCode.code === 200) {\n    var correctType = \"application/json\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1\n    } else {\n        tests[\"Content-Type is absent\"] = false;\n    }\n}",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1454693613102,
+			"name": "Retrieve Device Information Command",
+			"description": "Retrieves 360Fly device information in the form of the Bluetooth GATT Device Information Profile. Refer to the\n[Bluetooth GATT Device Information Profile](https://developer.bluetooth.org/TechnologyOverview/Pages/DIS.aspx) \nspecification for more information.\n\n* The _info_ command supports _both_ **authenticated** and **non-authenticated** requests.\n\n* The _info_ command does **NOT** require HTTPS\n\n#### __Response Data__\n\nCharacteristic | Definition | Return Value\n--- | --- | ---\n_model_no_      | Model number of device                | 360FLYBLK\n_ble_version_   | Version of BLE software               | B-00B0\n_serial_no_     | Device serial number                  | 123456789012345678\n_hw_version_    | Version of device hardware            | PCB-00\n_mac_address_   | Device MAC Address                    | E4:BA:D9:C0:00:46\n_name_          | Name assigned to device               | 360Fly Device\n_system_id_     | System identifier                     | 4600c0fe ffd9bae4    \n_manufacturer_  | Manufacturer of device                | 360fly\n_sw_version_    | Version of device software            | 1.0.0\n\n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3"
+		},
+		{
+			"id": "5fa563c8-aa40-c2f3-6540-372218771c4d",
+			"headers": "Accept: application/json\n",
+			"url": "{{HOST}}/360fly/ping",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Response 200\"] = responseCode.code === 200\n\nif (responseCode.code === 200) {\n    var correctType = \"application/json\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1\n    } else {\n        tests[\"Content-Type is absent\"] = false;\n    }\n}",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1454680071427,
+			"name": "Ping Webserver Command",
+			"description": "Ping the 360Fly device web server.\n\n* The _ping webserver_ command supports _both_ **authenticated** and **non-authenticated** requests.\n\n* The _time_ field is presented in ISO 8601 format.\n\n* The 360Fly device uses Coordinated Universal Time (UTC/GMT).\n\n* The _time data_ is in military (24-hour) time format.\n\n##### __Response Data__\n\nCharacteristic | Definition | Return Value\n--- | --- | ---\n_datetime_  |   Date: YYYY-MM-DD    |   YYYY-MM-DD **T** HH:MM:SS **Z**\n            |   Time: HH:MM:SS      |\n\n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3"
+		},
+		{
+			"id": "7158f7c4-2d66-a9fe-8ba1-33f2a466961e",
+			"headers": "Accept: application/json\nAuthorization: Basic YWRtaW46MDAwMDAwMDA=\n",
+			"url": "{{HOST}}/360fly/battery",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Response 200\"] = responseCode.code === 200\n\nif (responseCode.code === 200) {\n    var correctType = \"application/json\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1\n    } else {\n        tests[\"Content-Type is absent\"] = false;\n    }\n}",
+			"currentHelper": "basicAuth",
+			"helperAttributes": {
+				"username": "admin",
+				"password": "00000000",
+				"saveToRequest": true,
+				"id": "basic",
+				"timestamp": 1454678087782
+			},
+			"time": 1454680080391,
+			"name": "Retrieve Battery Status Command",
+			"description": "Retrieves the battery status details from the 360Fly device.\n\n* The _retrieve storage information_ command requires **authentication**.\n\n* `minutesRemaining` field is only an estimate.\n\n* Responds with 500 (Internal Server Error) if battery status is unavailable.\n\n##### __Response Data__\n\nCharacteristic | Definition | Return Value\n--- | --- | ---\n_charge_mode_       |   Not Charging    |   0\n                    |   Charging        |   1\n                    |   Charged         |   2\n_level_             |   Percent battery charge remaining.   |   0% - 100%\n_status_            |   Identical to _charge_mode_.         |\n_minutes_remaining_ |   Minutes of record time remaining on present battery charge level.   |\n\n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3"
+		},
+		{
+			"id": "7e57191f-6814-3781-3c10-3e25e26ce380",
+			"headers": "Accept: application/json\nAuthorization: Basic YWRtaW46MDAwMDAwMDA=\n",
+			"url": "{{HOST}}/360fly/firmware",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Response 200\"] = responseCode.code === 200\n\nif (responseCode.code === 200) {\n    var correctType = \"application/json\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1\n    } else {\n        tests[\"Content-Type is absent\"] = false;\n    }\n}\n",
+			"currentHelper": "basicAuth",
+			"helperAttributes": {
+				"username": "admin",
+				"password": "00000000",
+				"saveToRequest": true,
+				"id": "basic",
+				"timestamp": 1454678087782
+			},
+			"time": 1454693916718,
+			"name": "Retrieve Firmware Status Command",
+			"description": "Retrieves the device firmware version number and creation date information.\n\n* The _retrieve firmware info_ command requires **authentication**.\n\n* The _time_ field is presented in ISO 8601 format.\n\n##### __Response Data__\n\nCharacteristic | Definition | Return Value\n--- | --- | ---\n_version_   |   Firmware Version            |   \"X.Y.Z\"\n_created_   |   Creation date and time      |   \" WD MM DD HH:MM:SS TZ YYYY\"\n            |                               |   WD: Weekday (3 chars)\n            |                               |   MM: Month (3 chars)\n            |                               |   DD: Day (2 digits)\n            |                               |   HH: Hours (2 digits)\n            |                               |   MM: Minutes (2 digits)\n            |                               |   SS: Seconds (2 digits)\n            |                               |   TZ: Time Zone (3 digits)\n            |                               |   YYYY: Year (4 digits)\n\n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3"
+		},
+		{
+			"id": "88c0682e-3d63-ef33-9c69-0f4c85af8d07",
+			"headers": "Accept: application/json\nAuthorization: Basic YWRtaW46MDAwMDAwMDA=\n",
+			"url": "{{HOST}}/360fly/time",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Response 200\"] = responseCode.code === 200\n\nif (responseCode.code === 200) {\n    var correctType = \"application/json\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1\n    } else {\n        tests[\"Content-Type is absent\"] = false;\n    }\n}",
+			"currentHelper": "basicAuth",
+			"helperAttributes": {
+				"username": "admin",
+				"password": "00000000",
+				"saveToRequest": true,
+				"id": "basic",
+				"timestamp": 1454678087782
+			},
+			"time": 1454680170753,
+			"name": "Get Device Time",
+			"description": "Retrieves the current time stored on the 360Fly device.\n\n* The _retrieve device time_ command requires **authentication**.\n\n* The _time_ field is presented in ISO 8601 format.\n\n* The 360Fly device uses Coordinated Universal Time (UTC/GMT).\n\n* The _time data_ is in military (24-hour) time format.\n\n##### __Response Data__\n\nCharacteristic | Definition | Return Value\n--- | --- | ---\n_value_ |   Date: YYYY-MM-DD    |   YYYY-MM-DD **T** HH:MM:SS **Z**\n        |   Time: HH:MM:SS      |\n\n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3"
+		},
+		{
+			"id": "9207d329-19ca-8ae4-0d10-23161b0cf0cf",
+			"headers": "Accept: application/json\nAuthorization: Basic YWRtaW46MDAwMDAwMDA=\n",
+			"url": "{{HOST}}/360fly/power",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Response 200\"] = responseCode.code === 200\n\nif (responseCode.code === 200) {\n    var correctType = \"application/json\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1\n    } else {\n        tests[\"Content-Type is absent\"] = false;\n    }\n}",
+			"currentHelper": "basicAuth",
+			"helperAttributes": {
+				"username": "admin",
+				"password": "00000000",
+				"saveToRequest": true,
+				"id": "basic",
+				"timestamp": 1454678087782
+			},
+			"time": 1454679941393,
+			"name": "Retrieve Power Mode Command",
+			"description": "Retrieves power mode status of the 360Fly device.\n\n* The _retrieve power mode_ command requires **authentication**.\n\n* Note: The 360Fly device shall only return _2_ (device \"On\") since a network connection is required.\n\n#### __Response Data__\n\nCharacteristic | Definition | Return Value\n--- | --- | ---\n_mode_  | Device in \"Off\" state     | 0\n        | Device in \"Boot\" state    | 1\n        | Device in \"On\" state      | 2\n\n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3"
+		},
+		{
+			"id": "aa40cf27-db98-244d-e380-cafc5edeaf3c",
+			"headers": "Accept: text/plain\nAuthorization: Basic YWRtaW46MDAwMDAwMDA=\n",
+			"url": "{{HOST}}/360fly/name",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Response 200\"] = responseCode.code === 200\n\nif (responseCode.code === 200) {\n    var correctType = \"text/plain\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1\n    } else {\n        tests[\"Content-Type is absent\"] = false;\n    }\n}",
+			"currentHelper": "basicAuth",
+			"helperAttributes": {
+				"username": "admin",
+				"password": "00000000",
+				"saveToRequest": true,
+				"id": "basic",
+				"timestamp": 1454678087782
+			},
+			"time": 1454680124481,
+			"name": "Retrieve Camera Name Command",
+			"description": "Retrieves the name of the 360Fly device as set by the user. \nThis field is equivalent to hostname or the WiFi AP SSID.\n\n* The _retrieve name_ command requires **authentication**.\n\n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3"
+		},
+		{
+			"id": "c64d5381-5dfc-6141-a9c9-051fdc08bcd8",
+			"headers": "Accept: application/json\nAuthorization: Basic YWRtaW46MDAwMDAwMDA=\n",
+			"url": "{{HOST}}/360fly/storage",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "if (responseCode.code === 409) {\n    tests[\"Check to ensure mass storage, if in mass storage, ignore this failure\"] = false\n}\n\nif (responseCode.code === 200) {\n    tests[\"Response 200\"] = responseCode.code === 200\n    var correctType = \"application/json\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1\n}",
+			"currentHelper": "basicAuth",
+			"helperAttributes": {
+				"username": "admin",
+				"password": "00000000",
+				"saveToRequest": true,
+				"id": "basic",
+				"timestamp": 1454678087782
+			},
+			"time": 1454680342612,
+			"name": "Retrieve Storage Information Command",
+			"description": "Retrieves the SD card storage details from the 360Fly device.\n\n* The _retrieve storage info_ command requires **authentication**.\n\n##### __Response Data__\n\nCharacteristic | Definition | Return Value\n--- | --- | ---\n_available_         |   Amount of _free_ (remaining) storage on the device (in kilobytes).  |   15175104\n_used_              |   Amount of _used_ storage on the device (in kilobytes).              |   112992\n_minutesRemaining_  |   Available storage minutes remaining (if recording).                 |   101.16736\n_capacity_          |   _Total_ storage avaiable on the device (in kilobytes).              |   15288096\n_sdstatus_          |   Ready (normal)                                                      |   0\n                    |   Full                                                                |   1\n                    |   Reformatting                                                        |   2\n                    \n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3"
+		},
+		{
+			"id": "cde12ce3-942e-4c1d-cb3a-43dc88719939",
+			"headers": "Content-Type: text/plain\n",
+			"url": "{{HOST}}/360fly/name",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "PUT",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "tests[\"Manual Test Required\"] = false",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1454693433305,
+			"name": "Change/Update Camera Name Command",
+			"description": "Changes/Updates the user assigned name of the 360Fly device. \n\n* The _change/update name_ command requires **authentication**.\n\n* Note: Restrictions in length and character set may cause the request to fail.\n    * The _maximum_ name length is 18 characters.\n    * Only \"printable\" characters (`isprint()` in c) are allowed.\n\n* **_Changing the 360Fly device name will cause the WiFi connection to break_**.  Therefore, no response is sent.\n\n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3",
+			"rawModeData": "Neaà\n"
+		},
+		{
+			"id": "ddd3189b-31a1-5ff3-ba11-b3b35c1ae09c",
+			"headers": "Accept: application/json\n",
+			"url": "{{HOST}}/360fly/status",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Response 200\"] = responseCode.code === 200\n\nif (responseCode.code === 200) {\n    var correctType = \"application/json\";\n    var returnedType = postman.getResponseHeader(\"Content-Type\");\n    if (null !== returnedType) {\n        tests[\"Content-Type is correct\"] = returnedType.indexOf(correctType) > -1\n    } else {\n        tests[\"Content-Type is absent\"] = false;\n    }\n}",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1454680141487,
+			"name": "Retrieve Device Status Command",
+			"description": "Retrieves a current \"quick-view\" status of the 360Fly device.  In the case of an error, an\nempty dictionary is set as the value for the offending field(s) (e.g. if there is an error retrieving storage\ndata, then the storage field will read `\"storage\":{}`).  To debug errors, inspect the relevant endpoint(s) e.g.\nif there is a storage error, perform a `GET /360fly/storage`.\n\n* The _status_ command supports _both_ **authenticated** and **non-authenticated** requests.\n\n* The _status_ command does **NOT** require HTTPS\n\n* Note: Reported status information matches the 360Fly BLE service characteristic(s).\n\n#### __Response Data__\n\n##### *Camera Status*\n\nCharacteristic | Definition | Return Value\n--- | --- | ---\n_mode_ | Off                | 0\n       | Booting            | 1\n       | Sleeping           | 2\n       | Ready              | 3\n       | Recording          | 4\n       | USB Mass Storage   | 5\n       | FW Update          | 6    \n_usb_  | USB connection present | 1\n       | No USB connection      | 0\n\n##### *Battery*\n\nCharacteristic | Definition | Return Value\n--- | --- | ---\n_charge_mode_   | Device Not Charging   | 0\n                | Device Charging       | 1 \n                | Device Charged        | 2\n                | Error                 | _any other number_\n_level_         | Current battery charge level (in percentage)  | 0 to 100\n_status_        | Identical to _charge_mode_    |\n\n##### *Storage*\n\nCharacteristic | Definition\n--- | ---\n_capacity_  | _Total_ storage avaiable on the device (in kilobytes).\n_usage_     | Amount of _used_ storage on the device (in kilobytes).\n_available_ | Amount of _free_ (remaining) storage on the device (in kilobytes).\n\n##### *Power*\n\nCharacteristic | Definition | Return Value\n--- | --- | ---\n_mode_  | Device in \"Off\" state     | 0\n        | Device in \"Boot\" state    | 1\n        | Device in \"On\" state      | 2\n\n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3"
+		},
+		{
+			"id": "ff4a2c62-2458-ba06-9c93-ac5702753bb0",
+			"headers": "Content-Type: application/octet-stream\nAccept: text/html\nAccept: application/json\n",
+			"url": "{{HOST}}/360fly/firmware",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "tests[\"Manual Test Required\"] = false",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1454693545026,
+			"name": "Firmware Update Command",
+			"description": "Upload a firmware binary file and initiate an update to the 360Fly device.\n\n* The _firmware update_ command requires **authentication**.\n\n* The _version number_ field only supports numerical characters.\n\n* Must specify full path to .fly file location.\n\n",
+			"collectionId": "d6240b8f-4c5c-fab6-9335-03bffe924fc3",
+			"rawModeData": "(Firmware binary)\n"
+		}
+	]
+}
