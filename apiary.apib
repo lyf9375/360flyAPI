@@ -933,10 +933,34 @@ Delete media file and only its thumbnail, if relation is specified as thumbnail.
 
 
 
+## Media File Retrieval [/360fly/media/file/{mediaFilePath}]
+
+This section provides commands for downloading a media file on the 360Fly device.
+
++ Parameters
+    + mediaFilePath (required, string, `/100_2FLY/FLY00201.mp4`) ... the path of media file
+
+### Download/Rename A Specific Media File Command [GET]
+
+* The _download/rename a specific media file_ command requires **NO authentication**. _Authenticated requests_ **ARE NOT SUPPORTED.**
+* Device _cannot_ be in UMS mode to perform this action.
+* A single byte-range request is supported per http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35. The ability to request byte ranges is required by this endpoint for progressive downloading.
+* The media file is downloaded and stored in user's root directory.
+
++ Response 200 (application/octet-stream)
 
 
- 
 
+## Photo Thumbnail Retrieval [/360fly/media/thumbnail/{photoFilePath}]
+
+This section provides commands for downloading thumbnail for a photo file on the 360Fly device.
+
++ Parameters
+    + photoFilePath (required, string, `/100_2FLY/FLY00201.jpg`) ... the path of photo file
+
+### Retrieve Photo Thumbnail [GET]
+
++ Response 200 (application/octet-stream)
 
 
 
