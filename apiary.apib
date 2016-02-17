@@ -940,9 +940,9 @@ This section provides commands for downloading a media file on the 360Fly device
 + Parameters
     + mediaFilePath (required, string, `/100_2FLY/FLY00201.mp4`) ... the path of media file
 
-### Download/Rename A Specific Media File Command [GET]
+### Download A Specific Media File Command [GET]
 
-* The _download/rename a specific media file_ command requires **NO authentication**. _Authenticated requests_ **ARE NOT SUPPORTED.**
+* As for now, the _download a specific media file_ command requires **NO authentication** as with Fly1.0. 
 * Device _cannot_ be in UMS mode to perform this action.
 * A single byte-range request is supported per http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35. The ability to request byte ranges is required by this endpoint for progressive downloading.
 * The media file is downloaded and stored in user's root directory.
