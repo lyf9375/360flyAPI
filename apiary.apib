@@ -840,3 +840,227 @@ For setting projection at manufacturing. Can only be done once.
 ### Reset USB Configuration to default [DELETE]
 + Response 204
  + Attributes (USB Configuration)
+
+
+
+# Group File Handling - extended from Fly1.0
+
+* New attribute: __sessionCount__ in media metadata. It represents the total number of burst photos or chaptering videos in the same session
+* All `/360fly/video/file` requests should be mapped to `/360fly/media/file`
+
+
+## Media Metadata [/360fly/media/meta/{mediaFilePath}]
+
++ Parameters
+    + mediaFilePath (required, string, `100_3FLY/FLY00201.jpg`)
+    
++ Attributes (object)
+ + type: photo (string, required) - media file types: video, photo
+ + modified: `2014-05-18T00:09:16Z` (string, required) - Time & date of last modification to media file (ISO 8601)
+ + duration (array[number]) - [clip time, timescale] of duration
+ + fileSize: 123490357 (number, required) - File size (in bytes)
+ + modification (number, required) - Timestamp of when file was modified (in seconds)
+ + name: 001_2FLY/FLY00101.jpg (string, required) - Name of media file
+ + id (string, required) - Document ID of media file
+ + download (string, required) - Download URL on the 360Fly device
+ + durationSeconds (number, required) - duration in seconds
+ + instanceID (string, required) - instance ID of media file
+ + hasDuration: true (boolean, optional) - whether its duration is zero or not
+ + sessionCount: 1 (number, optional) - the total number of burst photos, or the total number of chaptering videos
+
+### Retrieve Media File Information [GET]
+
+* The _retrieve specific media file information_ command requires **authentication**.
+* Device _cannot_ be in UMS mode to retrieve this information.
+* Note: returns 404 (Not Found) if no media file present.
+
++ Response 200 (application/json)
+ + Attributes (Media Metadata)
+ 
+
+
+## Media File Collection [/360fly/media/file{?type,offset,limit}]
+
+##### __Command Parameters__
+Characteristic | Value (Range)
+---|---
+_type_      |   Media type: video, photo; if not specified, means all types
+_offset_    |   0 to (total number videos on 360Fly device)
+_limit_     |   0 to (total number videos on 360Fly device)
+
++ Parameters
+    + type (optional, string) ... Media file type: video, photo; if not specified, means all types
+    + offset (optional, integer, `0`) ... Zero-based offset into the list of files to return.
+    + limit (optional, integer, `50`) ... Maximum number of files to return per request.
+ 
+### Retrieve All Media Files [GET]
+
+
++ Response 200
+    + Body
+    
+            {
+                "items": [
+                    {
+                        "type": "video"
+                        "modified": "2014-05-18T00:09:16Z", 
+                        "duration": [
+                            12012120, 
+                            1000000
+                        ], 
+                        "fileSize": 21074620, 
+                        "modification": 1400371756, 
+                        "name": "100_3FLY/FLY00201.mp4", 
+                        "id": "cc35a69c-db7b-4141-9cd0-e7b11e0e853c", 
+                        "download": "/360fly/media/file/100_3FLY/FLY00201.mp4", 
+                        "durationSeconds": 12.01212, 
+                        "instanceID": "36e1aa83-b186-4421-95d1-0029dbe96566", 
+                        "hasduration": true, 
+                        "sessionCount": 1
+                    }
+                    {
+                        "type": "photo"
+                        "modified": "2014-05-18T00:09:19Z", 
+                        "fileSize": 1104620, 
+                        "modification": 1400371759, 
+                        "name": "100_3FLY/FLY00101.jpg", 
+                        "id": "cc35a69c-db7b-4141-9cd0-e7b11e0e853c", 
+                        "download": "/360fly/media/file/100_3FLY/FLY00101.jpg", 
+                        "instanceID": "36e1aa83-b186-4421-95d1-0029dbe96566", 
+                        "hasduration": false, 
+                        "sessionCount": 1
+                    }
+                ]
+                "offset": 0,
+                "itemCount": 2
+            }
+
+
+### Delete All Media Files [DELETE]
+
+Delete all media files, related files and empty DCIM folders on the 360Fly device.
+
+* The _delete all media files_ command requires **authentication**.
+* Device _cannot_ be in UMS mode to perform this action.
+* Successful file deletion results in a 204 (No Content) response.
+
++ Response 204
+
+
+
+## Related Media File Collection [/360fly/media/related/{mediaFilePath}{?relation}]
+
+
+##### __Command Parameters__
+Characteristic | Format |   Value (Range)
+---|---|---
+mediaFilePath |   "100_3FLY/FLY00201.jpg"  |  the media file
+_relation_  |   ""  |   the relation type: "thumbnail", "session". If not specified, all (default)
+
+
++ Parameters
+     + mediaFilePath (required, string, `100_3FLY/FLY00201.jpg`) ... Media file
+     + relation (optional, string) ... Relation type: thumbnail, session
+
+### Retrieve Related Media Files [GET]
++ Request (application/json)
+
++ Response 200
+    + Body
+    
+               {
+                       "photo": "/360fly/media/file/100_3FLY/FLY00201.jpg", 
+                       "thumbnail": "/360fly/media/thumbnail/100_3FLY/FLY00501.jpg",
+                       "session": [
+                        {
+                         "photo": "/360fly/media/file/100_3FLY/FLY00201.jpg", 
+                         "thumbnail": "/360fly/media/thumbnail/100_3FLY/FLY00501.jpg"
+                        },
+                        {
+                         "photo": "/360fly/media/file/100_3FLY/FLY00202.jpg", 
+                         "thumbnail": "/360fly/media/thumbnail/100_3FLY/FLY00502.jpg"
+                        },
+                        {
+                         "photo": "/360fly/media/file/100_3FLY/FLY00203.jpg", 
+                         "thumbnail": "/360fly/media/thumbnail/100_3FLY/FLY00503.jpg"
+                        }
+                       ],
+                       "sessionCount":3
+               }
+
+
++ Request (application/json)
+
++ Response 200
+    + Body
+    
+               {
+                       "recording": "/360fly/media/file/100_3FLY/FLY00201.mp4", 
+                       "thumbnail": "/360fly/media/file/100_3FLY/FLY00201.thm",
+                       "session": [
+                        {
+                         "recording": "/360fly/media/file/100_3FLY/FLY00201.mp4", 
+                         "thumbnail": "/360fly/media/file/100_3FLY/FLY00201.thm"
+                        },
+                        {
+                         "recording": "/360fly/media/file/100_3FLY/FLY00202.mp4", 
+                         "thumbnail": "/360fly/media/file/100_3FLY/FLY00202.thm"
+                        },
+                        {
+                         "recording": "/360fly/media/file/100_3FLY/FLY00203.mp4", 
+                         "thumbnail": "/360fly/media/file/100_3FLY/FLY00203.thm"
+                        }
+                       ],
+                       "sessionCount":3
+               }
+               
+
+### Delete Related Media Files [DELETE]
+
+Delete media file and all its related files, if relation is not specified or equal to session
+Delete media file and only its thumbnail, if relation is specified as thumbnail.
+
+* The _Delete Related Media Files_ command requires **authentication**.
+* Device _cannot_ be in UMS mode to perform this action.
+* Successful file deletion results in a 204 (No Content) response.
+
++ Response 204
+
+
+
+## Media File Retrieval [/360fly/media/file/{mediaFilePath}]
+
+This section provides commands for downloading a media file on the 360Fly device.
+
++ Parameters
+    + mediaFilePath (required, string, `100_3FLY/FLY00201.mp4`) ... the media file
+
+### Download A Specific Media File Command [GET]
+
+* The _download a specific media file_ command requires **authentication**. This is not the same as in Fly1.0. 
+* Device _cannot_ be in UMS mode to perform this action.
+* A single byte-range request is supported per http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35. The ability to request byte ranges is required by this endpoint for progressive downloading.
+* The media file is downloaded and stored in user's root directory.
+
++ Response 200 (application/octet-stream)
+
+
+
+## Media Thumbnail Retrieval [/360fly/media/thumbnail/{mediaFilePath}{?time,timescale}]
+
+This section provides commands for downloading thumbnail for a media file on the 360Fly device.
+
++ Parameters
+    + mediaFilePath (required, string, `100_3FLY/FLY00201.jpg`) ... the media file
+    + time (optional, integer, `495000`) ... valid only for video file. The time in media file from which thumbnail is generated.
+    + timescale (optional, integer, `3000`) ... valid only for video file. the timescale for time.
+
+### Create and Retrieve Media Thumbnail [GET]
+
++ Response 200 (application/octet-stream)
+
+
+
+
+
+
