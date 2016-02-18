@@ -138,7 +138,7 @@ Operating mode of the camera
 
 ## Camera Media Profile [/360fly/camera/profiles/{name}]
 
-Describes capture/encoding formats for recording, audio, sensordata, liveview, and photo.
+Describes capture/encoding formats for recording, audio, sensordata, liveview. Also specifices the projection data embedded into media, and the frame playback duration for recordings.
 
 + Attributes (object)
  + recordingFormat: fullRes30 (string, required) - format of recorded video. See /camera/formats/video
@@ -658,29 +658,22 @@ Settings for the 360fly `rtsp` stream.
 + Response 200 (application/json)
  + Attributes (Liveview)
 
-
-
 ## Photo [/360fly/camera/photo]
-* Note: A single shot photo, or the first photo in a burst session, is taken immediately (at 0ms), so total photos taken is given by duration/interval + 1 e.g. duration = 400ms and interval = 200ms, then 3 photos will be taken at 0ms, 200ms, and 400ms.
+
+Capture a single high-resolution JPEG image, or multiple images (burst).
 
 + Attributes (object)
- + projection: radial (string, required) - one of the supported projections (see '/360fly/camera/projections')
  + resolution: 3456x3456 (string, required, default) - resolution of photo
- + interval (number, optional, default) - Interval between burst photos (in milliseconds). Ignored for single shot
- + duration: 0 (number, optional, default) - Duration of time (in milliseconds) to take burst photos. 0 implies single shot.
- 
-
+ + count: 1 (number, required, default) - number of photos to take. > 1 implies burst mode
 
 ### Take Photo [POST]
 
-Returns location of the captured photo (for single shot), or the first one of the burst photo
+`Location` response header gives url of the captured photo for single shot, or the url of the first photo for burst 
 
 + Request (application/json)
 + Attributes (object)
- + projection: radial (string, required)
- + resolution: 3456x3456 (string, required)
- + interval: 200 (number, required) - Capture photo every 200ms
- + duration: 1000 (number,required) - Capture photos for 1000ms
+ + resolution: 3456x3456 (string, required) - resolution is `3456x3456`
+ + count: 3 (number, required) - Take a burst of 3 photos
 
 + Response 201 (application/json)
  + Header
