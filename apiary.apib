@@ -22,7 +22,7 @@ Configure 360fly media capture
 Operating mode of the camera
 
 + Attributes (object)
- + profile: proMode (string, required, default) - Default camera profile. Determines media formats for recorded and liveview video, audio, sensordata, and metadata 
+ + profile: proMode_2880sq_30fps (string, required, default) - Current camera profile (see /camera/profiles). Determines media formats for recorded and liveview video, audio, sensordata, and metadata 
  + maxChapterDuration (number, required, sample) - Max duration, in seconds, for a chapter in a recording. 
  + maxChapterFileSize  (number, required, sample) - Max file size, in bytes, for a chapter in a recording
 
@@ -33,98 +33,91 @@ Operating mode of the camera
 ### Modify camera config [PUT]
 + Attributes (object)
  + maxChapterDuration: 180 (number, optional, sample) - set chapter duration to 180 seconds
- + profile: slowMotion (string, optional, sample) - Use a profile with 60FPS encoded frame-rate for a slow motion effect
+ + profile: slowMotion_1728sq_60fps (string, optional, sample) - Use a profile with 60FPS encoded frame-rate for a slow motion effect
 
 + Request (application/json)
 
 + Response 200 (application/json)
  + Attributes (object)
-        + profile: slowMotion (string, required, sample)
+        + profile: slowMotion_1728sq_60fps (string, required, sample)
         + maxChapterDuration: 180 (number, required, sample)
         + maxChapterFileSize (number, required, sample)
 
 ## Camera Media Profile Collection [/360fly/camera/profiles]
 
 + Attributes (object)
- + proMode (Camera Media Profile, required, default) - Uses recording format for full resolution recording at 30fps
- + fullRes24 (object, required) - Uses recording format for full resolution at 24 fps. Allows bandwidth for liveview
+ + proMode_2880sq_30fps (Camera Media Profile, required, default) - Uses recording format for full resolution recording at 30fps
+ + standard_2880sq_24fps (object, required) - Uses recording format for full resolution at 24 fps. Allows bandwidth for liveview
         + recordingFormat: fullRes24 (string, required)
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 1424sq24 (string, required)
         + projection: radial (string, required)
         + frameDuration: 24 (string, required)
- + almostFullRes (object, required) - Almost full resolution at 30 fps. Allow some bandwidth for liveview
-        + recordingFormat: 2816sq30 (string,required)
-        + audioFormat: 48KAAC4 (string, required)
-        + sensordataFormat: mode30fps (string, required)
-        + liveviewFormat: 752sq15 (string, required)
-        + projection: radial (string, required)
-        + frameDuration: 30 (string, required)
- + frontFacing1584p (object, required) - 1584p at 30 fps in front facing mode
+ + frontFacing_1584p_30fps (object, required) - 1584p at 30 fps in front facing mode
         + recordingFormat: 1584p30
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 720p15 (string, required)
         + projection: planar (string, required)
         + frameDuration: 30 (string, required)
- + frontFacing1440p (object, required) - 1440p at 30 fps in front facing mode
+ + frontFacing_1440p_30fps (object, required) - 1440p at 30 fps in front facing mode
         + recordingFormat: 1440p30 (string, required)
         + audioFormat: 48KAAC4 (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 720p15 (string, required)
         + projection: planar (string, required)
         + frameDuration: 30 (string, required)
- + slowMotion (object, required) - 2032x2032 resolution at 60 fps. Recommended profile for slow motion recording
-        + recordingFormat: 2032sq60 (string, required)
+ + slowMotion_1728sq_60fps (object, required) -  60 fps encoded frame rate for slow motion recording
+        + recordingFormat: 1728sq60 (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode60fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
- + timeLapseHalfSec (object, required) - Uses recording format for full resolution at 2 fps. Suitable for time lapse recording where each frame represents a half second interval
+ + timeLapse_2880sq_2fps (object, required) - Uses recording format for full resolution at 2 fps. Suitable for time lapse recording where each frame represents a half second interval
         + recordingFormat: 2880sq2 (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode2fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
- + timeLapse1sec (object, required) - Uses recording format for full resolution at 1 fps. Suitable for time lapse recording where each frame represents a 1 second interval
+ + timeLapse_2880sq_1fps (object, required) - Uses recording format for full resolution at 1 fps. Suitable for time lapse recording where each frame represents a 1 second interval
         + recordingFormat: 2880sq1 (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode1fps (string, required)
         + liveviewFormat: 752sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
- + timeLapse2sec (object, required) - Suitable for time lapse recording where each frame represents a 2 second interval
+ + timeLapse_2880sq_2sec (object, required) - Suitable for time lapse recording where each frame represents a 2 second interval
         + recordingFormat: 2880sq2sec (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode2sec (string, required)
         + liveviewFormat: 752sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
- + timeLapse5sec (object, required) - Suitable for time lapse recording where each frame represents a 5 second interval
+ + timeLapse_2880sq_5sec (object, required) - Suitable for time lapse recording where each frame represents a 5 second interval
         + recordingFormat: 2880sq5sec (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode5sec (string, required)
         + liveviewFormat: 752sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
- + timeLapse10sec (object, required) - Suitable for time lapse recording where each frame represents a 10 second interval
+ + timeLapse_2880sq_10sec (object, required) - Suitable for time lapse recording where each frame represents a 10 second interval
         + recordingFormat: 2880sq10sec (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode10sec (string, required)
         + liveviewFormat: 752sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
- + timeLapse30sec (object, required) - Suitable for time lapse recording where each frame represents a 30 second interval
+ + timeLapse_2880sq_30sec (object, required) - Suitable for time lapse recording where each frame represents a 30 second interval
         + recordingFormat: 2880sq30sec (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode30sec (string, required)
         + liveviewFormat: 752sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
- + timeLapse60sec (object, required) - Suitable for time lapse recording where each frame represents a 60 second interval
+ + timeLapse_2880sq_60sec (object, required) - Suitable for time lapse recording where each frame represents a 60 second interval
         + recordingFormat: 2880sq60sec (string, required)
         + audioFormat (string, required)
         + sensordataFormat: mode60sec (string, required)
@@ -149,29 +142,11 @@ Describes capture/encoding formats for recording, audio, sensordata, liveview. A
  + frameDuration: 30 (string, required, default) - frame playback duration of recordings, represented as the denominator e.g. 30 implies 1/30seconds
  
 + Parameters
- + name (required, string, `proMode`) the relevant profile
+ + name (required, string, `proMode_2880sq_30fps`) the relevant profile
  
 ### Retrieve media profile details [GET]
 + Response 200 (application/json)
  + Attributes (Camera Media Profile)
-
-### Create or modify media profile [PUT]
-+ Attributes (object)
- + sensordataFormat: mode60fps (string, optional, sample)
-
-+ Request (application/json)
-
-+ Response 200 (application/json)
- + Attributes (object)
-        + recordingFormat: fullRes30 (string, required)
-        + audioFormat: 48KAAC4 (string, required)
-        + sensordataFormat: mode60fps (string, required)
-        + liveviewFormat: 752sq15 (string, required)
-        + projection: radial (string, required)
-        + frameDuration: 30 (number, required)
-
-### Remove media profile [DELETE]
-+ Response 204
 
 ## Camera Formats Collection [/360fly/camera/formats]
 
@@ -270,8 +245,8 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
- + 2032sq60 (object, required) - The max resolution recording format at 60fps
-        + resolution: 2032x2032 (string, required)
+ + 1728sq60 (object, required) - The max resolution recording format at 60fps
+        + resolution: 1728x1728 (string, required)
         + resize: scale (string, required)
         + codec: h264 (string, required)
         + framerate: 60 (number, required)
@@ -432,19 +407,6 @@ Format of encoded video for recording and liveview
 + Response 200 (application/json)
  + Attributes (Camera Video Format)
 
-### Modify video format [PUT]
-
-+ Attributes (object)
- + resolution: 2880x2880 (string)
-
-+ Request (application/json)
-
-+ Response 200 (application/json)
- + Attributes (Camera Video Format)
-
-### Remove video format [DELETE]
-+ Response 204
-
 ## Camera Audio Formats Collection [/360fly/camera/formats/audio]
 
 + Attributes (object)
@@ -470,18 +432,6 @@ Format of encoded video for recording and liveview
 ### Retrieve audio format details [GET]
 + Response 200 (application/json)
  + Attributes (Camera Audio Format)
-
-### Modify audio format [PUT]
-+ Attributes (object)
- + bitrate: 64000 (number, optional)
-
-+ Request (application/json)
-
-+ Response 200 (application/json)
- + Attributes (Camera Audio Format)
-
-### Remove audio format [DELETE]
-+ Response 204
 
 ## Camera Sensordata Formats Collection [/360fly/camera/formats/sensordata]
 
@@ -576,18 +526,6 @@ Format of sensordata. Effectively a configuration for underlying sensors, events
 + Response 200 (application/json)
  + Attributes (Camera Sensordata Format)
 
-### Modify sensordata format [PUT]
-+ Attributes (object)
- + accelRate: 30 (number)
-
-+ Request (application/json)
-
-+ Response 200 (application/json)
- + Attributes (Camera Sensordata Format)
-
-### Remove sensordata format [DELETE]
-+ Response 204
-
 ## Recording [/360fly/camera/recording]
 
 * _Supercedes functionality of 1.0 recording endpoint_
@@ -595,7 +533,7 @@ Format of sensordata. Effectively a configuration for underlying sensors, events
 Start/stop recording and get current recording status. You can specify a config for a new recording, or if left unspecified, your recording will use config given by `/360fly/camera/config`. A `GET` on an inactive recording gives `204`. A successful `POST` returns a `Location` header for the new recording download url (or the url to first chapter, in the case of chaptered recording)
 
 + Attributes (object)
- + profile: proMode (string, optional, default) - The profile for the active recording
+ + profile: proMode_2880sq_30fps (string, optional, default) - The profile for the active recording
  + maxChapterDuration (number, optional, default) - The chapter duration for active recording
  + maxChapterFileSize (number, optional, default) - The chapter file size for active recording
  + hours: 0 (number, required, sample) - duration in hours of active recording
@@ -628,12 +566,12 @@ Start/stop recording and get current recording status. You can specify a config 
 
 + Request (application/json)
  + Attributes (object)
-        + profile: slowMotion (string, optional, sample) - request slowMotion profile for this recording, which has a 60 fps encoded frame rate. 
+        + profile: slowMotion_1728sq_60fps (string, optional, sample) - request a slow motion profile for this recording, which has a 60 fps encoded frame rate. 
         + maxChapterDuration: 180 (number, optional, sample) - request for recording to chapter on 180 second intervals
 
 + Response 201 (application/json)
  + Attributes (object)
-        + profile: slowMotion (string, required, sample) - active recording uses slowMotion profile
+        + profile: slowMotion_1728sq_60fps (string, required, sample) - recording in slow motion
         + maxChapterDuration: 180 (number, required, sample) - active recording chapters on 180 second intervals
         + hours: 0 (number, required, default)
         + minutes: 0 (number, required, default)
@@ -652,7 +590,7 @@ Settings for the 360fly `rtsp` stream.
 
 + Attributes
  + url: rtsp://fly.local/live1.sdp (string, required, sample) - liveview rtsp url
- + projection (Projection, required, default) - the projection data of liveview video
+ + projection (Projection, required, default) - the projection data for liveview. This mirrors the projection specified in the current profile. See `/camera/profiles/{name}` for profile details. See `/camera/config` for setting current profile.
 
 ### Retrieve liveview settings [GET]
 + Response 200 (application/json)
@@ -736,27 +674,6 @@ A camera tuning configuration.
 + Response 200 (application/json)
  + Attributes (Scene)
 
-### Create or modify scene [PUT]
-
-+ Request (application/json)
- + Attributes (object)
-        + ae_lock: true (boolean, optional)
-        + awb_lock: true (boolean, optional)
-
-+ Response 200 (application/json)
- + Attributes (object)
-        + ae_lock: true (boolean, required)
-        + saturation: 100 (number, required)
-        + max_iso_sensitivity: 8000 (number, required)
-        + contrast: 100 (number, required)
-        + awb_lock: true (boolean, required)
-        + brightness: 100 (number, required)
-        + ae_compensation: 100 (number, required)
-        + max_shutter: 15 (number, required)
-
-### Delete scene [DELETE]
-+ Response 204
-
 ## Projection List [/360fly/camera/projections]
 + Attributes (object)
  + radial (Projection, required, default) - the default fisheye projection
@@ -793,8 +710,6 @@ For setting projection at manufacturing. Can only be done once.
 
 + Response 200 (application/json)
  + Attributes (Projection)
-
-
 
 # Group USB
 
