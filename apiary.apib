@@ -22,7 +22,7 @@ Configure 360fly media capture
 Operating mode of the camera
 
 + Attributes (object)
- + profile: proMode (string, required, default) - Default camera profile. Determines media formats for recorded and liveview video and audio, sensordata, and photos. 
+ + profile: proMode (string, required, default) - Default camera profile. Determines media formats for recorded and liveview video, audio, sensordata, and metadata 
  + maxChapterDuration (number, required, sample) - Max duration, in seconds, for a chapter in a recording. 
  + maxChapterFileSize  (number, required, sample) - Max file size, in bytes, for a chapter in a recording
 
@@ -663,7 +663,6 @@ Settings for the 360fly `rtsp` stream.
 Capture a single high-resolution JPEG image, or multiple images (burst).
 
 + Attributes (object)
- + resolution: 3456x3456 (string, required, default) - resolution of photo
  + count: 1 (number, required, default) - number of photos to take. > 1 implies burst mode
 
 ### Take Photo [POST]
@@ -672,7 +671,6 @@ Capture a single high-resolution JPEG image, or multiple images (burst).
 
 + Request (application/json)
 + Attributes (object)
- + resolution: 3456x3456 (string, required) - resolution is `3456x3456`
  + count: 3 (number, required) - Take a burst of 3 photos
 
 + Response 201 (application/json)
