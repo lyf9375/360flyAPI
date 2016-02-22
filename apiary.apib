@@ -970,7 +970,157 @@ This section provides commands for downloading thumbnail for a media file on the
 + Response 200 (application/octet-stream)
 
 
+# Group Network
 
+## Network Interfaces [/360fly/network/interfaces]
 
++ Attributes (object)
+ + ap (Access Point Interface, required) - configuration for network access point
+ + station (Station Interface, required) - configuration for station connection
 
+### Retrieve network interfaces [GET]
 
++ Response 200 (application/json)
+ + Attributes (Network Interfaces)
+
+## Access Point Interface [/360fly/network/interfaces/ap]
+
+* Control the AP network interface. The `password` property is omitted from responses, but can be used to change the AP password via a `PUT` request. `ipAddr` and `error` are read-only properties.
+* `state` can only be set to `1` or `2` via `PUT` request.
+
+ ##### __AP Interface States__
+        Value | State | Description
+        ---|---|---
+        0 | WiFi Off | WiFi module not running
+        1 | AP Down | Access Point is not active
+        2 | AP Up | Access Point is active
+        3 | AP in Configuration | AP is being configured by another process
+        128 | AP Error | AP interface is down due to error. See `error` property. 
+
+ ##### __AP Interface Errors__
+        Value | Description
+        ---|---
+        0 | No error
+        1 | SSID of AP is invalid and cannot be used
+        2 | Password for AP security is invalid and cannot be used
+
++ Attributes (object)
+ + state: 3 (number, required, default) - AP state. See below for table of possible values.
+ + SSID: 360fly_ABCD (string, required, sample) - SSID of AP network
+ + security: WPA2 (string, required, default) - Network security type. Options: [NONE, WEP, WPA, WPA2]
+ + ipAddr: 192.168.2.1 (string, required, default) - IP address of camera on the AP network
+ + error: 0 (number, required, default) - error code. See below for table of values
+
+### Retrieve AP details [GET]
+
++ Response 200 (application/json)
+ + Attributes (Access Point Interface)
+
+### Configure AP [PUT]
+
++ Request (application/json)
++ Attributes (object)
+ + SSID: 360fly_1234 (string, optional, sample) - Change AP SSID
+ + password: passphrase12345 (string, optional, sample) - Change AP password
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + state: 3 (number, required, default)
+        + SSID: 360fly_1234 (string, required, sample)
+        + security: WPA2 (string, required, default)
+        + ipAddr: 192.168.2.1 (string, required, default)
+        + error: 0 (number, required, default)
+
+### Reset AP to default [DELETE]
+
++ Response 204
+
+## Station Interface [/360fly/network/interfaces/station]
+
+* Control the station network interface. The `password` property is omitted from responses, but can be used to connect to a secure AP via a `PUT` request. 
+* `ipAddr`, `error`, and `RSSI` are read-only properties.
+* A connection request is made by setting `"state":2` and specifying `SSID`, `security`, and `password` via `PUT`
+* If attempting to connect to a saved network (see `/360fly/network/scan` entries' property `saved`), then `security` and `password` may be omitted from connection request
+* `state` can only be set to `1` or `2` via `PUT` request
+
+ ##### __Station Interface States__
+        Value | State | Description
+        ---|---|---
+        0 | WiFi Off | WiFi module not running
+        1 | Station Down | Not connected to station
+        2 | Station Connecting | Connection is initiated but not complete
+        3 | Station Up | Station connected
+        4 | Station in Configuration | Station interface is being configured by another process
+        128 | AP Error | AP interface error. See `error` property. 
+
+ ##### __Station Interface Errors__
+        Value | Summary | Description
+        ---|---|---
+        0 | No error
+        2 | Disconnected by Server | Previous connection lost
+        3 | Connection Timeout | Connection attempt failed, possibly because SSID can't be reached
+        4 | Self-Assigned Address | Failed to obtain leased IP address via DHCP
+        5 | WEP Auth Required | Incorrect security type supplied. Requires WEP
+        6 | WPA Auth Required | Incorrect security type supplied. Requires WPA
+        7 | Auth Not Accepted | Incorrect Password
+
++ Attributes (object)
+ + state: 1 (number, required, default) - Station interface state. See below table of possible values.
+ + SSID (string, required, default) - SSID of the connected network. null when not connected.
+ + security (string, required, default) - Security type of connected network. null when not connected. Options: [NONE, WEP, WPA, WPA2, null]
+ + ipAddr (string, required, default) - IP address of camera on the connected station network. null when not connected.
+ + RSSI (number, required, default) - RSSI of network connection (measure of signal strength) in dBm + 127. null when not connected.
+ + error: 0 (number, required, default) - error code. See below for table of values
+
+### Retrieve Station details [GET]
+
++ Response 200 (application/json)
+ + Attributes (Station Interface)
+
+### Configure Station Interface [PUT]
+
++ Attributes (object)
+ + state: 2 (number, optional, sample) - connect to station
+ + SSID: officeNet (string, optional, sample) - connect to network with SSID officeNet
+ + security: WPA2 (string, optional, sample) - security type of officeNet
+ + password: passphrase54321 (string, optional, sample) - password for officeNet
++ Request (application/json)
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + state: 2 (number, required, sample)
+        + SSID: officeNet (string, required, sample)
+        + security: WPA2 (string, required, sample)
+        + ipAddr (string, required, default) - have not gotten IP address lease yet
+        + RSSI: 73 (number, required, sample)
+        + error: 0 (number, required, default)
+
+### Disconnect from Station [DELETE]
+
+Reset Station Interface to default values
+
++ Response 204
+
+## Network Scan [/360fly/network/scan{?limit}]
+
+Scan area for WiFi networks. Results are returned in order of signal strength (RSSI)
+
++ Attributes (array)
+ + entry0 (object, optional, sample)
+        + SSID: firstNetworkSSID (string, required, sample)
+        + security: WPA2 (string, required, sample)
+        + saved: true (boolean, required, sample)
+        + RSSI: 71 (number, required, sample)
+ + entry1 (object, optional, sample)
+        + SSID: secondNetworkSSID (string, required, sample)
+        + security: WEP (string, required, sample)
+        + saved: false (boolean, required, sample)
+        + RSSI: 68 (number, required, sample)
+
++ Parameters
+ + limit (optional, number) ... Maximum number of results
+
+### Retrieve scan results [GET]
+
++ Response 200 (application/json)
+ + Attributes (Network Scan)
