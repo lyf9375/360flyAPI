@@ -620,6 +620,49 @@ Capture a single high-resolution JPEG image, or multiple images (burst).
 
                         Location: /360fly/media/file/100_3FLY/FLY00801.jpg
 
+## Triggered Recording [/360fly/camera/trigger]
+
+Configure camera recording to trigger based on motion or audio detection, or the accelerometer.
+
+ + Attributes (object)
+  + type: accel (string, required, default) - trigger type. Options: [accel, motion, audio]
+  + sensitivity: 5 (number, required, default) - sensitivity of the trigger mechanism e.g. audio trigger requires a minimum volume to start recording. Range: 1~10
+  + delay: 10 (number, required, sample) - Minimum allowed time, in seconds, between two trigger activations 
+  + duration: 6 (number, required, sample) - Duration, in seconds, of triggered recordings
+  + buffer: 3 (number, optional, sample) - Size of buffered video, in seconds. If omitted or null, video is not buffered.
+
+### Retrieve trigger [GET]
+
++ Response 200 (application/json)
+ + Attributes (Triggered Recording)
+
++ Response 204
+
+### Create new trigger [PUT]
+
+* _If a trigger already exists, it will be deleted and replaced_
+
++ Attributes (object)
+ + type: motion (string, required, sample) - trigger recording on motion detect
+ + sensitivity: 1 (number, required, sample) - low sensitivity i.e. only detect high motion events
+ + delay: 600 (number, required, sample) - Wait at least 10 minutes between consecutive triggered recordings
+ + duration: 10 (number, required, sample) - Triggered recordings will be 10 seconds long
+
++ Request (application/json)
+
++ Response 201 (application/json)
+ + Attributes (object)
+        + type: motion (string, required, sample)
+        + sensitivity: 1 (number, required, sample)
+        + delay: 600 (number, required, sample)
+        + duration: 10 (number, required, sample)
+        + buffer (number, optional, sample) - No video buffering
+
+### Delete trigger [DELETE]
+
++ Response 204
+
+
 ## Tuning [/360fly/camera/tuning]
 
 + Attributes (object)
