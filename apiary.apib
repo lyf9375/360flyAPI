@@ -985,7 +985,9 @@ This section provides commands for downloading thumbnail for a media file on the
 
 ## Access Point Interface [/360fly/network/interfaces/ap]
 
-* Control the AP network interface. The `password` property is omitted from responses, but can be used to change the AP password via a `PUT` request. `ipAddr` and `error` are read-only properties.
+* Control the AP network interface. `SSID`, `ipAddr`, and `error` are read-only properties. 
+* `SSID` matches camera name
+* AP password matches camera password
 * `state` can only be set to `1` or `2` via `PUT` request.
 
  ##### __AP Interface States__
@@ -1005,7 +1007,7 @@ This section provides commands for downloading thumbnail for a media file on the
         2 | Password for AP security is invalid and cannot be used
 
 + Attributes (object)
- + state: 3 (number, required, default) - AP state. See below for table of possible values.
+ + state: 2 (number, required, default) - AP state. See below for table of possible values.
  + SSID: 360fly_ABCD (string, required, sample) - SSID of AP network
  + security: WPA2 (string, required, default) - Network security type. Options: [NONE, WEP, WPA, WPA2]
  + ipAddr: 192.168.2.1 (string, required, default) - IP address of camera on the AP network
@@ -1020,13 +1022,12 @@ This section provides commands for downloading thumbnail for a media file on the
 
 + Request (application/json)
 + Attributes (object)
- + SSID: 360fly_1234 (string, optional, sample) - Change AP SSID
- + password: passphrase12345 (string, optional, sample) - Change AP password
+ + state: 1 (number, optional, sample) - Request to shut AP down
 
 + Response 200 (application/json)
  + Attributes (object)
-        + state: 3 (number, required, default)
-        + SSID: 360fly_1234 (string, required, sample)
+        + state: 1 (number, required, default)
+        + SSID: 360fly_ABCD (string, required, sample)
         + security: WPA2 (string, required, default)
         + ipAddr: 192.168.2.1 (string, required, default)
         + error: 0 (number, required, default)
@@ -1103,7 +1104,15 @@ Reset Station Interface to default values
 
 ## Network Scan [/360fly/network/scan{?limit}]
 
-Scan area for WiFi networks. Results are returned in order of signal strength (RSSI)
+ ##### __Scan Results Entry__
+        Value | Description
+        ---|---
+        SSID | SSID of found network
+        security | security type of found network. Options: [WPA, WPA2, WEP, NONE]
+        saved | credentials of found network are saved on your 360fly
+        RSSI | signal strength of found network, in dBm + 127
+
+Scan area for WiFi networks. Results are returned in order of signal strength (RSSI). See table above for description of a scan results entry
 
 + Attributes (array)
  + entry0 (object, optional, sample)
@@ -1116,6 +1125,7 @@ Scan area for WiFi networks. Results are returned in order of signal strength (R
         + security: WEP (string, required, sample)
         + saved: false (boolean, required, sample)
         + RSSI: 68 (number, required, sample)
+
 
 + Parameters
  + limit (optional, number) ... Maximum number of results
