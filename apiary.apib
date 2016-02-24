@@ -13,6 +13,37 @@ These response headers are to be included with _every_ response
 
                         X-360fly-API-Version: v0.3.0
 
+
+# Group General Device Control and Status
+
+* _Extends ReST 1.0 Spec_
+
+## Identity [/360fly/id]
+
+* The `password` property is never returned, but can be modified via a `PUT` request.
+* Successful `PUT` requests will cause all WiFi AP clients to disconnect since the AP SSID or password will change
+
++ Attributes (object)
+ + name: 360fly (string, required, sample) - Name of 360fly. This is the name presented to users and the AP SSID
+ + password: 00000000 (string, required, default) - Password of 360fly. Used for http authentication and WiFi AP security. password is never returned
+
+### Retrieve identity [GET]
+
++ Response 200 (application/json)
++ Attributes (object)
+ + name: 360fly (string, required, sample)
+
+### Change identity [PUT]
++ Attributes (object)
+ + name: my360fly (string, optional, sample) - change the 360fly's name
+ + password: myPassPhrase (string, optional, sample) - change 360fly's password
+
++ Request (application/json)
+
++ Response 200 (application/json)
++ Attributes (object)
+ + name: my360fly (string, required, sample)
+
 # Group Camera
 
 Configure 360fly media capture
@@ -662,7 +693,6 @@ Configure camera recording to trigger based on motion or audio detection, or the
 
 + Response 204
 
-
 ## Tuning [/360fly/camera/tuning]
 
 + Attributes (object)
@@ -1019,7 +1049,13 @@ This section provides commands for downloading thumbnail for a media file on the
 
 + Attributes (object)
  + ap (Access Point Interface, required) - configuration for network access point
- + station (Station Interface, required) - configuration for station connection
+ + station (object, required) - configuration for station connection
+        + state: 1 (number, required, default)
+        + SSID (string, required, default)
+        + security (string, required, default)
+        + ipAddr (string, required, default)
+        + RSSI (number, required, default)
+        + error: 0 (number, required, default)
 
 ### Retrieve network interfaces [GET]
 
@@ -1029,8 +1065,8 @@ This section provides commands for downloading thumbnail for a media file on the
 ## Access Point Interface [/360fly/network/interfaces/ap]
 
 * Control the AP network interface. `SSID`, `ipAddr`, and `error` are read-only properties. 
-* `SSID` matches camera name
-* AP password matches camera password
+* `SSID` matches the 360fly's name. See `/360fly/id`.
+* AP password matches the 360fly's password. See `/360fly/id`.
 * `state` can only be set to `1` or `2` via `PUT` request.
 
  ##### __AP Interface States__
@@ -1081,7 +1117,7 @@ This section provides commands for downloading thumbnail for a media file on the
 
 ## Station Interface [/360fly/network/interfaces/station]
 
-* Control the station network interface. The `password` property is omitted from responses, but can be used to connect to a secure AP via a `PUT` request. 
+* Control the station network interface. The `password` property is never returned, but can be used to connect to a secure AP via a `PUT` request. 
 * `ipAddr`, `error`, and `RSSI` are read-only properties.
 * A connection request is made by setting `"state":2` and specifying `SSID`, `security`, and `password` via `PUT`
 * If attempting to connect to a saved network (see `/360fly/network/scan` entries' property `saved`), then `security` and `password` may be omitted from connection request
@@ -1112,16 +1148,23 @@ This section provides commands for downloading thumbnail for a media file on the
  + state: 1 (number, required, default) - Station interface state. See below table of possible values.
  + SSID (string, required, default) - SSID of the connected network. null when not connected.
  + security (string, required, default) - Security type of connected network. null when not connected. Options: [NONE, WEP, WPA, WPA2, null]
+ + password (string, required, default) - Password for connected network. null when not connected. password is never returned
  + ipAddr (string, required, default) - IP address of camera on the connected station network. null when not connected.
  + RSSI (number, required, default) - RSSI of network connection (measure of signal strength) in dBm + 127. null when not connected.
  + error: 0 (number, required, default) - error code. See below for table of values
 
-### Retrieve Station details [GET]
+### Retrieve Station Interface details [GET]
 
 + Response 200 (application/json)
- + Attributes (Station Interface)
++ Attributes (object)
+ + state: 1 (number, required, default)
+ + SSID (string, required, default)
+ + security (string, required, default)
+ + ipAddr (string, required, default)
+ + RSSI (number, required, default)
+ + error: 0 (number, required, default)
 
-### Configure Station Interface [PUT]
+### Connect/disconnect network [PUT]
 
 + Attributes (object)
  + state: 2 (number, optional, sample) - connect to station
@@ -1135,7 +1178,7 @@ This section provides commands for downloading thumbnail for a media file on the
         + state: 2 (number, required, sample)
         + SSID: officeNet (string, required, sample)
         + security: WPA2 (string, required, sample)
-        + ipAddr (string, required, default) - have not gotten IP address lease yet
+        + ipAddr (string, required, default) - null because we have not gotten IP address lease yet
         + RSSI: 73 (number, required, sample)
         + error: 0 (number, required, default)
 
