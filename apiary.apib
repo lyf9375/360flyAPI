@@ -1027,8 +1027,6 @@ This section provides commands for downloading a media file on the 360Fly device
 
 + Response 200 (application/octet-stream)
 
-
-
 ## Media Thumbnail Retrieval [/360fly/media/thumbnail/{mediaFilePath}{?time,timescale}]
 
 This section provides commands for downloading thumbnail for a media file on the 360Fly device.
@@ -1042,20 +1040,13 @@ This section provides commands for downloading thumbnail for a media file on the
 
 + Response 200 (application/octet-stream)
 
-
 # Group Network
 
 ## Network Interfaces [/360fly/network/interfaces]
 
 + Attributes (object)
  + ap (Access Point Interface, required) - configuration for network access point
- + station (object, required) - configuration for station connection
-        + state: 1 (number, required, default)
-        + SSID (string, required, default)
-        + security (string, required, default)
-        + ipAddr (string, required, default)
-        + RSSI (number, required, default)
-        + error: 0 (number, required, default)
+ + station (Station Interface, required) - configuration for station connection
 
 ### Retrieve network interfaces [GET]
 
@@ -1090,6 +1081,8 @@ This section provides commands for downloading thumbnail for a media file on the
  + SSID: 360fly_ABCD (string, required, sample) - SSID of AP network
  + security: WPA2 (string, required, default) - Network security type. Options: [NONE, WEP, WPA, WPA2]
  + ipAddr: 192.168.2.1 (string, required, default) - IP address of camera on the AP network
+ + frequency: 2.4 (number, required, default) - WiFi AP operating frequency (GHz). Options: [2.4, 5]
+ + channel (number, required, default) - WiFi AP channel. null indicates channel is chosen automatically. Changing channel should not be implemented till a future version. 
  + error: 0 (number, required, default) - error code. See below for table of values
 
 ### Retrieve AP details [GET]
@@ -1109,6 +1102,8 @@ This section provides commands for downloading thumbnail for a media file on the
         + SSID: 360fly_ABCD (string, required, sample)
         + security: WPA2 (string, required, default)
         + ipAddr: 192.168.2.1 (string, required, default)
+        + frequency: 2.4 (number, required, default)
+        + channel (number, required, default)
         + error: 0 (number, required, default)
 
 ### Reset AP to default [DELETE]
