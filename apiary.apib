@@ -1119,8 +1119,10 @@ This section provides commands for downloading thumbnail for a media file on the
 
 * Control the station network interface. The `password` property is never returned, but can be used to connect to a secure AP via a `PUT` request. 
 * `ipAddr`, `error`, and `RSSI` are read-only properties.
-* A connection request is made by setting `"state":2` and specifying `SSID`, `security`, and `password` via `PUT`
-* If attempting to connect to a saved network (see `/360fly/network/scan` entries' property `saved`), then `security` and `password` may be omitted from connection request
+* A connection request is made by setting `"state":2` and specifying `SSID`, `security`, `password`, and `saved` via `PUT`
+* If attempting to connect to a saved network (see `/360fly/network/saved`), then `security`, `password`, and `saved` may be omitted from connection request.
+* If attempting to connect to a saved network, and the request specifies `password` and/or `security`, these properties will be overwritten in the saved network entry (see `/360fly/network/saved`)
+* If attempting to connect to an unsaved network, the `saved` property determines if new network will be saved
 * `state` can only be set to `1` or `2` via `PUT` request
 
  ##### __Station Interface States__
@@ -1149,6 +1151,7 @@ This section provides commands for downloading thumbnail for a media file on the
  + SSID (string, required, default) - SSID of the connected network. null when not connected.
  + security (string, required, default) - Security type of connected network. null when not connected. Options: [NONE, WEP, WPA, WPA2, null]
  + password (string, required, default) - Password for connected network. null when not connected. password is never returned
+ + saved (boolean, required, default) - Connected network is or isn't a saved network (See /360fly/network/saved). null when not connected
  + ipAddr (string, required, default) - IP address of camera on the connected station network. null when not connected.
  + RSSI (number, required, default) - RSSI of network connection (measure of signal strength) in dBm + 127. null when not connected.
  + error: 0 (number, required, default) - error code. See below for table of values
@@ -1160,6 +1163,7 @@ This section provides commands for downloading thumbnail for a media file on the
  + state: 1 (number, required, default)
  + SSID (string, required, default)
  + security (string, required, default)
+ + saved (boolean, required, default)
  + ipAddr (string, required, default)
  + RSSI (number, required, default)
  + error: 0 (number, required, default)
@@ -1171,6 +1175,7 @@ This section provides commands for downloading thumbnail for a media file on the
  + SSID: officeNet (string, optional, sample) - connect to network with SSID officeNet
  + security: WPA2 (string, optional, sample) - security type of officeNet
  + password: passphrase54321 (string, optional, sample) - password for officeNet
+ + saved: true (boolean, optional, default) - save officeNet. See /360fly/network/saved
 + Request (application/json)
 
 + Response 200 (application/json)
@@ -1178,7 +1183,8 @@ This section provides commands for downloading thumbnail for a media file on the
         + state: 2 (number, required, sample)
         + SSID: officeNet (string, required, sample)
         + security: WPA2 (string, required, sample)
-        + ipAddr (string, required, default) - null because we have not gotten IP address lease yet
+        + saved: true (boolean, required, sample)
+        + ipAddr (string, required, default) - have not gotten IP address lease yet
         + RSSI: 73 (number, required, sample)
         + error: 0 (number, required, default)
 
@@ -1212,7 +1218,6 @@ Scan area for WiFi networks. Results are returned in order of signal strength (R
         + saved: false (boolean, required, sample)
         + RSSI: 68 (number, required, sample)
 
-
 + Parameters
  + limit (optional, number) ... Maximum number of results
 
@@ -1220,3 +1225,46 @@ Scan area for WiFi networks. Results are returned in order of signal strength (R
 
 + Response 200 (application/json)
  + Attributes (Network Scan)
+
+## Saved Networks [/360fly/network/saved{?offset,limit}]
+
+* Saved networks are returned in order of their connection priority
+
++ Attributes (array)
+ + entry0 (object, optional, sample)
+        + id: 0 (number, required, sample)
+        + SSID: firstNetworkSSID (string, required, sample)
+        + security: WPA2 (string, required, sample)
+        + connected: false (boolean, required, sample)
+ + entry1 (Saved Network, optional, sample)
+
++ Parameters
+ + offset (optional, number) ... results array returned starting at `offset`
+ + limit (optional, number) ... maximum number of returned results
+
+### Retrieve saved networks [GET]
++ Response 200 (application/json)
+ + Attributes (Saved Networks)
+
+### Forget all networks [DELETE]
++ Response 204
+
+## Saved Network [/360fly/network/saved/{id}]
+
++ Attributes (object)
+ + id: 1 (number, required, sample) - index of entry in saved networks array. Also indicates connection priority
+ + SSID: someSavedNetwork (string, required, sample) - SSID of this saved network
+ + security: NONE (string, required, sample) - security of this saved network
+ + connected: false (boolean, required, sample) - indicates 360fly is currently connected to this network
+
++ Parameters
+ + id (required, number, `1`) ... id of the saved network 
+
+### Retrieve saved network [GET]
++ Response 200 (application/json)
+ + Attributes (Saved Network)
+
+### Forget network [DELETE]
+
++ Response 204
+
