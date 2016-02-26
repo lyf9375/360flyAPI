@@ -1324,13 +1324,12 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 
 ## BLE Connected Device [/360fly/ble/connections/{id}]
 
-* all properties are read-only, except `paired`, which can be written via `PUT` to pair with connected device
+* all properties are read-only, except `bonded`, which can be written via `PUT` to pair with connected device
 
 + Attributes (object)
  + id: 0 (number, required, sample) - index of device in connected devices array (see /360fly/ble/connections)
- + name: BLEHeadSet0 (string, required, sample) - name of connected device
- + paired: false (boolean, required, sample) - is device paired to 360fly
- + bonded: true (boolean, required, sample) - is device bonded to 360fly
+ + name: myBLEDevice (string, required, sample) - name of connected device
+ + bonded: false (boolean, required, sample) - is device bonded to 360fly
  + RSSI: 59 (number, required, sample) - signal strength, measured in dBm + 127
 
 + Parameters
@@ -1341,10 +1340,12 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 + Response 200 (application/json)
  + Attributes (BLE Connected Device)
 
-### Pair with connected device [PUT]
+### Pair with device [PUT]
 
-* May require a pairing pin
-* Successfully paired devices are automatically bonded if possible (See `/360fly/ble/bonds`)
+* May require security pin
+* Pairing also means "bonding with connected device"
+* Successful pair/bond requests return a `Location` header with url to new bond in the bonds collection (see `/360fly/ble/bonds`)
+* If the bonds collection is at maximum, then the oldest bond is replaced by the new bond
 * Unsuccessful pairing requests will respond with an `error` property. See table below.
  ##### __Error Codes__
         Value | Description
@@ -1355,20 +1356,19 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 
 + Request (application/json)
  + Attributes (object)
-        + paired: true (boolean, optional, sample) - attempt to pair with connected device
+        + bonded: true (boolean, optional, sample) - attempt to pair with connected device
         + pin: 1234 (number, optional, sample) - security pin for connected device
 
 + Response 200 (application/json)
  + Attributes (object)
         + id: 0 (number, required, sample)
         + name: BLEHeadSet0 (string, required, sample)
-        + paired: true (boolean, required, sample) - successfully paired
         + bonded: true (boolean, required, sample)
         + RSSI: 56 (number, required, sample)
 
 + Request (application/json)
  + Attributes (object)
-        + paired: true (boolean, optional, sample) - attempt to pair with connected device
+        + bonded: true (boolean, optional, sample) - attempt to pair with connected device
         + pin: 4321 (number, optional, sample) - incorrect security pin for connected device
 
 + Response 401 (application/json)
@@ -1376,8 +1376,6 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
         + error: 1 (number, required, sample)
 
 ### Disconnect device [DELETE]
-
-* A disconnected device is no longer paired
 
 + Response 204
 
@@ -1420,12 +1418,13 @@ Scan for advertising peripherals
 + Response 200 (application/json)
  + Attributes (BLE Scan Result)
 
-### Connect/disconnect device [PUT]
+### Connect/disconnect/pair device [PUT]
 * Should always specify `connected`, and optionally specify `pin` property.  All other properties are read-only 
 * If number of connections is at maximum, the oldest connection will be dropped so this new connection can be made
 * Successful connections return a `Location` header with the newly connected device url
-* If possible, 360fly will attempt to pair with the newly connected device. Some peripherals require a `pin` for pairing. Bonded peripherals can pair without specifying `pin`.
-* Successfully paired devices are automatically bonded if possible (See `/360fly/ble/bonds`)
+* If possible, 360fly will attempt to pair/bond with the newly connected device. Successful pairing/bonding will add peripheral to bonds collection (see `/360fly/ble/bonds`). 
+* Some peripherals require a `pin` for pairing/bonding. Previously bonded peripherals can pair without specifying `pin`.
+* If the bonds collection is at maximum, then the oldest bond is replaced by the new bond
 * Failed requests will return an error code. See table below
 
  ##### __Error Codes__
@@ -1445,7 +1444,7 @@ Scan for advertising peripherals
         + id: 1 (number, required, sample)
         + name: BLEHeadSet3 (string, required, sample)
         + connected: true (boolean, required, sample)
-        + bonded: true (boolean, required, sample) - the successful connection also paired, and therefore bonded
+        + bonded: true (boolean, required, sample) - the successful connection also paired/bonded
         + RSSI: 67 (number, required, sample)
  + Header
 
@@ -1461,7 +1460,7 @@ Scan for advertising peripherals
         + id: 1 (number, required, sample)
         + name: BLEHeadSet3 (string, required, sample)
         + connected: true (boolean, required, sample)
-        + bonded: false (boolean, required, sample) - the successful connection failed to pair, so it did not bond
+        + bonded: false (boolean, required, sample) - pairing/bonding was unsuccessful due to incorrect pin
         + RSSI: 67 (number, required, sample)
  + Header
 
@@ -1473,4 +1472,19 @@ Scan for advertising peripherals
 
 + Response 200 (application/json)
  + Attributes (BLE Scan Result)
+
++ Request (application/json)
+ + Attributes (object)
+        + connected: true (boolean, optional, sample) - connect, but do not specify security pin
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + id: 1 (number, required, sample)
+        + name: BLEHeadSet3 (string, required, sample)
+        + connected: true (boolean, required, sample)
+        + bonded: false (boolean, required, sample) - pairing/bonding didn't happen since no security pin was supplied
+        + RSSI: 67 (number, required, sample)
+ + Header
+
+                        Location: https://${HOST}/360fly/ble/connections/0
         
