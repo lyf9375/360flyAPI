@@ -1221,6 +1221,18 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 + Response 200 (application/json)
  + Attributes (Network Scan)
 
+
+### Start network scan [POST]
+
++ Response 201 (application/json)
+
+
+### Stop network scan [DELETE]
+
++ Response 200 (application/json)
++ Response 204
+
+
 ## Saved Networks [/360fly/network/saved{?offset,limit}]
 
 * Saved networks are returned in order of their connection priority
@@ -1401,3 +1413,14 @@ Scan for advertising peripherals. See table above for scan results entry descrip
 
 + Response 200 (application/json)
  + Attributes (BLE Scan)
+
+### Start Bluetooth scan [POST]
+
++ Response 201 (application/json)
+
+
+### Stop Bluetooth scan [DELETE]
+
++ Response 200 (application/json)
++ Response 204
+
