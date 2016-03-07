@@ -1265,15 +1265,17 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 
 # Group Bluetooth
 
-## BLE Bonded Devices Collection [/360fly/ble/devices]
+## BLE Bonded Devices Collection [/360fly/ble/bonds{?name}]
 
 + Attributes (array)
  + entry0 (BLE Bonded Device, optional, sample)
  + entry1 (object, optional, sample)
         + id: 1 (number, required, sample)
         + name: BLEHeadSet1 (string, required, sample)
-        + connected: false (boolean, required, sample)
         + RSSI: 0 (number, required, sample)
+
++ Parameters
+ + name (string, optional) ... filter response by `name` property
 
 ### Retrieve bonded devices [GET]
 
@@ -1282,122 +1284,207 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 + Response 200 (application/json)
  + Attributes (BLE Bonded Devices Collection)
 
-### Connect and pair new device [POST]
-
-* Should always include `scanIndex` property, and optionally include `pin` property. No other properties should be specified 
-* `scanIndex` is the device index in the latest scan results (See `/360fly/ble/scan`)
-* If number of connections is at maximum, the oldest connection will be dropped so this new connection can be made
-* Successfully connected and paired devices become bonded devices
-* Failed requests will return an error code. See table below
-
- ##### __Error Codes__
-        Value | Description
-        ---|---
-        0 | No Error
-        1 | Incorrect Pin
-        2 | Connection attempt timed out (Device may no longer be in range)
-        3 | Invalid `scanIndex` (no such entry in scan results; see `/360fly/ble/scan`)
-+ Request (application/json)
- + Attributes (object)
-        + scanIndex: 1 (number, required, sample) - target device index in scan results (see /360fly/ble/scan)
-        + pin: 1234 (number, optional, sample) - target device's pairing pin. 
-
-+ Response 201
- + Header
-
-                        Location: https://$HOST/360fly/ble/devices/2
-
-+ Request (application/json)
- + Attributes (object)
-        + scanIndex: 0 (string, required, sample) - target device's index in scan results (see /360fly/ble/scan)
-        + pin: 4321 (number, optional, sample) - __incorrect__ pairing pin. 
-
-+ Response 403 (application/json)
- + Attributes (object)
-        + error: 1 (number, required, sample)
-
-+ Request (application/json)
- + Attributes (object)
-        + scanIndex: 1000 (string, required, sample) - scanIndex that is not listed in last BLE scan
-        + pin: 1234 (number, optional, sample) - target device's pairing pin. 
-
-+ Response 404 (application/json)
- + Attributes (object)
-        + error: 3 (number, required, sample)
-
-### Forget all devices [DELETE]
+### Forget all bonded devices [DELETE]
 
 + Response 204
 
-## BLE Bonded Device [/360fly/ble/devices/{id}]
-
-* All properties are read-only, except `connected`, which is used to connect to a bonded device via a `PUT` request
+## BLE Bonded Device [/360fly/ble/bonds/{id}]
 
 + Attributes (object)
- + id: 0 (number, required, sample) - index of device in array of BLE Devices (see /360fly/ble/devices)
+ + id: 0 (number, required, sample) - index of device in array of BLE Bonded Devices (see /360fly/ble/bonds)
  + name: BLEHeadSet0 (string, required, sample) - device name
- + connected: true (boolean, required, sample) - device is or isn't currently connected
  + RSSI: 50 (number, required, sample) - signal strength, measured in dBm + 127
 
 + Parameters
- + id (required, number, `0`) ... index of device in array of BLE devices
+ + id (required, number, `0`) ... index of device in array of BLE bonds
 
 ### Retrieve bonded device [GET]
 
 + Response 200 (application/json)
  + Attributes (BLE Bonded Device)
 
-### Connect/disconnect bonded device [PUT]
+### Forget bonded device [DELETE]
 
-+ Request (application/json)
- + Attributes (object)
-        + connected: true (boolean, required, sample) - connect to device
++ Response 204
+ 
+## BLE Connected Devices Collection [/360fly/ble/connections]
+
++ Attributes (array)
+ + entry0 (BLE Connected Device, optional, sample)
+
+### Retrieve connected devices [GET]
+
+* For now, only one device can be connected at a time
 
 + Response 200 (application/json)
- + Attributes (BLE Bonded Device)
+ + Attributes (BLE Connected Devices Collection)
+
+### Disconnect all devices [DELETE]
++ Response 204
+
+## BLE Connected Device [/360fly/ble/connections/{id}]
+
+* all properties are read-only, except `bonded`, which can be written via `PUT` to pair with connected device
+
++ Attributes (object)
+ + id: 0 (number, required, sample) - index of device in connected devices array (see /360fly/ble/connections)
+ + name: myBLEDevice (string, required, sample) - name of connected device
+ + bonded: false (boolean, required, sample) - is device bonded to 360fly
+ + RSSI: 59 (number, required, sample) - signal strength, measured in dBm + 127
+
++ Parameters
+ + id (required, number, `0`) ... index of device in array of connected devices (see `/360fly/ble/connections`)
+
+### Retrieve connected device [GET]
+
++ Response 200 (application/json)
+ + Attributes (BLE Connected Device)
+
+### Pair with device [PUT]
+
+* May require security pin
+* Pairing also means "bonding with connected device"
+* Successful pair/bond requests return a `Location` header with url to new bond in the bonds collection (see `/360fly/ble/bonds`)
+* If the bonds collection is at maximum, then the oldest bond is replaced by the new bond
+* Unsuccessful pairing requests will respond with an `error` property. See table below.
+ ##### __Error Codes__
+        Value | Description
+        ---|---
+        0 | No Error
+        1 | Incorrect Pin
+        2 | Pairing attempt timed out (Device may no longer be in range)
 
 + Request (application/json)
  + Attributes (object)
-        + connected: false (boolean, required, sample) - disconnect device
+        + bonded: true (boolean, optional, sample) - attempt to pair with connected device
+        + pin: 1234 (number, optional, sample) - security pin for connected device
 
 + Response 200 (application/json)
  + Attributes (object)
         + id: 0 (number, required, sample)
         + name: BLEHeadSet0 (string, required, sample)
-        + connected: false (boolean, required, sample) - device is no longer connected
-        + RSSI: 51 (number, required, sample)
+        + bonded: true (boolean, required, sample)
+        + RSSI: 56 (number, required, sample)
 
-### Forget bonded device [DELETE]
++ Request (application/json)
+ + Attributes (object)
+        + bonded: true (boolean, optional, sample) - attempt to pair with connected device
+        + pin: 4321 (number, optional, sample) - incorrect security pin for connected device
+
++ Response 401 (application/json)
+ + Attributes (object)
+        + error: 1 (number, required, sample)
+
+### Disconnect device [DELETE]
 
 + Response 204
- 
-## BLE Scan [/360fly/ble/scan{?limit}]
 
- ##### __Scan Results Entry__
-        Value | Description
-        ---|---
-        name | name of advertising peripheral
-        bonded | is a bonded device
-        RSSI | signal strength of advertising peripheral, in dBm + 127
+## BLE Scan Results Collection [/360fly/ble/scan{?limit}]
 
-Scan for advertising peripherals. See table above for scan results entry description. 
+Scan for advertising peripherals
 * Results are ordered by RSSI (signal strength)
 * Only supported remote audio peripherals are shown
 
 + Attributes (array)
  + entry0 (object)
+        + id: 0 (number, required, sample)
         + name: BLEHeadSet0 (string, required, sample)
+        + connected: false (boolean, required, sample)
         + bonded: true (boolean, required, sample)
         + RSSI: 80 (number, required, sample)
- + entry1 (object)
-        + name: BLEHeadSet3 (string, required, sample)
-        + bonded: false (boolean, required, sample)
-        + RSSI: 60 (number, required, sample)
+ + entry1 (BLE Scan Result)
 
 + Parameters
  + limit (optional, number) ... Maximum number of results
 
 ### Retrieve scan results [GET]
++ Response 200 (application/json)
+ + Attributes (BLE Scan Results Collection)
+
+## BLE Scan Result [/360fly/ble/scan/{id}]
+
++ Attributes (object)
+ + id: 1 (number, required, sample) - index of peripheral in scan results (see /360fly/ble/scan)
+ + name: BLEHeadSet3 (string, required, sample) - name of advertising peripheral
+ + connected: false (boolean, required, sample) - is peripheral currently connected
+ + bonded: false (boolean, required, sample) - is peripheral a bonded device
+ + RSSI: 60 (number, required, sample) - signal strength of advertising peripheral, in dBm + 127
+
++ Parameters
+ + id (required, number, `1`) ... index of peripheral in scan results (see `/360fly/ble/scan`)
+
+### Retrieve scan result [GET]
 
 + Response 200 (application/json)
- + Attributes (BLE Scan)
+ + Attributes (BLE Scan Result)
+
+### Connect/disconnect/pair device [PUT]
+* Should always specify `connected`, and optionally specify `pin` property.  All other properties are read-only 
+* If number of connections is at maximum, the oldest connection will be dropped so this new connection can be made
+* Successful connections return a `Location` header with the newly connected device url
+* If possible, 360fly will attempt to pair/bond with the newly connected device. Successful pairing/bonding will add peripheral to bonds collection (see `/360fly/ble/bonds`). 
+* Some peripherals require a `pin` for pairing/bonding. Previously bonded peripherals can pair without specifying `pin`.
+* If the bonds collection is at maximum, then the oldest bond is replaced by the new bond
+* Failed requests will return an error code. See table below
+
+ ##### __Error Codes__
+        Value | Description
+        ---|---
+        0 | No Error
+        1 | Connection attempt timed out (Device may no longer be in range)
+
++ Attributes (object)
+ + connected: true (boolean, optional, sample)
+ + pin: 1234 (number, optional, sample) - correct pairing pin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + id: 1 (number, required, sample)
+        + name: BLEHeadSet3 (string, required, sample)
+        + connected: true (boolean, required, sample)
+        + bonded: true (boolean, required, sample) - the successful connection also paired/bonded
+        + RSSI: 67 (number, required, sample)
+ + Header
+
+                        Location: https://${HOST}/360fly/ble/connections/0
+
++ Request (application/json)
+ + Attributes (object)
+        + connected: true (boolean, optional, sample)
+        + pin: 4321 (number, optional, sample) - incorrect pairing pin
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + id: 1 (number, required, sample)
+        + name: BLEHeadSet3 (string, required, sample)
+        + connected: true (boolean, required, sample)
+        + bonded: false (boolean, required, sample) - pairing/bonding was unsuccessful due to incorrect pin
+        + RSSI: 67 (number, required, sample)
+ + Header
+
+                        Location: https://${HOST}/360fly/ble/connections/0
+
++ Request (application/json)
+ + Attributes (object)
+        + connected: false (boolean, optional, sample) - disconnect
+
++ Response 200 (application/json)
+ + Attributes (BLE Scan Result)
+
++ Request (application/json)
+ + Attributes (object)
+        + connected: true (boolean, optional, sample) - connect, but do not specify security pin
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + id: 1 (number, required, sample)
+        + name: BLEHeadSet3 (string, required, sample)
+        + connected: true (boolean, required, sample)
+        + bonded: false (boolean, required, sample) - pairing/bonding didn't happen since no security pin was supplied
+        + RSSI: 67 (number, required, sample)
+ + Header
+
+                        Location: https://${HOST}/360fly/ble/connections/0
+        
