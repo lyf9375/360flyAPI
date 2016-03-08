@@ -16,7 +16,7 @@ These response headers are to be included with _every_ response
 
 # Group General Device Control and Status
 
-* _Extends ReST 1.0 Spec_
+* _Extends 1.0 ReST Spec_
 
 ## Identity [/360fly/id]
 
@@ -1039,6 +1039,33 @@ This section provides commands for downloading thumbnail for a media file on the
 ### Create and Retrieve Media Thumbnail [GET]
 
 + Response 200 (application/octet-stream)
+
+# Group Sensors
+
+## GPS [/360fly/sensors/gps]
+ ##### __GPS States__
+        Value | State
+        ---|---
+        0 | GPS Off
+        1 | GPS On, no fix
+        2 | GPS on and has fix
+
++ Attributes (object)
+ + state: 0 (number, required, default) - state of gps. See table below
+
+
+### Retrieve gps info [GET]
++ Response 200 (application/json)
+ + Attributes (GPS)
+
+### Configure gps [PUT]
++ Request (application/json)
+ + Attributes (object)
+        + state: 1 (number, optional, sample) - turn gps on
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + state: 1 (boolean, required, sample) - gps is now on
 
 # Group Network
 
