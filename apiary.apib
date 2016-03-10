@@ -84,21 +84,21 @@ Operating mode of the camera
  + proMode_2880sq_30fps (Camera Media Profile, required, default) - Uses recording format for full resolution recording at 30fps
  + standard_2880sq_24fps (object, required) - Uses recording format for full resolution at 24 fps. Allows bandwidth for liveview
         + recordingFormat: fullRes24 (string, required)
-        + audioFormat: 48KAAC4 (string, required)
+        + audioFormat: 48KAAC (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 1424sq24 (string, required)
         + projection: radial (string, required)
         + frameDuration: 24 (string, required)
  + frontFacing_1584p_30fps (object, required) - 1584p at 30 fps in front facing mode
         + recordingFormat: 1584p30
-        + audioFormat: 48KAAC4 (string, required)
+        + audioFormat: 48KAAC (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 720p15 (string, required)
         + projection: planar (string, required)
         + frameDuration: 30 (string, required)
  + frontFacing_1440p_30fps (object, required) - 1440p at 30 fps in front facing mode
         + recordingFormat: 1440p30 (string, required)
-        + audioFormat: 48KAAC4 (string, required)
+        + audioFormat: 48KAAC (string, required)
         + sensordataFormat: mode30fps (string, required)
         + liveviewFormat: 720p15 (string, required)
         + projection: planar (string, required)
@@ -170,7 +170,7 @@ Describes capture/encoding formats for recording, audio, sensordata, liveview. A
 
 + Attributes (object)
  + recordingFormat: fullRes30 (string, required) - format of recorded video. See /camera/formats/video
- + audioFormat: 48KAAC4 (string, required) - format of encoded audio. See /camera/formats/audio
+ + audioFormat: 48KAAC (string, required) - format of encoded audio. See /camera/formats/audio
  + sensordataFormat: mode30fps (string, required) - format of sensor data for recordings and (future version) liveview stream. See /camera/formats/sensordata
  + liveviewFormat: 752sq15 (string, required) - format of liveview video stream. See /camera/formats/video
  + projection: radial (string, required, default) - name of projection metadata embedded in recordings
@@ -445,10 +445,10 @@ Format of encoded video for recording and liveview
 ## Camera Audio Formats Collection [/360fly/camera/formats/audio]
 
 + Attributes (object)
- + 48KAAC4 (object, required) - default audio encoding format
+ + 48KAAC (object, required) - default audio encoding format
         + bitrate: 6400 (number, required)
         + samplerate: 4800 (number, required)
-        + codec: AAC4 (string, required)
+        + codec: AAC (string, required)
 
 ### List all audio formats [GET]
 + Response 200 (application/json)
@@ -459,10 +459,10 @@ Format of encoded video for recording and liveview
 + Attributes (object)
  + bitrate: 64000 (required, number) - encoded audio bitrate
  + samplerate: 48000 (required, number) - rate audio is sampled
- + codec: AAC4 (required, string)
+ + codec: AAC (required, string)
  
 + Parameters
- + name (required, string, `48KAAC4`) the relevant audio format
+ + name (required, string, `48KAAC`) the relevant audio format
  
 ### Retrieve audio format details [GET]
 + Response 200 (application/json)
