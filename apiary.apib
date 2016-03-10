@@ -640,7 +640,8 @@ Capture a single high-resolution JPEG image, or multiple images (burst).
 
 ### Take Photo [POST]
 
-`Location` response header gives url of the captured photo for single shot, or the url of the first photo for burst 
+* `Location` response header gives url of the captured photo for single shot, or the url of the first photo for burst 
+* An empty request body takes a single photo
 
 + Request (application/json)
 + Attributes (object)
@@ -650,6 +651,13 @@ Capture a single high-resolution JPEG image, or multiple images (burst).
  + Header
 
                         Location: /360fly/media/file/100_3FLY/FLY00801.jpg
+
++ Request (application/json)
+
++ Response 201 (application/json)
+ + Header
+
+                        Location: /360fly/media/file/137_3FLY/FLY34501.jpg
 
 ## Triggered Recording [/360fly/camera/trigger]
 
