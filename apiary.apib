@@ -1059,21 +1059,51 @@ This section provides commands for downloading thumbnail for a media file on the
         2 | GPS on and has fix
 
 + Attributes (object)
- + state: 0 (number, required, default) - state of gps. See table below
+ + state: 2 (number, required, sample) - state of gps. See table below
+ + time: 2009–10–17T18:37:26Z (string, required, sample) - current time in UTC using ISO 8601 format
+ + latitude: 47.644548 (number, required, sample) - latitude in decimal degrees
+ + longitude: 122.326897 (number, required, sample) - longitude in decimal degrees
+ + altitude: 475 (number, required, sample) - altitude in feet
+ + speed: 6 (number, required, sample) - speed in miles per hour
+ + heading: 0 (number, required, sample) - direction, in degrees from North
+ + accuracy: 16 (number, required, sample) - location accuracy, in feet 
 
 
 ### Retrieve gps info [GET]
 + Response 200 (application/json)
  + Attributes (GPS)
 
++ Request (application/json)
+
++ Response 200 (application/json)
+ + Attributes (object)
+        + state: 0 (number, required, sample) - GPS off
+        + time (string, required, sample)
+        + latitude (string, required, sample)
+        + longitude (number, required, sample)
+        + altitude (number, required, sample)
+        + speed (number, required, sample)
+        + heading (number, required, sample)
+        + accuracy (number, required, sample)
+
 ### Configure gps [PUT]
+
+* Can only modify `state` property to turn GPS on or off. All other properties are read-only.
+
 + Request (application/json)
  + Attributes (object)
         + state: 1 (number, optional, sample) - turn gps on
 
 + Response 200 (application/json)
  + Attributes (object)
-        + state: 1 (boolean, required, sample) - gps is now on
+        + state: 1 (boolean, required, sample) - gps is now on, but doesn't have fix
+        + time (string, required, sample)
+        + latitude (string, required, sample)
+        + longitude (number, required, sample)
+        + altitude (number, required, sample)
+        + speed (number, required, sample)
+        + heading (number, required, sample)
+        + accuracy (number, required, sample)
 
 # Group Network
 
