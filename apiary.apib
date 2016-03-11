@@ -765,10 +765,29 @@ For setting projection at manufacturing. Can only be done once.
 
 # Group USB
 
+##### __USB modes__
+        bit | modes | Description
+        ---|---|---
+        0 | UMS | Mass storage enable bit
+        1 | UVC | USB video streaming enable bit
+        2 | UAC | USB audio streaming enable bit
+        3 | ADB | ADB enable bit
+
+        Value | modes | Description
+        ---|---|---
+        0 | Off | USB is disabled
+        1 | UMS | Mass storage only
+        2 | UVC | USB video streaming only
+        4 | UAC | USB audio streaming only
+        6 | UVC+UAC | USB video and audio streaming
+        9 | UMS+ADB | Mass storage and ADB
+       14 | UVC+UAC+ADB | USB video and audio streaming, ADB
+       15 | UVC+UAC+UMS+ADB | USB video and audio streaming, UMS, and ADB (default)
+
 ## USB Configuration [/360fly/usb]
 
 + Attributes (object)
- + mode: 1 (number, required, default) - USB mode: 0 - disabled; 1 - mass storage mode; 2 - USB video streaming
+ + mode: 1 (number, required, default) - USB mode;
  + persistentMode: 1 (number, required) - default USB mode after reboot
 
 ### Retrieve USB Configuration [GET]
