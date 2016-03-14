@@ -771,18 +771,18 @@ For setting projection at manufacturing. Can only be done once.
         0 | UMS | Mass storage enable bit
         1 | UVC | USB video streaming enable bit
         2 | UAC | USB audio streaming enable bit
-        3 | ADB | ADB enable bit
+        3 | noADB | ADB disable bit
 
         Value | modes | Description
         ---|---|---
         0 | Off | USB is disabled
-        1 | UMS | Mass storage only
-        2 | UVC | USB video streaming only
-        4 | UAC | USB audio streaming only
-        6 | UVC+UAC | USB video and audio streaming
-        9 | UMS+ADB | Mass storage and ADB
-       14 | UVC+UAC+ADB | USB video and audio streaming, ADB
-       15 | UVC+UAC+UMS+ADB | USB video and audio streaming, UMS, and ADB (default)
+        1 | UMS | Mass storage, ADB enabled
+        2 | UVC | USB video streaming, ADB enabled
+        4 | UAC | USB audio streaming, ADB enabled
+        6 | UVC+UAC | USB video and audio streaming, ADB enabled
+        7 | UVC+UAC+UMS | USB video and audio streaming, UMS, ADB enabled (default)
+        9 | UMS+noADB | Mass storage with ADB disabled
+       14 | UVC+UAC+noADB | USB video and audio streaming, ADB disabled
 
 ## USB Configuration [/360fly/usb]
 
