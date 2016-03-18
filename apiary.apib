@@ -738,7 +738,7 @@ Configure camera recording to trigger based on motion or audio detection, or the
  + brightness: 100 (number, required, default) - image brightness. Range 0~200
  + ae_compensation: 100 (number, required, default) - compensation for auto exposure. Range: 50~200
  + contrast: 100 (number, required, default) - image contrast. Range 0~100
- + maxShutter: 30 (number, required, default) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds.
+ + max_shutter: 30 (number, required, default) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds.
 
 ### Retrieve tuning settings [GET]
 + Response 200 (application/json)
@@ -750,6 +750,56 @@ Configure camera recording to trigger based on motion or audio detection, or the
 
 + Response 200 (application/json)
  + Attributes (Scene)
+
+### Retrieve tuning options [OPTIONS]
++ Response 200 (application/json)
+ + Body     
+
+                        {
+                                "ae_lock":{
+                                        "default":false,
+                                        "type":"boolean"
+                                },
+                                "saturation":{
+                                        "min":0,
+                                        "type":"integer",
+                                        "default":100,
+                                        "max":200
+                                },
+                                "max_iso_sensitivity":{
+                                        "min":1000,
+                                        "type":"integer",
+                                        "default":8000,
+                                        "max":64000
+                                },
+                                "awb_lock":{
+                                        "default":false,
+                                        "type":"boolean"
+                                },
+                                "brightness":{
+                                        "min":0,
+                                        "type":"integer",
+                                        "default":100,
+                                        "max":200
+                                },
+                                "ae_compensation":{
+                                        "min":50,
+                                        "type":"integer",
+                                        "default":100,
+                                        "max":200
+                                },
+                                "contrast":{
+                                        "min":0,
+                                        "type":"integer",
+                                        "default":100,
+                                        "max":200
+                                },
+                                "max_shutter": {
+                                        "min":15,
+                                        "type":"integer",
+                                        "default":30
+                                }
+                        }
 
 ### Reset to default tuning [DELETE]
 + Response 200 (application/json)
