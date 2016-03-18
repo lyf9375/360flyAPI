@@ -112,7 +112,7 @@ Configure 360fly media capture
 Operating mode of the camera
 
 + Attributes (object)
- + profile: proMode_2880sq_30fps (string, required, default) - Current camera profile (see /camera/profiles). Determines media formats for recorded and liveview video, audio, sensordata, and metadata 
+ + profile: standard_2880sq_24fps (string, required, default) - Current camera profile (see /camera/profiles). Determines media formats for recorded and liveview video, audio, sensordata, and metadata 
  + maxChapterDuration (number, required, sample) - Max duration, in seconds, for a chapter in a recording. 
  + maxChapterFileSize  (number, required, sample) - Max file size, in bytes, for a chapter in a recording
 
@@ -140,8 +140,8 @@ Operating mode of the camera
 ## Camera Media Profile Collection [/360fly/camera/profiles]
 
 + Attributes (object)
- + proMode_2880sq_30fps (Camera Media Profile, required, default) - Uses recording format for full resolution recording at 30fps
- + standard_2880sq_24fps (object, required) - Uses recording format for full resolution at 24 fps. Allows bandwidth for liveview
+ + proMode_2880sq_30fps (Camera Media Profile, required) - Uses recording format for full resolution recording at 30fps
+ + standard_2880sq_24fps (object, required, default) - Uses recording format for full resolution at 24 fps. Allows bandwidth for liveview
         + recordingFormat: fullRes24 (string, required)
         + audioFormat: 48KAAC (string, required)
         + sensordataFormat: mode30fps (string, required)
@@ -594,7 +594,7 @@ Format of sensordata. Effectively a configuration for underlying sensors, events
 Start/stop recording and get current recording status. You can specify a config for a new recording, or if left unspecified, your recording will use config given by `/360fly/camera/config`. A `GET` on an inactive recording gives `204`. A successful `POST` returns a `Location` header for the new recording download url (or the url to first chapter, in the case of chaptered recording)
 
 + Attributes (object)
- + profile: proMode_2880sq_30fps (string, optional, default) - The profile for the active recording
+ + profile: standard_2880sq_24fps (string, optional, default) - The profile for the active recording
  + maxChapterDuration (number, optional, default) - The chapter duration for active recording
  + maxChapterFileSize (number, optional, default) - The chapter file size for active recording
  + hours: 0 (number, required, sample) - duration in hours of active recording
@@ -634,6 +634,7 @@ Start/stop recording and get current recording status. You can specify a config 
  + Attributes (object)
         + profile: slowMotion_1728sq_60fps (string, required, sample) - recording in slow motion
         + maxChapterDuration: 180 (number, required, sample) - active recording chapters on 180 second intervals
+        + maxChapterFileSize (number, required, default)
         + hours: 0 (number, required, default)
         + minutes: 0 (number, required, default)
         + seconds: 0 (number, required, default)
