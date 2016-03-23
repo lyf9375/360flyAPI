@@ -1155,12 +1155,12 @@ This section provides commands for downloading thumbnail for a media file on the
 
 + Attributes (object)
  + state: 2 (number, required, default) - AP state. See below for table of possible values.
- + SSID: 360fly_ABCD (string, required, sample) - SSID of AP network
+ + SSID: 360fly_ABCD (string, required, sample) - SSID of AP network. READ-ONLY
  + security: WPA2 (string, required, default) - Network security type. Options: [NONE, WEP, WPA, WPA2]
- + ipAddr: 192.168.2.1 (string, required, default) - IP address of camera on the AP network
- + frequency: 2.4 (number, required, default) - WiFi AP operating frequency (GHz). Options: [2.4, 5]
- + channel (number, required, default) - WiFi AP channel. null indicates channel is chosen automatically. Changing channel should not be implemented till a future version. 
- + error: 0 (number, required, default) - error code. See below for table of values
+ + ipAddr: 192.168.2.1 (string, required, default) - IP address of camera on the AP network. READ-ONLY
+ + frequency: 2.4 (number, required, default) - WiFi AP operating frequency (GHz). Options: [2.4, 5.0]
+ + channel (number, required, default) - WiFi AP channel. null indicates channel is chosen automatically. READ-ONLY (configurable in a future version) 
+ + error: 0 (number, required, default) - error code. See below for table of values. READ-ONLY
 
 ### Retrieve AP details [GET]
 
@@ -1224,9 +1224,9 @@ This section provides commands for downloading thumbnail for a media file on the
  + security (string, required, default) - Security type of connected network. null when not connected. Options: [NONE, WEP, WPA, WPA2, null]
  + password (string, required, default) - Password for connected network. null when not connected. password is never returned
  + saved (boolean, required, default) - Connected network is or isn't a saved network (See /360fly/network/saved). null when not connected
- + ipAddr (string, required, default) - IP address of camera on the connected station network. null when not connected.
- + RSSI (number, required, default) - RSSI of network connection (measure of signal strength) in dBm + 127. null when not connected.
- + error: 0 (number, required, default) - error code. See below for table of values
+ + ipAddr (string, required, default) - IP address of camera on the connected station network. null when not connected. READ-ONLY
+ + RSSI (number, required, default) - RSSI of network connection (measure of signal strength) in dBm + 127. null when not connected. READ-ONLY
+ + error: 0 (number, required, default) - error code. See below for table of values. READ-ONLY
 
 ### Retrieve Station Interface details [GET]
 
