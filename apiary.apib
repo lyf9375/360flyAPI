@@ -47,32 +47,9 @@ These response headers are to be included with _every_ response
 
 ## USB [/360fly/usb]
 
-* Function of the USB interface is configurable using the tables below
-
-
- #### __USB bits__
-        bit | name | Description
-        ---|---|---
-        0 | UMS | Mass storage enable bit
-        1 | UVC | USB video streaming enable bit
-        2 | UAC | USB audio streaming enable bit
-        3 | noADB | ADB disable bit
-
- #### __USB modes__
-        Value | mode | Description
-        ---|---|---
-        0 | Off | USB is disabled
-        1 | UMS | Mass storage, ADB enabled
-        2 | UVC | USB video streaming, ADB enabled
-        4 | UAC | USB audio streaming, ADB enabled
-        6 | UVC+UAC | USB video and audio streaming, ADB enabled
-        7 | UVC+UAC+UMS | USB video and audio streaming, UMS, ADB enabled (default)
-        9 | UMS+noADB | Mass storage with ADB disabled
-        14 | UVC+UAC+noADB | USB video and audio streaming, ADB disabled
-
 + Attributes (object)
- + mode: 1 (number, required, default) - USB mode; See USB modes table below. modes are constructed from bitwise OR'ing the values in the USB bits table below.
- + persistentMode: 1 (number, required, default) - default USB mode after reboot
+ + mode: 1 (number, required, default) - USB mode: 0 - disabled; 1 - mass storage mode; 2 - USB video streaming
+ + persistentMode: 1 (number, required) - default USB mode after reboot
 
 ### Retrieve USB Configuration [GET]
 
@@ -83,24 +60,24 @@ These response headers are to be included with _every_ response
 
 + Request (application/json)
  + Attributes (object)
-        + mode: 7 (number, required) - Enabling USB video streaming, audio streaming, and UMS
+        + mode: 2 (number, required) - Enabling USB video streaming
 
 + Response 200 (application/json)
  + Attributes (object)
-        + mode: 7 (number, required)
+        + mode: 2 (number, required)
         + persistentMode: 1 (number, required)
 
 + Request (application/json)
  + Attributes (object)
-        + persistentMode: 7 (number, required) - USB video streaming, audio streaming, and UMS mode will persist after reboot
+        + persistentMode: 2 (number, required) - USB video streaming mode will persist after reboot
 
 + Response 200 (application/json)
  + Attributes (object)
         + mode: 1 (number, required)
-        + persistentMode: 7 (number, required)
+        + persistentMode: 2 (number, required)
 
 ### Reset USB Configuration to default [DELETE]
-+ Response 200
++ Response 204
  + Attributes (USB)
 
 # Group Camera
