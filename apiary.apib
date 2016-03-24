@@ -47,32 +47,9 @@ These response headers are to be included with _every_ response
 
 ## USB [/360fly/usb]
 
-* Function of the USB interface is configurable using the tables below
-
-
- #### __USB bits__
-        bit | name | Description
-        ---|---|---
-        0 | UMS | Mass storage enable bit
-        1 | UVC | USB video streaming enable bit
-        2 | UAC | USB audio streaming enable bit
-        3 | noADB | ADB disable bit
-
- #### __USB modes__
-        Value | mode | Description
-        ---|---|---
-        0 | Off | USB is disabled
-        1 | UMS | Mass storage, ADB enabled
-        2 | UVC | USB video streaming, ADB enabled
-        4 | UAC | USB audio streaming, ADB enabled
-        6 | UVC+UAC | USB video and audio streaming, ADB enabled
-        7 | UVC+UAC+UMS | USB video and audio streaming, UMS, ADB enabled (default)
-        9 | UMS+noADB | Mass storage with ADB disabled
-        14 | UVC+UAC+noADB | USB video and audio streaming, ADB disabled
-
 + Attributes (object)
- + mode: 1 (number, required, default) - USB mode; See USB modes table below. modes are constructed from bitwise OR'ing the values in the USB bits table below.
- + persistentMode: 1 (number, required, default) - default USB mode after reboot
+ + mode: 1 (number, required, default) - USB mode: 0 - disabled; 1 - mass storage mode; 2 - USB video streaming
+ + persistentMode: 1 (number, required) - default USB mode after reboot
 
 ### Retrieve USB Configuration [GET]
 
@@ -83,24 +60,24 @@ These response headers are to be included with _every_ response
 
 + Request (application/json)
  + Attributes (object)
-        + mode: 7 (number, required) - Enabling USB video streaming, audio streaming, and UMS
+        + mode: 2 (number, required) - Enabling USB video streaming
 
 + Response 200 (application/json)
  + Attributes (object)
-        + mode: 7 (number, required)
+        + mode: 2 (number, required)
         + persistentMode: 1 (number, required)
 
 + Request (application/json)
  + Attributes (object)
-        + persistentMode: 7 (number, required) - USB video streaming, audio streaming, and UMS mode will persist after reboot
+        + persistentMode: 2 (number, required) - USB video streaming mode will persist after reboot
 
 + Response 200 (application/json)
  + Attributes (object)
         + mode: 1 (number, required)
-        + persistentMode: 7 (number, required)
+        + persistentMode: 2 (number, required)
 
 ### Reset USB Configuration to default [DELETE]
-+ Response 200
++ Response 204
  + Attributes (USB)
 
 # Group Camera
@@ -1157,12 +1134,12 @@ This section provides commands for downloading thumbnail for a media file on the
 
 + Attributes (object)
  + state: 2 (number, required, default) - AP state. See below for table of possible values.
- + SSID: 360fly_ABCD (string, required, sample) - SSID of AP network
+ + SSID: 360fly_ABCD (string, required, sample) - SSID of AP network. READ-ONLY
  + security: WPA2 (string, required, default) - Network security type. Options: [NONE, WEP, WPA, WPA2]
- + ipAddr: 192.168.2.1 (string, required, default) - IP address of camera on the AP network
- + frequency: 2.4 (number, required, default) - WiFi AP operating frequency (GHz). Options: [2.4, 5]
- + channel (number, required, default) - WiFi AP channel. null indicates channel is chosen automatically. Changing channel should not be implemented till a future version. 
- + error: 0 (number, required, default) - error code. See below for table of values
+ + ipAddr: 192.168.2.1 (string, required, default) - IP address of camera on the AP network. READ-ONLY
+ + frequency: 2.4 (number, required, default) - WiFi AP operating frequency (GHz). Options: [2.4, 5.0]
+ + channel (number, required, default) - WiFi AP channel. null indicates channel is chosen automatically. READ-ONLY (configurable in a future version) 
+ + error: 0 (number, required, default) - error code. See below for table of values. READ-ONLY
 
 ### Retrieve AP details [GET]
 
@@ -1226,9 +1203,9 @@ This section provides commands for downloading thumbnail for a media file on the
  + security (string, required, default) - Security type of connected network. null when not connected. Options: [NONE, WEP, WPA, WPA2, null]
  + password (string, required, default) - Password for connected network. null when not connected. password is never returned
  + saved (boolean, required, default) - Connected network is or isn't a saved network (See /360fly/network/saved). null when not connected
- + ipAddr (string, required, default) - IP address of camera on the connected station network. null when not connected.
- + RSSI (number, required, default) - RSSI of network connection (measure of signal strength) in dBm + 127. null when not connected.
- + error: 0 (number, required, default) - error code. See below for table of values
+ + ipAddr (string, required, default) - IP address of camera on the connected station network. null when not connected. READ-ONLY
+ + RSSI (number, required, default) - RSSI of network connection (measure of signal strength) in dBm + 127. null when not connected. READ-ONLY
+ + error: 0 (number, required, default) - error code. See below for table of values. READ-ONLY
 
 ### Retrieve Station Interface details [GET]
 
