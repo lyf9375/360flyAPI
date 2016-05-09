@@ -11,7 +11,7 @@ These response headers are to be included with _every_ response
 
 + Headers
 
-                        X-360fly-API-Version: v0.11.0
+                        X-360fly-API-Version: v0.12.0
 
 
 # Group General Device Control and Status
@@ -129,7 +129,7 @@ Operating mode of the camera
         + recordingFormat: 1440p30 (string, required)
         + audioFormat: 48KAAC (string, required)
         + sensordataFormat: mode30fps (string, required)
-        + liveviewFormat: 1440p15 (string, required)
+        + liveviewFormat: 1080p15 (string, required)
         + projection: planar (string, required)
         + frameDuration: 30 (string, required)
  + slowMotion_1728sq_60fps (object, required) -  60 fps encoded frame rate for slow motion recording
@@ -317,6 +317,19 @@ The available media and sensordata formats. The various formats are used to comp
         + keyinterval: 15 (number, required)
         + ratecontrol: CVBR (string, required)
         + bitrate: 13000000  (number, required)
+        + quant: 18 (number, required)
+        + maxquant: 23 (number, required)
+        + minquant: 0 (number, required)
+        + maxframerate (number, required)
+        + minframerate (number, required)
+ + 1080p15 (object, required) - a front-facing liveview format
+        + resolution: 1920x1080
+        + resize: crop (string, required)
+        + codec: h264 (string, required)
+        + framerate: 15 (number, required)
+        + keyinterval: 15 (number, required)
+        + ratecontrol: CVBR (string, required)
+        + bitrate: 7000000  (number, required)
         + quant: 18 (number, required)
         + maxquant: 23 (number, required)
         + minquant: 0 (number, required)
