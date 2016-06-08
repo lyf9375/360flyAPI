@@ -47,9 +47,13 @@ These response headers are to be included with _every_ response
 
 ## USB [/360fly/usb]
 
+* When request to change, either `mode` or `persistentMode` is to be changed, not both.  
+* In fly1.5 (Firefly), changing `persistentMode` will not only change the persistent mode, but also changes the current mode.
+
 + Attributes (object)
- + mode: 1 (number, required, default) - USB mode: 1 - mass storage mode; 2 - USB video streaming
- + persistentMode: 1 (number, required) - default USB mode after reboot
+ + mode: 1 (number, optional, default) - USB mode: 1 - mass storage mode; 2 - USB video streaming
+ + persistentMode: 1 (number, optional) - default USB mode after reboot
+
 
 ### Retrieve USB Configuration [GET]
 
@@ -69,7 +73,7 @@ These response headers are to be included with _every_ response
 
 + Request (application/json)
  + Attributes (object)
-        + persistentMode: 2 (number, required) - Note: in fly1.5 (Firefly), this will not only change the persistent mode, but also changes the current mode.
+        + persistentMode: 2 (number, required)
 
 + Response 200 (application/json)
  + Attributes (object)
