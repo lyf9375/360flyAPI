@@ -11,12 +11,43 @@ These response headers are to be included with _every_ response
 
 + Headers
 
-                        X-360fly-API-Version: v0.13.0
+                        X-360fly-API-Version: v0.14.0
 
 
 # Group General Device Control and Status
 
 * _Extends 1.0 ReST Spec_
+
+## Status [/360fly/status]
+
+* New camera status mode is added: `webcam` with value 7.
+
+##### __camera status modes__
+Value | Meaning
+---|---
+_0_  |   Off
+_1_  |   Booting
+_2_  |   Sleeping
+_3_  |   Ready
+_4_  |   Recording
+_5_  |   USB mass storage
+_6_  |   Firmware updating
+_7_  |   Webcam
+
+
+### Retrieve status [GET]
+
++ Response 200 (application/json)
+ 
+ + Body 
+    
+            {
+                "battery":{"charge_mode": 1, "level":70},
+                "cam_status" : {"mode":7, "charged":false, "charging":true},
+                "power" : {"mode":2},
+                "storage":{"usage":10,"available":1234,"capacity":30893120}
+            }
+            
 
 ## Identity [/360fly/id]
 
