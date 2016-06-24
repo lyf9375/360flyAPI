@@ -160,6 +160,13 @@ Operating mode of the camera
         + liveviewFormat: 1440sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 24 (string, required)
+ + extended_2880sq_24fps (object, required) - full resolution at 24 fps w/liveview disabled for extended battery life
+        + recordingFormat: fullRes24 (string, required)
+        + audioFormat: 48KAAC (string, required)
+        + sensordataFormat: mode30fps (string, required)
+        + liveviewFormat (string, required, nullable)
+        + projection: radial (string, required)
+        + frameDuration: 24 (string, required)
  + frontFacing_1440p_30fps (object, required) - 1440p at 30 fps in front facing mode
         + recordingFormat: 1440p30 (string, required)
         + audioFormat: 48KAAC (string, required)
@@ -176,49 +183,49 @@ Operating mode of the camera
         + frameDuration: 30 (string, required)
  + timeLapse_2880sq_2fps (object, required) - Uses recording format for full resolution at 2 fps. Suitable for time lapse recording where each frame represents a half second interval
         + recordingFormat: 2880sq2 (string, required)
-        + audioFormat (string, required)
+        + audioFormat (string, required, nullable)
         + sensordataFormat: mode2fps (string, required)
         + liveviewFormat: 1440sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
  + timeLapse_2880sq_1fps (object, required) - Uses recording format for full resolution at 1 fps. Suitable for time lapse recording where each frame represents a 1 second interval
         + recordingFormat: 2880sq1 (string, required)
-        + audioFormat (string, required)
+        + audioFormat (string, required, nullable)
         + sensordataFormat: mode1fps (string, required)
         + liveviewFormat: 1440sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
  + timeLapse_2880sq_2sec (object, required) - Suitable for time lapse recording where each frame represents a 2 second interval
         + recordingFormat: 2880sq2sec (string, required)
-        + audioFormat (string, required)
+        + audioFormat (string, required, nullable)
         + sensordataFormat: mode2sec (string, required)
         + liveviewFormat: 1440sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
  + timeLapse_2880sq_5sec (object, required) - Suitable for time lapse recording where each frame represents a 5 second interval
         + recordingFormat: 2880sq5sec (string, required)
-        + audioFormat (string, required)
+        + audioFormat (string, required, nullable)
         + sensordataFormat: mode5sec (string, required)
         + liveviewFormat: 1440sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
  + timeLapse_2880sq_10sec (object, required) - Suitable for time lapse recording where each frame represents a 10 second interval
         + recordingFormat: 2880sq10sec (string, required)
-        + audioFormat (string, required)
+        + audioFormat (string, required, nullable)
         + sensordataFormat: mode10sec (string, required)
         + liveviewFormat: 1440sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
  + timeLapse_2880sq_30sec (object, required) - Suitable for time lapse recording where each frame represents a 30 second interval
         + recordingFormat: 2880sq30sec (string, required)
-        + audioFormat (string, required)
+        + audioFormat (string, required, nullable)
         + sensordataFormat: mode30sec (string, required)
         + liveviewFormat: 1440sq15 (string, required)
         + projection: radial (string, required)
         + frameDuration: 30 (string, required)
  + timeLapse_2880sq_60sec (object, required) - Suitable for time lapse recording where each frame represents a 60 second interval
         + recordingFormat: 2880sq60sec (string, required)
-        + audioFormat (string, required)
+        + audioFormat (string, required, nullable)
         + sensordataFormat: mode60sec (string, required)
         + liveviewFormat: 1440sq15 (string, required)
         + projection: radial (string, required)
@@ -236,7 +243,7 @@ Describes capture/encoding formats for recording, audio, sensordata, liveview. A
  + recordingFormat: fullRes30 (string, required) - format of recorded video. See /camera/formats/video
  + audioFormat: 48KAAC (string, required) - format of encoded audio. See /camera/formats/audio
  + sensordataFormat: mode30fps (string, required) - format of sensor data for recordings and (future version) liveview stream. See /camera/formats/sensordata
- + liveviewFormat (string, required) - format of liveview video stream. See /camera/formats/video
+ + liveviewFormat (string, required, nullable) - format of liveview video stream. See /camera/formats/video
  + projection: radial (string, required, default) - name of projection metadata embedded in recordings
  + frameDuration: 30 (string, required, default) - frame playback duration of recordings, represented as the denominator e.g. 30 implies 1/30seconds
  
