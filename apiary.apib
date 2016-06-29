@@ -713,6 +713,7 @@ Capture a single high-resolution JPEG image, or multiple images (burst).
 ### Take Photo [POST]
 
 * `Location` response header gives url of the captured photo for single shot, or the url of the first photo for burst 
+* There should be at least 3 seconds delay between consecutive requests 
 * An empty request body takes a single photo
 
 + Request (application/json)
