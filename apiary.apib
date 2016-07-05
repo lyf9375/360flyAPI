@@ -2,13 +2,12 @@ MAT: 1A
 
 # 360fly ReST API
 
-This API document outlines additions or modifications to the base 360fly REST specification that are required to
-achieve full functionality of the 360Fly HD and 4K cameras.
-
 A number of the requests and responses use JSON syntax. Where possible,
 we use [JSON Schema](http://json-schema.org) to define these messages.  A guide
 to JSON Schema is maintained at
 [Understanding JSON Schema](http://spacetelescope.github.io/understanding-json-schema/index.html).
+
+*NOTE* many endpoints will be marked as **360fly 4K only**
 
 The REST API is a command and control mechanism through network interfaces to  
 360fly, specifically WiFi. In many cases, similar functionality is expected to be 
@@ -18,7 +17,7 @@ available through the Bluetooth LE profile as well. Each URL is preceded by `/36
 
 * All endpoints should correctly validate expected content-types with the with the content-type header provided by the client.
 
-# Global Response Headers
+## Global Response Headers
 
 These response headers are to be included with _every_ response
 
@@ -26,20 +25,23 @@ These response headers are to be included with _every_ response
 
                         X-360fly-API-Version: v0.15.0
 
-## Authentication
+## HTTPS and Authentication
 
-The 360fly REST API will conform to [RFC 2617](https://tools.ietf.org/rfc/rfc2617.txt) regarding 
+* All endpoints shall support HTTPS for security reasons, though some endpoints may support HTTP for download speed concerns.
+* The 360fly REST API will conform to [RFC 2617](https://tools.ietf.org/rfc/rfc2617.txt) regarding 
 the use of authentication to provide an initial layer of security for users.
 * All endpoints shall use authentication unless an explicit exception is made. 
-* Endpoints that require HTTPS communcications should shall support both digest and basic authentication.
-* Endpoints that support HTTP communcations shall require HTTP digest authentication to prevent transmitting clear-text passwords.
-
+* Endpoints that require HTTPS communications may support both digest and basic authentication.
+* Endpoints that support HTTP communications shall require HTTP digest authentication to prevent transmitting clear-text passwords.
 
 # Group General Device Control and Status
 
 ## Status [/360fly/status]
 
-##### __camera status modes__
+* supports both HTTP and HTTPS
+* does _not_ require authentication 
+
+##### `mode`
 Value | Meaning
 ---|---
 _0_  |   Off
@@ -49,21 +51,40 @@ _3_  |   Ready
 _4_  |   Recording
 _5_  |   USB mass storage
 _6_  |   Firmware updating
-_7_  |   Webcam
-_usb_  | USB connection present | 1
-       | No USB connection      | 0
-_low_battery_ | Battery level normal | false
- | Battery level too low | true
-_low_storage_ | Storage level normal | false
- | Storage level too low | true
-_high_temperature_ | Temperature normal | false
- | Temperature too high | true
+_7_  |   Webcam **360fly 4K only**
 
-* Note: `Webcam` status is only available on Firefly (version 1.5) cameras.
+##### `usb`
+Value | Meaning
+---|---
+`true` | USB connection present
+`false`       | No USB connection
+
+
+##### `low_battery`
+Value | Meaning
+---|---
+`false` | Battery level normal 
+`true` | Battery level too low
+
+
+
+##### `low_storage`
+Value | Meaning
+---|---
+`false` | Storage level normal
+`true` | Storage level too low
+
+
+##### `high_temperature`
+Value | Meaning
+---|---
+`false` | Temperature normal
+`true` | Temperature too high
+
 
 ##### *Mode Substate Bitflags (Deprecated)*
 Substate | Value
---- | ---
+---|---
 none | 0x0000
 charging | 0x4000
 charged | 0x8000
@@ -73,7 +94,7 @@ high temperature | 0x0400
 
 ##### *rec_error Bitflags (Deprecated)*
 Error | Value
---- | ---
+---|---
 none | 0x00
 storage too low | 0x01
 storage error | 0x02
@@ -82,24 +103,24 @@ temperature too high | 0x08
 
 ##### *Battery*
 Characteristic | Definition | Return Value
---- | --- | ---
-_charge_mode_   | Device Not Charging   | 0
+---|---|---
+_charge mode_   | Device Not Charging   | 0
                 | Device Charging       | 1 
                 | Device Charged        | 2
                 | Error                 | _any other number_
 _level_         | Current battery charge level (in percentage)  | 0 to 100
-_status_        | Identical to _charge_mode_    |
+_status_        | Identical to _charge mode_    |
 
 ##### *Storage*
 Characteristic | Definition
---- | ---
+---|---
 _capacity_  | _Total_ storage avaiable on the device (in kilobytes).
 _usage_     | Amount of _used_ storage on the device (as a percentage).
 _available_ | Amount of _free_ (remaining) storage on the device (in kilobytes).
 
 ##### *Power*
 Characteristic | Definition | Return Value
---- | --- | ---
+---|---|---
 _mode_  | Device in "Off" state     | 0
         | Device in "Boot" state    | 1
         | Device in "On" state      | 2
@@ -132,16 +153,16 @@ specification for more information.
 
 #### __Response Data__
 Characteristic | Definition | Return Value
---- | --- | ---
-_model_no_      | Model number of device                | 360FLYBLK
-_ble_version_   | Version of BLE software               | B-00B0
-_serial_no_     | Device serial number                  | 123456789012345678
-_hw_version_    | Version of device hardware            | PCB-00
-_mac_addr_      | Device MAC Address                    | E4:BA:D9:C0:00:46
-_name_          | Name assigned to device               | 360Fly Device
-_system_id_     | System identifier                     | 4600c0fe ffd9bae4    
-_manufacturer_  | Manufacturer of device                | 360fly
-_sw_version_    | Version of device software            | 1.0.0
+---|---|---
+`model_no`      | Model number of device                | 360FLYBLK
+`ble_version`   | Version of BLE software               | B-00B0
+`serial_no`     | Device serial number                  | 123456789012345678
+`hw_version`    | Version of device hardware            | PCB-00
+`mac_addr`      | Device MAC Address                    | E4:BA:D9:C0:00:46
+`name`          | Name assigned to device               | 360Fly Device
+`system_id`     | System identifier                     | 4600c0fe ffd9bae4    
+`manufacturer`  | Manufacturer of device                | 360fly
+`sw_version`    | Version of device software            | 1.0.0
 
 + Response 200 (application/json)
 
@@ -197,7 +218,7 @@ Changes/Updates the user assigned name of the 360Fly device.
 
 ## Identity [/360fly/id]
 
-* Note: ID endpoint is only available on Firefly (version 1.5) cameras.
+* **360fly 4K only**
 
 * The `password` property is never returned, but can be modified via a `PUT` request.
 * Successful `PUT` requests will cause all WiFi AP clients to disconnect since the AP SSID or password will change
@@ -226,7 +247,7 @@ Changes/Updates the user assigned name of the 360Fly device.
 
 ## USB [/360fly/usb]
 
-* Note: USB endpoint is only available on Firefly (version 1.5) cameras.
+* **360fly 4K only**
 
 * When request to change, either `mode` or `persistentMode` is to be changed, not both.  
 * In fly1.5 (Firefly), changing `persistentMode` will not only change the persistent mode, but also changes the current mode.
@@ -277,7 +298,7 @@ Retrieves power mode status of the 360Fly device.
 
 #### __Response Data__
 Characteristic | Definition | Return Value
---- | --- | ---
+---|---|---
 _mode_  | Device in "Off" state     | 0
         | Device in "Boot" state    | 1
         | Device in "On" state      | 2
@@ -299,7 +320,7 @@ This command is used to shutdown or reset the 360Fly device.
 
 #### __Command Data__
 Command | Action
---- | ---
+---|---
 `"mode":0`  | _Shutdown_ the 360Fly device.
 `"mode":1`  | _Reset_ the 360Fly device.
 
@@ -327,7 +348,7 @@ Retrieves the current time stored on the 360Fly device.
 
 ##### __Response Data__
 Characteristic | Definition | Return Value
---- | --- | ---
+---|---|---
 _value_ |   Date: YYYY-MM-DD    |   YYYY-MM-DD **T** HH:MM:SS **Z**
         |   Time: HH:MM:SS      |
 
@@ -348,7 +369,7 @@ Sets the 360Fly device clock to the specified time.
 
 #### __Command Data__
 Command | Action
---- | ---
+---|---
 `"value":2016-01-12T11:20:10Z`  |   Sets _date_ to 2016-01-12.
                                 |   Sets _time_ to 11:20:10.
 
@@ -362,96 +383,6 @@ Command | Action
 
 + Response 204
 
-
-## Firmware [/360fly/firmware]
-
-### Retrieve Firmware Status Command [GET]
-
-Retrieves the device firmware version number and creation date information.
-
-* The _retrieve firmware info_ command requires **authentication**.
-* The _time_ field is presented in ISO 8601 format.
-
-##### __Response Data__
-Characteristic | Definition | Return Value
---- | --- | ---
-_version_   |   Firmware Version            |   "X.Y.Z"
-_created_   |   Creation date and time      |   " WD MM DD HH:MM:SS TZ YYYY"
-            |                               |   WD: Weekday (3 chars)
-            |                               |   MM: Month (3 chars)
-            |                               |   DD: Day (2 digits)
-            |                               |   HH: Hours (2 digits)
-            |                               |   MM: Minutes (2 digits)
-            |                               |   SS: Seconds (2 digits)
-            |                               |   TZ: Time Zone (3 digits)
-            |                               |   YYYY: Year (4 digits)
-
-+ Response 200 (application/json)
-
-    + Body
-    
-            {
-                "version":"1.0.0",
-                "created":"Fri Jan 22 15:09:10 UTC 2015"
-            }
-
-### Firmware Update Command [POST]
-
-Upload a firmware binary file and initiate an update to the 360Fly device.
-
-* The _firmware update_ command requires **authentication**.
-* The _version number_ field only supports numerical characters.
-* Must specify full path to .fly file location.
-
-+ Request (application/octet-stream)
-
-        (Firmware binary)
-
-+ Response 202 (text/html)
-
-        Firmware accepted. Your device will restart momentarily.
-        
-+ Response 400 (application/json)
-
-    + Body
-    
-            {
-                "error":5
-            }
-
-+ Response 403 (text/html)
-
-        Battery level too low. Battery must be at 30 percent or higher
-    
-+ Response 403 (text/html)
-
-        Uploaded file in unexpected format
-        
-+ Response 403 (text/html)
-
-        Issuing certificate is untrusted
-        
-+ Response 403 (text/html)
-
-        Firmware could not be verified against issuing certificate
-        
-+ Response 403 (text/html)
-
-        Firmware update is not primed
-
-+ Response 409 (application/json)
-
-        Firmware cannot be updated at this time
-        
-+ Response 415 (application/json)
-
-        Uploaded file in unexpected format *not implemented
-            
-+ Response 500 (text/html)
-
-        Internal server error
-
-
 ## Device Storage [/360fly/storage]
 
 ### Retrieve Storage Information Command [GET]
@@ -462,7 +393,7 @@ Retrieves the SD card storage details from the 360Fly device.
 
 ##### __Response Data__
 Characteristic | Definition | Return Value
---- | --- | ---
+---|---|---
 _available_         |   Amount of _free_ (remaining) storage on the device (in kilobytes).  |   15175104
 _used_              |   Amount of _used_ storage on the device (in kilobytes).              |   112992
 _minutesRemaining_  |   Available storage minutes remaining (if recording).                 |   101.16736
@@ -496,13 +427,13 @@ Retrieves the battery status details from the 360Fly device.
 
 ##### __Response Data__
 Characteristic | Definition | Return Value
---- | --- | ---
-_charge_mode_       |   Not Charging    |   0
+---|---|---
+`charge_mode`       |   Not Charging    |   0
                     |   Charging        |   1
                     |   Charged         |   2
-_level_             |   Percent battery charge remaining.   |   0% - 100%
-_status_            |   Identical to _charge_mode_.         |
-_minutes_remaining_ |   Minutes of record time remaining on present battery charge level.   |
+`level`             |   Percent battery charge remaining.   |   0% - 100%
+`status`            |   Identical to `charge_mode`.         |
+`minutes_remaining` |   Minutes of record time remaining on present battery charge level.   |
 
 + Response 200 (application/json)
 
@@ -557,7 +488,7 @@ Ping the 360Fly device web server.
 
 ##### __Response Data__
 Characteristic | Definition | Return Value
---- | --- | ---
+---|---|---
 _datetime_  |   Date: YYYY-MM-DD    |   YYYY-MM-DD **T** HH:MM:SS **Z**
             |   Time: HH:MM:SS      |
 
@@ -570,7 +501,7 @@ _datetime_  |   Date: YYYY-MM-DD    |   YYYY-MM-DD **T** HH:MM:SS **Z**
             }
 
 
-# Group Camera
+# Group Preferences
 
 Collection of user configurable preferences.
 
@@ -596,7 +527,7 @@ Retrieves **_ALL_** user configurable preferences on the 360Fly device.
 
 ##### __Response Data__
 Characteristic | Definition | Return Value
---- | --- | ---
+---|---|---
 _IsActivated_       |   360Fly Device not activated     |   0
                     |   360Fly Device activated         |   1
 _Registration_      |   360Fly Device not registered    |   0
@@ -616,12 +547,12 @@ _Registration_      |   360Fly Device not registered    |   0
 
 Update **_ALL_** existing user preferences or create them if they do not exist.
 
-* The set/update **all** device preferences_ command requires **authentication**.
+* The set/update **all** device preferences command requires **authentication**.
 * Returns the full user preference list.
 
 ##### __Command Data__
 Command | Action
---- | ---
+---|---
 `"IsActivated":0`   |   Deactivate the 360Fly device
 `"IsActivated":1`   |   Activate the 360Fly device
 `"Registration":0`  |   Un-register 360Fly device
@@ -662,7 +593,7 @@ Removes/Resets **_ALL_** user preferences on of the 360Fly device.
 
 ##### __Default Preference Settings__
 Characteristic | Value
---- | ---
+---|---
 _IsActivated_       |   0
 _Registration_      |   0
 
@@ -726,12 +657,13 @@ Removes/Resets a **_specific_** user preference on the 360Fly device.
 
         Preference not found
 
+# Group Camera
 
 ## Camera Config [/360fly/camera/config]
 
 Operating mode of the camera
 
-* Note: Config endpoint only available on Firefly (version 1.5) cameras.
+* **360fly 4K only**
 
 + Attributes (object)
  + profile: standard_2880sq_24fps (string, required, default) - Current camera profile (see /camera/profiles). Determines media formats for recorded and liveview video, audio, sensordata, and metadata 
@@ -761,7 +693,7 @@ Operating mode of the camera
 
 ## Camera Media Profile Collection [/360fly/camera/profiles]
 
-* Note: Profiles endpoint only available on Firefly (version 1.5) cameras.
+* **360fly 4K only**
 
 + Attributes (object)
  + proMode_2880sq_30fps (Camera Media Profile, required) - Uses recording format for full resolution recording at 30fps
@@ -851,6 +783,8 @@ Operating mode of the camera
 
 Describes capture/encoding formats for recording, audio, sensordata, liveview. Also specifices the projection data embedded into media, and the frame playback duration for recordings.
 
+* **360fly 4K only**
+
 + Attributes (object)
  + recordingFormat: fullRes30 (string, required) - format of recorded video. See /camera/formats/video
  + audioFormat: 48KAAC (string, required) - format of encoded audio. See /camera/formats/audio
@@ -870,7 +804,7 @@ Describes capture/encoding formats for recording, audio, sensordata, liveview. A
 
 The available media and sensordata formats. The various formats are used to compose a profile (see `/camera/profiles`). The formats are essentially configurations for underlying media/data encoder and capture applications.
 
-* Note: Formats endpoint only available on Firefly (version 1.5) cameras.
+* **360fly 4K only**
 
 * Both recording and liveview use video formats 
 
@@ -884,6 +818,8 @@ The available media and sensordata formats. The various formats are used to comp
  + Attributes (Camera Formats Collection)
 
 ## Camera Video Formats Collection [/360fly/camera/formats/video]
+
+* **360fly 4K only**
 
 + Attributes (object)
  + fullRes30 (Camera Video Format, required, default) - Default recording video format
@@ -1101,9 +1037,11 @@ The available media and sensordata formats. The various formats are used to comp
 + Response 200 (application/json)
  + Attributes (Camera Video Formats Collection)
          
+
 ## Camera Video Format [/360fly/camera/formats/video/{name}]
 
 Format of encoded video for recording and liveview
+* **360fly 4K only**
 
 + Attributes (object)
  + resolution: 2880x2880 (string, required) - resolution of encoded video
@@ -1128,6 +1066,7 @@ Format of encoded video for recording and liveview
  + Attributes (Camera Video Format)
 
 ## Camera Audio Formats Collection [/360fly/camera/formats/audio]
+* **360fly 4K only**
 
 + Attributes (object)
  + 48KAAC (object, required) - default audio encoding format
@@ -1140,6 +1079,7 @@ Format of encoded video for recording and liveview
  + Attributes (Camera Audio Formats Collection)
 
 ## Camera Audio Format [/360fly/camera/formats/audio/{name}]
+* **360fly 4K only**
 
 + Attributes (object)
  + bitrate: 64000 (required, number) - encoded audio bitrate
@@ -1154,6 +1094,7 @@ Format of encoded video for recording and liveview
  + Attributes (Camera Audio Format)
 
 ## Camera Sensordata Formats Collection [/360fly/camera/formats/sensordata]
+* **360fly 4K only**
 
 + Attributes (object)
  + mode30fps (Camera Sensordata Format, required, default) - default sensor data capture behavior. Captures most sensors at 30fps
@@ -1227,6 +1168,7 @@ Format of encoded video for recording and liveview
  + Attributes (Camera Sensordata Formats Collection)
 
 ## Camera Sensordata Format [/360fly/camera/formats/sensordata/{name}]
+* **360fly 4K only**
 
 Format of sensordata. Effectively a configuration for underlying sensors, events, etc.
 
@@ -1248,17 +1190,15 @@ Format of sensordata. Effectively a configuration for underlying sensors, events
 
 ## Recording [/360fly/camera/recording]
 
-* _Supercedes functionality of 1.0 recording endpoint_.
-* Supports _both_ **authenticated** and **non-authenticated** requests.
 * Device _cannot_ be in UMS mode to perform this action.
 * Returns a 204 (No Content) when no recording is active.
 
-Start/stop recording and get current recording status. You can specify a config for a new recording, or if left unspecified, your recording will use config given by `/360fly/camera/config` (Firefly version 1.5 camera only). A `GET` on an inactive recording gives `204`. A successful `POST` returns a `Location` header for the new recording download url (or the url to first chapter, in the case of chaptered recording)
+Start/stop recording and get current recording status. On the 360fly 4K, you can specify a config for a new recording, or if left unspecified, your recording will use config given by `/360fly/camera/config`. A `GET` on an inactive recording gives `204`. A successful `POST` returns a `Location` header for the new recording download url (or the url to first chapter, in the case of chaptered recording)
 
 + Attributes (object)
- + profile: standard_2880sq_24fps (string, optional, default) - The profile for the active recording
- + maxChapterDuration (number, optional, default) - The chapter duration for active recording
- + maxChapterFileSize (number, optional, default) - The chapter file size for active recording
+ + profile: standard_2880sq_24fps (string, optional, default) - **360fly 4K only** The profile for the active recording
+ + maxChapterDuration (number, optional, default) - **360fly 4K only** The chapter duration for active recording
+ + maxChapterFileSize (number, optional, default) - **360fly 4K only** The chapter file size for active recording
  + hours: 0 (number, required, sample) - duration in hours of active recording
  + minutes: 4 (number, required, sample) - duration in minutes (modulo hours) of active recording
  + seconds: 30 (number, required, sample) - duration in seconds (modulo hours and minutes) of active recording
@@ -1273,7 +1213,6 @@ Start/stop recording and get current recording status. You can specify a config 
 ### Start Recording [POST]
 Start a recording session.
 
-* The _start recording_ command supports _both_ **authenticated** and **non-authenticated** requests.
 * Device _cannot_ be in UMS mode to perform this action.
 * Use an "empty body" for simple record triggering (Use a `Content-length: 0` header for an empty request body).
 
@@ -1313,7 +1252,6 @@ Start a recording session.
 
 Stop the recording session.
 
-* The _stop recording_ command supports _both_ **authenticated** and **non-authenticated** requests.
 * Device _cannot_ be in UMS mode to perform this action.
 * Additional Information
     * This command _will stop_ a recording that is in progress. 
@@ -1327,27 +1265,19 @@ Stop the recording session.
 
 Settings for the 360fly `rtsp` stream.
 
-* Supports _both_ **authenticated** and **non-authenticated** requests.
-
 + Attributes
- + url: rtsp://fly.local/live1.sdp (string, required, sample) - liveview rtsp url
- + projection (Projection, required, default) - the projection data for liveview. This mirrors the projection specified in the current profile. See `/camera/profiles/{name}` for profile details. See `/camera/config` for setting current profile.
+ + url: rtsp://192.168.2.1/live1.sdp (string, required, sample) - liveview rtsp url
+ + projection (Projection, required, default) - **360fly 4K only** the projection data for liveview. This mirrors the projection specified in the current profile. See `/camera/profiles/{name}` for profile details. See `/camera/config` for setting current profile.
 
 ### Retrieve liveview settings [GET]
 + Response 200 (application/json)
  + Attributes (Liveview)
 
-##### __Response Data__
-Characteristic | Definition | Values
---- | --- | ---
-_url_   |   URL address     |   "rtsp:\/\/192.168.2.1\/live1.sdp"
-
-
 ## Photo [/360fly/camera/photo]
 
 Capture a single high-resolution JPEG image, or multiple images (burst).
 
-* Note: Photo endpoint is only available on Firefly (version 1.5) cameras.
+* **360fly 4K only**
 
 + Attributes (object)
  + count: 1 (number, required, default) - number of photos to take. > 1 implies burst mode
@@ -1378,14 +1308,15 @@ Capture a single high-resolution JPEG image, or multiple images (burst).
 
 Configure camera recording to trigger based on motion or audio detection, or the accelerometer.
 
-* Note: Trigger endpoint is only available on Firefly (version 1.5) cameras.
+* **360fly 4K only**
 
- + Attributes (object)
-  + type: accel (string, required, default) - trigger type. Options: [accel, motion, audio]
-  + sensitivity: 5 (number, required, default) - sensitivity of the trigger mechanism e.g. audio trigger requires a minimum volume to start recording. Range: 1~10
-  + delay: 10 (number, required, sample) - Minimum allowed time, in seconds, between two trigger activations 
-  + duration: 6 (number, required, sample) - Duration, in seconds, of triggered recordings
-  + buffer: 3 (number, optional, sample) - Size of buffered video, in seconds. If omitted or null, video is not buffered.
++ Attributes (object)
+ + type: accel (string, required, default) - trigger type. Options: [accel, motion, audio]
+ + sensitivity: 5 (number, required, default) - sensitivity of the trigger mechanism e.g. audio trigger requires a minimum volume to start recording. Range: 1~10
+ + delay: 10 (number, required, sample) - Minimum allowed time, in seconds, between two trigger activations 
+ + duration: 6 (number, required, sample) - Duration, in seconds, of triggered recordings
+ + buffer: 3 (number, optional, sample) - Size of buffered video, in seconds. If omitted or null, video is not buffered.
+
 
 ### Retrieve trigger [GET]
 
@@ -1421,14 +1352,14 @@ Configure camera recording to trigger based on motion or audio detection, or the
 ## Tuning [/360fly/camera/tuning]
 
 + Attributes (object)
- + ae_lock: false (boolean, required, default) - auto exposure lock/unlock
- + saturation: 100 (number, required, default) - image saturation. Range 0~200
- + max_iso_sensitivity: 8000 (number, required, default) - image iso (which adjusts gain). Range: 1000~64000
- + awb_lock: false (boolean, required, default) - auto white balance lock/unlock
- + brightness: 100 (number, required, default) - image brightness. Range 0~200
- + ae_compensation: 100 (number, required, default) - compensation for auto exposure. Range: 50~200
- + contrast: 100 (number, required, default) - image contrast. Range 0~100
- + max_shutter: 30 (number, required, default) - max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds.
+ + `ae_lock`: false (boolean, required, default) - auto exposure lock/unlock
+ + `saturation`: 100 (number, required, default) - image saturation. Range 0~200
+ + `max_iso_sensitivity`: 8000 (number, required, default) - image iso (which adjusts gain). Range: 1000~64000
+ + `awb_lock`: false (boolean, required, default) - auto white balance lock/unlock
+ + `brightness`: 100 (number, required, default) - image brightness. Range 0~200
+ + `ae_compensation`: 100 (number, required, default) - compensation for auto exposure. Range: 50~200
+ + `contrast`: 100 (number, required, default) - image contrast. Range 0~100
+ + `max_shutter`: 30 (number, required, default) - **360fly 4K only** max shutter speed. Shows denominator e.g. 30 implies 1/30 seconds.
 
 ### Retrieve tuning settings [GET]
 
@@ -1465,38 +1396,38 @@ Retrieve a list of scene tuning fields, types and associated values/ranges for t
 
 ##### __Response Data__
 Characteristic | Definition |   Parameter   |   Value
---- | --- | --- | ---
-_ae_lock_               |   Auto-exposure lock                  |   type    |   boolean
+---|---|---|---
+`ae_lock`               |   Auto-exposure lock                  |   type    |   boolean
                         |                                       |   default |   0: unlocked
                         |                                       |           |   1: locked
-_saturation_            |   Saturation setting                  |   type    |   integer
+`saturation`            |   Saturation setting                  |   type    |   integer
                         |                                       |   default |   1000
                         |                                       |   min     |   0
                         |                                       |   max     |   200
-_max_iso_sensitivity_   |   Maximum ISO sensitivity             |   type    |   integer
+`max_iso_sensitivity`   |   Maximum ISO sensitivity             |   type    |   integer
                         |                                       |   default |   8000
                         |                                       |   min     |   1000
                         |                                       |   max     |   64000
-_awb_lock_              |   Auto-white-balance Lock             |   type    |   boolean
+`awb_lock`              |   Auto-white-balance Lock             |   type    |   boolean
                         |                                       |   default |   0: unlocked
                         |                                       |           |   1: locked
-_brightness_            |   Brightness setting                  |   type    |   integer
+`brightness`            |   Brightness setting                  |   type    |   integer
                         |                                       |   default |   100
                         |                                       |   min     |   0
                         |                                       |   max     |   200
-_ae_compensation_       |   Auto-exposure compensation setting  |   type    |   integer
+`ae_compensation`       |   Auto-exposure compensation setting  |   type    |   integer
                         |                                       |   default |   100
                         |                                       |   min     |   50
                         |                                       |   max     |   200
-_contrast_              |   Contrast setting                    |   type    |   integer
+`contrast`              |   Contrast setting                    |   type    |   integer
                         |                                       |   default |   100
                         |                                       |   min     |   0
                         |                                       |   max     |   200
-_max_shutter_           |   Shutter speed setting               |   type    |   integer
+`max_shutter`           |   Shutter speed setting               |   type    |   integer
                         |                                       |   default |   100
                         |                                       |   min     |   15
 
-* Note: max_shutter set point only available on Firefly (version 1.5) cameras.
+* Note: `max_shutter` set point only available on Firefly (version 1.5) cameras.
 
 + Response 200 (application/json)
  + Body     
@@ -1560,7 +1491,7 @@ Reset **all** device tuning parameters to the default state.
 
 ## Scenes Collection [/360fly/camera/scenes]
 
-* Note: Scenes endpoint only available on Firefly (version 1.5) cameras.
+* **360fly 4K only**
 
 + Attributes (object)
  + normal (Tuning, required, default)
@@ -1571,18 +1502,19 @@ Reset **all** device tuning parameters to the default state.
  + Attributes (Scenes Collection)
 
 ## Scene [/360fly/camera/scenes/{name}]
+* **360fly 4K only**
 
 A camera tuning configuration. 
 
 + Attributes (object)
- + ae_lock: false (boolean, required)
- + saturation: 100 (number, required)
- + max_iso_sensitivity: 6400 (number, required)
- + contrast: 100 (number, required)
- + awb_lock: false (boolean, required)
- + brightness: 100 (number, required)
- + ae_compensation: 100 (number, required)
- + max_shutter: 15 (number, required)
+ + `ae_lock`: false (boolean, required)
+ + `saturation`: 100 (number, required)
+ + `max_iso_sensitivity`: 6400 (number, required)
+ + `contrast`: 100 (number, required)
+ + `awb_lock`: false (boolean, required)
+ + `brightness`: 100 (number, required)
+ + `ae_compensation`: 100 (number, required)
+ + `max_shutter`: 15 (number, required)
 
 + Parameters
  + name (required, string, `lowLight`) the relevant scene
@@ -1591,7 +1523,8 @@ A camera tuning configuration.
 + Response 200 (application/json)
  + Attributes (Scene)
 
-## Projection [/360fly/camera/projections]
+## Projection List [/360fly/camera/projections]
+* **360fly 4K only**
 + Attributes (object)
  + radial (Projection, required, default) - the default fisheye projection
  + planar (object, required) - standard playback
@@ -1606,7 +1539,7 @@ used by the 360Fly device. This information is embedded in the metadata for each
 
 ##### __Response Data__
 Characteristic | Definition | Values
---- | --- | ---
+---|---|---
 _type_          |   Data configuration      |   Radial
 _radialMapping_ |   _**???**_               |   Ftheta
 _outerAngle_    |   _**???**_               |   120
@@ -1650,7 +1583,7 @@ Set/Update the projection information for the 360Fly device.
 
 ##### __Command Parameters__
 Characteristic | Definition | Value (Range)
---- | --- | ---
+---|---|---
 _type_          |   Data configuration      |   Radial
 _radialMapping_ |   _**???**_               |   Ftheta
 _outerAngle_    |   _**???**_               |   _**???**_
@@ -1688,13 +1621,13 @@ Retrieves a list of available video files (and metadata) on the 360Fly device.
 
 ##### __Command Parameters__
 Characteristic | Value (Range)
---- | ---
+---|---
 _offset_    |   0 to (total number videos on 360Fly device)
 _limit_     |   0 to (total number videos on 360Fly device)
 
 ##### __Response Data__
 Characteristic | Definition | Return Value
---- | --- | ---
+---|---|---
 _type_              |   File type                                           |   "video"
 _modified_          |   Time & date of last modification to video (ISO 8601)|   "2016-01-18T09:00:00Z"
 _duration_          |   Duration of video (time & scale)                    |   [clip time, timescale]
@@ -1756,7 +1689,7 @@ but also retrieves a JSON-encoded list of video/image files with metadata withou
 
 ##### __Command Parameters__
 Characteristic | Format |   Value (Range)
---- | --- | ---
+---|---|---
 _Range_ |   "Range: files 0-3"  |   0 to (total number videos on 360Fly device)
 
 + Request
@@ -1834,7 +1767,7 @@ Retrieve 360Fly device directory path to files related to a specific video.
 
 ##### __Response Data__
 Characteristic | Definition | Return Value
---- | --- | ---
+---|---|---
 _recording_ |   Path to the specified video file.   |   "\/360fly\/video\/file\/VideoFile_xxx.mp4"
 _thumbnail_ |   Path to the specified video thumbnail file.   |   "\/360fly\/video\/file\/Thumbnail_xxx.mp4"
 
@@ -1881,7 +1814,7 @@ This service creates a video clip from a specific video file on the 360Fly devic
 
 ##### __Command Parameters__
 Characteristic | Definition |   Value (Range)
---- | --- | ---
+---|---|---
 _start_     |   Number of seconds into a video to begin clipping    |   0 to (length of video in seconds)
 _duration_  |   Duration of video clip                              |   0 to (length of video in seconds)
 _timescale_ |   Timescale used for sampling                         |  _**???**_
@@ -1922,7 +1855,7 @@ a thumbnail may be a JPEG image or a video file containing a single frame.
 
 ##### __Command Parameters__
 Characteristic | Definition |   Value (Range)
---- | --- | ---
+---|---|---
 _time_      |   Number of seconds into a video to grab thumbnail image  |   0 to (length of video in seconds)
 _timescale_ |   Timescale used for sampling                             |  _**???**_
 
@@ -1946,7 +1879,7 @@ _timescale_ |   Timescale used for sampling                             |  _**??
 
 ## Media Metadata [/360fly/media/meta/{mediaFilePath}]
 
-* Note: Media endpoint only available in Firefly (version 1.5) cameras.
+* **360fly 4K only**
 * New attribute: __sessionCount__ in media metadata. It represents the total number of burst photos or chaptering videos in the same session
 
 + Parameters
@@ -1958,7 +1891,7 @@ _timescale_ |   Timescale used for sampling                             |  _**??
  + duration (array[number]) - [clip time, timescale] of duration
  + fileSize: 123490357 (number, required) - File size (in bytes)
  + modification (number, required) - Timestamp of when file was modified (in seconds)
- + name: 001_2FLY/FLY00101.jpg (string, required) - Name of media file
+ + name: `001_2FLY/FLY00101.jpg` (string, required) - Name of media file
  + id (string, required) - Document ID of media file
  + download (string, required) - Download URL on the 360Fly device
  + durationSeconds (number, required) - duration in seconds
@@ -1977,6 +1910,7 @@ _timescale_ |   Timescale used for sampling                             |  _**??
  
 
 ## Media File Collection [/360fly/media/file{?type,offset,limit}]
+* **360fly 4K only**
 
 ##### __Command Parameters__
 Characteristic | Value (Range)
@@ -2045,12 +1979,13 @@ Delete all media files, related files and empty DCIM folders on the 360Fly devic
 
 
 ## Related Media File Collection [/360fly/media/related/{mediaFilePath}{?relation}]
+* **360fly 4K only**
 
 
 ##### __Command Parameters__
 Characteristic | Format |   Value (Range)
 ---|---|---
-mediaFilePath |   "100_3FLY/FLY00201.jpg"  |  the media file
+mediaFilePath |   `100_3FLY/FLY00201.jpg`  |  the media file
 _relation_  |   ""  |   the relation type: "thumbnail", "session". If not specified, all (default)
 
 
@@ -2124,6 +2059,7 @@ Delete media file and only its thumbnail, if relation is specified as thumbnail.
 
 
 ## Media File Retrieval [/360fly/media/file/{mediaFilePath}]
+* **360fly 4K only**
 
 This section provides commands for downloading a media file on the 360Fly device.
 
@@ -2140,6 +2076,7 @@ This section provides commands for downloading a media file on the 360Fly device
 + Response 200 (application/octet-stream)
 
 ## Media Thumbnail Retrieval [/360fly/media/thumbnail/{mediaFilePath}{?time,timescale}]
+* **360fly 4K only**
 
 This section provides commands for downloading thumbnail for a media file on the 360Fly device.
 
@@ -2156,9 +2093,13 @@ This section provides commands for downloading thumbnail for a media file on the
 # Group Sensors
 
 ## GPS [/360fly/sensors/gps]
+
+
+* **360fly 4K only**
+
  ##### __GPS States__
         Value | State
-        ---|---
+       ---|---
         0 | GPS Off
         1 | GPS On, no fix
         2 | GPS on and has fix
@@ -2183,9 +2124,8 @@ This section provides commands for downloading thumbnail for a media file on the
 
 # Group Network
 
-#### *Network API is NOT a launch requirement*
-
 ## Network Interfaces [/360fly/network/interfaces]
+* **360fly 4K only**
 
 + Attributes (object)
  + ap (Access Point Interface, required) - configuration for network access point
@@ -2197,6 +2137,7 @@ This section provides commands for downloading thumbnail for a media file on the
  + Attributes (Network Interfaces)
 
 ## Access Point Interface [/360fly/network/interfaces/ap]
+* **360fly 4K only**
 
 * Control the AP network interface. `SSID`, `ipAddr`, and `error` are read-only properties. 
 * `SSID` matches the 360fly's name. See `/360fly/id`.
@@ -2205,7 +2146,7 @@ This section provides commands for downloading thumbnail for a media file on the
 
  ##### __AP Interface States__
         Value | State | Description
-        ---|---|---
+       ---|---|---
         0 | WiFi Off | WiFi module not running
         1 | AP Down | Access Point is not active
         2 | AP Up | Access Point is active
@@ -2214,14 +2155,14 @@ This section provides commands for downloading thumbnail for a media file on the
 
  ##### __AP Interface Errors__
         Value | Description
-        ---|---
+       ---|---
         0 | No error
         1 | SSID of AP is invalid and cannot be used
         2 | Password for AP security is invalid and cannot be used
 
 + Attributes (object)
  + state: 2 (number, required, default) - AP state. See below for table of possible values.
- + SSID: 360fly_ABCD (string, required, sample) - SSID of AP network. READ-ONLY
+ + SSID: `360fly_ABCD` (string, required, sample) - SSID of AP network. READ-ONLY
  + security: WPA2 (string, required, default) - Network security type. Options: [NONE, WEP, WPA, WPA2]
  + ipAddr: 192.168.2.1 (string, required, default) - IP address of camera on the AP network. READ-ONLY
  + frequency: 2.4 (number, required, default) - WiFi AP operating frequency (GHz). Options: [2.4, 5.0]
@@ -2254,6 +2195,7 @@ This section provides commands for downloading thumbnail for a media file on the
 + Response 204
 
 ## Station Interface [/360fly/network/interfaces/station]
+* **360fly 4K only**
 
 * Control the station network interface. The `password` property is never returned, but can be used to connect to a secure AP via a `PUT` request. 
 * `ipAddr`, `error`, and `RSSI` are read-only properties.
@@ -2265,7 +2207,7 @@ This section provides commands for downloading thumbnail for a media file on the
 
  ##### __Station Interface States__
         Value | State | Description
-        ---|---|---
+       ---|---|---
         0 | WiFi Off | WiFi module not running
         1 | Station Down | Not connected to station
         2 | Station Connecting | Connection is initiated but not complete
@@ -2275,7 +2217,7 @@ This section provides commands for downloading thumbnail for a media file on the
 
  ##### __Station Interface Errors__
         Value | Summary | Description
-        ---|---|---
+       ---|---|---
         0 | No error
         2 | Disconnected by Server | Previous connection lost
         3 | Connection Timeout | Connection attempt failed, possibly because SSID can't be reached
@@ -2333,10 +2275,11 @@ Reset Station Interface to default values
 + Response 204
 
 ## Network Scan [/360fly/network/scan{?limit}]
+* **360fly 4K only**
 
  ##### __Scan Results Entry__
         Value | Description
-        ---|---
+       ---|---
         SSID | SSID of found network
         security | security type of found network. Options: [WPA, WPA2, WEP, NONE]
         saved | credentials of found network are saved on your 360fly
@@ -2345,12 +2288,12 @@ Reset Station Interface to default values
 Scan for WiFi networks. Results are returned in order of signal strength (RSSI). See table above for description of a scan results entry
 
 + Attributes (array)
- + entry0 (object, optional, sample)
+ + (object, optional, sample)
         + SSID: firstNetworkSSID (string, required, sample)
         + security: WPA2 (string, required, sample)
         + saved: true (boolean, required, sample)
         + RSSI: 71 (number, required, sample)
- + entry1 (object, optional, sample)
+ + (object, optional, sample)
         + SSID: secondNetworkSSID (string, required, sample)
         + security: WEP (string, required, sample)
         + saved: false (boolean, required, sample)
@@ -2365,16 +2308,17 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
  + Attributes (Network Scan)
 
 ## Saved Networks [/360fly/network/saved{?offset,limit}]
+* **360fly 4K only**
 
 * Saved networks are returned in order of their connection priority
 
 + Attributes (array)
- + entry0 (object, optional, sample)
+ + (object, optional, sample)
         + id: 0 (number, required, sample)
         + SSID: firstNetworkSSID (string, required, sample)
         + security: WPA2 (string, required, sample)
         + connected: false (boolean, required, sample)
- + entry1 (Saved Network, optional, sample)
+ + (Saved Network, optional, sample)
 
 + Parameters
  + offset (optional, number) ... results array returned starting at `offset`
@@ -2388,6 +2332,7 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 + Response 204
 
 ## Saved Network [/360fly/network/saved/{id}]
+* **360fly 4K only**
 
 + Attributes (object)
  + id: 1 (number, required, sample) - index of entry in saved networks array. Also indicates connection priority
@@ -2409,10 +2354,11 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 # Group Bluetooth
 
 ## Bluetooth Bonded Devices Collection [/360fly/bluetooth/bonds{?name}]
+* **360fly 4K only**
 
 + Attributes (array)
- + entry0 (Bluetooth Bonded Device, optional, sample)
- + entry1 (object, optional, sample)
+ + (Bluetooth Bonded Device, optional, sample)
+ + (object, optional, sample)
         + id: 1 (number, required, sample)
         + name: BTHeadSet1 (string, required, sample)
         + RSSI: 0 (number, required, sample)
@@ -2432,6 +2378,7 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 + Response 204
 
 ## Bluetooth Bonded Device [/360fly/bluetooth/bonds/{id}]
+* **360fly 4K only**
 
 + Attributes (object)
  + id: 0 (number, required, sample) - index of device in array of Bonded Devices (see /360fly/bluetooth/bonds)
@@ -2453,7 +2400,7 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 ## Bluetooth Connected Devices Collection [/360fly/bluetooth/connections]
 
 + Attributes (array)
- + entry0 (Bluetooth Connected Device, optional, sample)
+ + (Bluetooth Connected Device, optional, sample)
 
 ### Retrieve connected devices [GET]
 
@@ -2466,6 +2413,7 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 + Response 204
 
 ## Bluetooth Connected Device [/360fly/bluetooth/connections/{id}]
+* **360fly 4K only**
 
 + Attributes (object)
  + id: 0 (number, required, sample) - index of device in connected devices array (see /360fly/bluetooth/connections)
@@ -2490,7 +2438,7 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 * Unsuccessful pairing requests will respond with an `error` property. See table below.
  ##### __Error Codes__
         Value | Description
-        ---|---
+       ---|---
         0 | No Error
         1 | Incorrect Pin
         2 | Pairing attempt timed out (Device may no longer be in range)
@@ -2540,19 +2488,20 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 + Response 204
 
 ## Bluetooth Scan Results Collection [/360fly/bluetooth/scan{?limit}]
+* **360fly 4K only**
 
 Scan for advertising peripherals
 * Results are ordered by RSSI (signal strength)
 * Only supported remote audio peripherals are shown
 
 + Attributes (array)
- + entry0 (object)
+ + (object)
         + id: 0 (number, required, sample)
         + name: BTHeadSet0 (string, required, sample)
         + connected: false (boolean, required, sample)
         + bonded: true (boolean, required, sample)
         + RSSI: 80 (number, required, sample)
- + entry1 (Bluetooth Scan Result)
+ + (Bluetooth Scan Result)
 
 + Parameters
  + limit (optional, number) ... Maximum number of results
@@ -2562,6 +2511,7 @@ Scan for advertising peripherals
  + Attributes (Bluetooth Scan Results Collection)
 
 ## Bluetooth Scan Result [/360fly/bluetooth/scan/{id}]
+* **360fly 4K only**
 
 + Attributes (object)
  + id: 1 (number, required, sample) - index of peripheral in scan results (see /360fly/bluetooth/scan)
@@ -2589,7 +2539,7 @@ Scan for advertising peripherals
 
  ##### __Error Codes__
         Value | Description
-        ---|---
+       ---|---
         0 | No Error
         1 | Connection attempt timed out (Device may no longer be in range)
 
