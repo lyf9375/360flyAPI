@@ -2601,7 +2601,7 @@ Scan for advertising peripherals
 ## Bluetooth LE Scan Result [/360fly/ble/scan]
 * **360fly 4K only**
 * The 360fly will connect to one BLE device at a time.
-* **Supported Services are **
+* **Supported Services are**
 * Heart Rate | 0x180D
 * Cycling Speed and Cadence | 0x1816
 * Cycling Power | 0x1818
@@ -2627,22 +2627,20 @@ Scan for advertising peripherals
         + name: HeartRate (string, required, sample)
         + services: 180A (string, required, sample)
 
-
 ## Connect/disconnect device [PUT] [/360fly/ble/scan/macid]
 * If number of connections is at maximum, the oldest connection will be dropped so this new connection can be made
 * Failed requests will return an error code. See table below
 * This call should block (not return) right away.  Wait for x seconds, waiting for connection results.
-
 + Request (application/json)
  + Attributes (object)
-        + macid: true (boolean, required, sample)
+        + macid: true (string, required, sample)
         + services: 180A (string, required, sample) - Application to list services to listen to in this device
 + Response 200 (application/json)
 
 ### Disconnect device [DELETE]
 + Request (application/json)
  + Attributes (object)
-      + macid: true (boolean, required, sample)
+      + macid: true (string, required, sample)
 + Response 200 (application/json)
 
 ## Retrieve all connected devices [GET] [/360fly/ble/connections]
