@@ -9,8 +9,8 @@ to JSON Schema is maintained at
 
 *NOTE* many endpoints will be marked as **360fly 4K only**
 
-The REST API is a command and control mechanism through network interfaces to  
-360fly, specifically WiFi. In many cases, similar functionality is expected to be 
+The REST API is a command and control mechanism through network interfaces to
+360fly, specifically WiFi. In many cases, similar functionality is expected to be
 available through the Bluetooth LE profile as well. Each URL is preceded by `/360fly`.
 
 ## Global Request Requirements
@@ -28,9 +28,9 @@ These response headers are to be included with _every_ response
 ## HTTPS and Authentication
 
 * All endpoints shall support HTTPS for security reasons, though some endpoints may support HTTP for download speed concerns.
-* The 360fly REST API will conform to [RFC 2617](https://tools.ietf.org/rfc/rfc2617.txt) regarding 
+* The 360fly REST API will conform to [RFC 2617](https://tools.ietf.org/rfc/rfc2617.txt) regarding
 the use of authentication to provide an initial layer of security for users.
-* All endpoints shall use authentication unless an explicit exception is made. 
+* All endpoints shall use authentication unless an explicit exception is made.
 * Endpoints that require HTTPS communications may support both digest and basic authentication.
 * Endpoints that support HTTP communications shall require HTTP digest authentication to prevent transmitting clear-text passwords.
 
@@ -39,7 +39,7 @@ the use of authentication to provide an initial layer of security for users.
 ## Status [/360fly/status]
 
 * supports both HTTP and HTTPS
-* does _not_ require authentication 
+* does _not_ require authentication
 
 ##### `mode`
 Value | Meaning
@@ -63,7 +63,7 @@ Value | Meaning
 ##### `low_battery`
 Value | Meaning
 ---|---
-`false` | Battery level normal 
+`false` | Battery level normal
 `true` | Battery level too low
 
 
@@ -105,7 +105,7 @@ temperature too high | 0x08
 Characteristic | Definition | Return Value
 ---|---|---
 _charge mode_   | Device Not Charging   | 0
-                | Device Charging       | 1 
+                | Device Charging       | 1
                 | Device Charged        | 2
                 | Error                 | _any other number_
 _level_         | Current battery charge level (in percentage)  | 0 to 100
@@ -129,23 +129,23 @@ _mode_  | Device in "Off" state     | 0
 ### Retrieve status [GET]
 
 + Response 200 (application/json)
- 
- + Body 
-    
+
+ + Body
+
             {
                 "cam_status" : {"mode":3, "usb":true, "low_battery":false, "low_storage":false, "high_temperature":false, "rec_error":0},
                 "battery":{"charge_mode": 1, "level":70, "status":0},
                 "storage":{"capacity":30893120,"usage":10,"available":1234},
                 "power" : {"mode":2}
             }
-            
+
 
 ## Info [/360fly/info]
 
 ### Retrieve Device Information Command [GET]
 
 Retrieves 360Fly device information in the form of the Bluetooth GATT Device Information Profile. Refer to the
-[Bluetooth GATT Device Information Profile](https://developer.bluetooth.org/TechnologyOverview/Pages/DIS.aspx) 
+[Bluetooth GATT Device Information Profile](https://developer.bluetooth.org/TechnologyOverview/Pages/DIS.aspx)
 specification for more information.
 
 * The _info_ command supports _both_ **authenticated** and **non-authenticated** requests.
@@ -160,14 +160,14 @@ Characteristic | Definition | Return Value
 `hw_version`    | Version of device hardware            | PCB-00
 `mac_addr`      | Device MAC Address                    | E4:BA:D9:C0:00:46
 `name`          | Name assigned to device               | 360Fly Device
-`system_id`     | System identifier                     | 4600c0fe ffd9bae4    
+`system_id`     | System identifier                     | 4600c0fe ffd9bae4
 `manufacturer`  | Manufacturer of device                | 360fly
 `sw_version`    | Version of device software            | 1.0.0
 
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "model_no": "360FLYBLK",
                 "ble_version": "B-00B8",
@@ -186,7 +186,7 @@ Characteristic | Definition | Return Value
 
 ### Retrieve Camera Name Command [GET]
 
-Retrieves the name of the 360Fly device as set by the user. 
+Retrieves the name of the 360Fly device as set by the user.
 This field is equivalent to hostname or the WiFi AP SSID.
 
 * The _retrieve name_ command requires **authentication**.
@@ -194,12 +194,12 @@ This field is equivalent to hostname or the WiFi AP SSID.
 + Response 200 (text/plain)
 
     + Body
-    
+
             360FlyCameraName
 
 ### Change/Update Camera Name Command [PUT]
 
-Changes/Updates the user assigned name of the 360Fly device. 
+Changes/Updates the user assigned name of the 360Fly device.
 
 * The _change/update name_ command requires **authentication**.
 * Note: Restrictions in length and character set may cause the request to fail.
@@ -210,7 +210,7 @@ Changes/Updates the user assigned name of the 360Fly device.
 + Request (text/plain)
 
     + Body
-            
+
             New360FlyCameraName
 
 + Response 204
@@ -249,7 +249,7 @@ Changes/Updates the user assigned name of the 360Fly device.
 
 * **360fly 4K only**
 
-* When request to change, either `mode` or `persistentMode` is to be changed, not both.  
+* When request to change, either `mode` or `persistentMode` is to be changed, not both.
 * In fly1.5 (Firefly), changing `persistentMode` will not only change the persistent mode, but also changes the current mode.
 
 + Attributes (object)
@@ -306,14 +306,14 @@ _mode_  | Device in "Off" state     | 0
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "mode":2
             }
 
 ### Set Power Mode Command [POST]
 
-This command is used to shutdown or reset the 360Fly device. 
+This command is used to shutdown or reset the 360Fly device.
 
 * The _set power mode_ command requires **authentication**.
 * Successful shutdowns and resets result in a 204 ( _No Content_ ) response.
@@ -327,7 +327,7 @@ Command | Action
 + Request (application/json)
 
     + Body
-    
+
             {
                 "mode":0
             }
@@ -355,7 +355,7 @@ _value_ |   Date: YYYY-MM-DD    |   YYYY-MM-DD **T** HH:MM:SS **Z**
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "value":"2016-01-22T15:09:10Z"
             }
@@ -376,7 +376,7 @@ Command | Action
 + Request (application/json)
 
     + Body
-    
+
             {
                 "value":"2016-01-13T15:09:10Z"
             }
@@ -401,12 +401,12 @@ _capacity_          |   _Total_ storage avaiable on the device (in kilobytes).  
 _sdstatus_          |   Ready (normal)                                                      |   0
                     |   Full                                                                |   1
                     |   Reformatting                                                        |   2
-                    
+
 + Response 200 (application/json)
 
     + Body
 
-            { 
+            {
                 "available": 15175104,
                 "used": 112992,
                 "MinutesRemaining": 101.16736,
@@ -438,16 +438,16 @@ Characteristic | Definition | Return Value
 + Response 200 (application/json)
 
     + Body
-    
-            { 
+
+            {
                 "charge_mode":0,
                 "level":50,
                 "status":0,
                 "minutesRemaining":60
             }
-        
+
     + Schema
-    
+
             {
                 "type":"object",
                 "properties":{
@@ -469,7 +469,7 @@ Characteristic | Definition | Return Value
                     }
                 }
             }
-            
+
 + Response 500 (text/html)
 
         Internal server error
@@ -495,7 +495,7 @@ _datetime_  |   Date: YYYY-MM-DD    |   YYYY-MM-DD **T** HH:MM:SS **Z**
 + Response 200 (application/json)
 
     + Body
-        
+
             {
                 "datetime":"2016-02-03T10:02:00Z"
             }
@@ -512,8 +512,8 @@ Collection of user configurable preferences.
 + Model (application/json)
 
     + Body
-    
-            { 
+
+            {
                 "IsActivated":0,
                 "Registration":0
             }
@@ -536,7 +536,7 @@ _Registration_      |   360Fly Device not registered    |   0
 + Response 200
 
     [Preference Collection][]
-    
+
 + Response 500 (text/html)
 
     + Body
@@ -561,13 +561,13 @@ Command | Action
 + Request (application/json)
 
     + Body
-    
+
             {
                 "key": "value"
             }
-            
+
     + Schema
-            
+
             {
                 "type": "object",
                 "properties": {
@@ -600,8 +600,8 @@ _Registration_      |   0
 + Response 200
 
     [Preference Collection][]
-    
-            
+
+
 ## Specific Device Preferences [/360fly/preferences/{preference}]
 
 Collection of user configurable preferences that can be retrieved or modified individually.
@@ -618,13 +618,13 @@ Retrieves a **_specific_** user configurable preference on the 360Fly device.
 * Responds with 404 (Not Found) if preference does not exist.
 
 + Response 200 (text/html)
-  
+
         (preference value)
-            
+
 + Response 404 (text/html)
 
         Preference does not exist
-        
+
 ### Update/Create Specific Preference Value Command [PUT]
 
 Update a **_specific_** existing user preference or create one if it does not exist.
@@ -633,7 +633,7 @@ Update a **_specific_** existing user preference or create one if it does not ex
 * Refer to the _**Update/Create All Device Preferences**_ section for a list of settable preferences.
 * Note: Returns a 204 ( No Content ) response.
 + Request (text/html)
-    
+
         (IsActivated Value)
 
 + Response 204
@@ -652,7 +652,7 @@ Removes/Resets a **_specific_** user preference on the 360Fly device.
 + Response 200 (text/html)
 
         (default preference value)
-        
+
 + Response 404 (text/html)
 
         Preference not found
@@ -666,8 +666,8 @@ Operating mode of the camera
 * **360fly 4K only**
 
 + Attributes (object)
- + profile: standard_2880sq_24fps (string, required, default) - Current camera profile (see /camera/profiles). Determines media formats for recorded and liveview video, audio, sensordata, and metadata 
- + maxChapterDuration (number, required, sample) - Max duration, in seconds, for a chapter in a recording. 
+ + profile: standard_2880sq_24fps (string, required, default) - Current camera profile (see /camera/profiles). Determines media formats for recorded and liveview video, audio, sensordata, and metadata
+ + maxChapterDuration (number, required, sample) - Max duration, in seconds, for a chapter in a recording.
  + maxChapterFileSize  (number, required, sample) - Max file size, in bytes, for a chapter in a recording
 
 ### Retrieve camera config [GET]
@@ -792,10 +792,10 @@ Describes capture/encoding formats for recording, audio, sensordata, liveview. A
  + liveviewFormat (string, required, nullable) - format of liveview video stream. See /camera/formats/video
  + projection: radial (string, required, default) - name of projection metadata embedded in recordings
  + frameDuration: 30 (string, required, default) - frame playback duration of recordings, represented as the denominator e.g. 30 implies 1/30seconds
- 
+
 + Parameters
  + name (required, string, `proMode_2880sq_30fps`) the relevant profile
- 
+
 ### Retrieve media profile details [GET]
 + Response 200 (application/json)
  + Attributes (Camera Media Profile)
@@ -806,7 +806,7 @@ The available media and sensordata formats. The various formats are used to comp
 
 * **360fly 4K only**
 
-* Both recording and liveview use video formats 
+* Both recording and liveview use video formats
 
 + Attributes (object)
  + video (Camera Video Formats Collection, required) - list of available video formats
@@ -901,7 +901,7 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
- + 1440p15 (object, required) - a front-facing liveview format   
+ + 1440p15 (object, required) - a front-facing liveview format
         + resolution: 2560x1440
         + resize: crop (string, required)
         + codec: h264 (string, required)
@@ -1031,12 +1031,12 @@ The available media and sensordata formats. The various formats are used to comp
         + minquant: 0 (number, required)
         + maxframerate (number, required)
         + minframerate (number, required)
-        
-        
+
+
 ### List all video formats [GET]
 + Response 200 (application/json)
  + Attributes (Camera Video Formats Collection)
-         
+
 
 ## Camera Video Format [/360fly/camera/formats/video/{name}]
 
@@ -1059,7 +1059,7 @@ Format of encoded video for recording and liveview
 
 + Parameters
  + name (required, string, `fullRes30`) the relevant video format
- 
+
 ### Retrieve video format details [GET]
 
 + Response 200 (application/json)
@@ -1085,10 +1085,10 @@ Format of encoded video for recording and liveview
  + bitrate: 64000 (required, number) - encoded audio bitrate
  + samplerate: 48000 (required, number) - rate audio is sampled
  + codec: AAC (required, string)
- 
+
 + Parameters
  + name (required, string, `48KAAC`) the relevant audio format
- 
+
 ### Retrieve audio format details [GET]
 + Response 200 (application/json)
  + Attributes (Camera Audio Format)
@@ -1180,10 +1180,10 @@ Format of sensordata. Effectively a configuration for underlying sensors, events
  + magnetoMode: 1 (number, required) - magnetometer operating mode
  + magnetoRate: 30 (number, required) - magnetometer sample rate, in samples per second
  + gpsRate: 1 (number, required) - gps sample rate, in samples per second
- 
+
 + Parameters
  + name (required, string, `mode30fps`) the relevant sensordata format
- 
+
 ### Retrieve sensordata format details [GET]
 + Response 200 (application/json)
  + Attributes (Camera Sensordata Format)
@@ -1233,7 +1233,7 @@ Start a recording session.
 
 + Request (application/json)
  + Attributes (object)
-        + profile: slowMotion_1728sq_60fps (string, optional, sample) - request a slow motion profile for this recording, which has a 60 fps encoded frame rate. 
+        + profile: slowMotion_1728sq_60fps (string, optional, sample) - request a slow motion profile for this recording, which has a 60 fps encoded frame rate.
         + maxChapterDuration: 180 (number, optional, sample) - request for recording to chapter on 180 second intervals
 
 + Response 201 (application/json)
@@ -1254,7 +1254,7 @@ Stop the recording session.
 
 * Device _cannot_ be in UMS mode to perform this action.
 * Additional Information
-    * This command _will stop_ a recording that is in progress. 
+    * This command _will stop_ a recording that is in progress.
     * When a recording request exists but is not in progress (i.e. it is slotted to start at a later time), the recording request is cancelled.
 
 + Response 202
@@ -1284,8 +1284,8 @@ Capture a single high-resolution JPEG image, or multiple images (burst).
 
 ### Take Photo [POST]
 
-* `Location` response header gives url of the captured photo for single shot, or the url of the first photo for burst 
-* There should be at least 3 seconds delay between consecutive requests 
+* `Location` response header gives url of the captured photo for single shot, or the url of the first photo for burst
+* There should be at least 3 seconds delay between consecutive requests
 * An empty request body takes a single photo
 
 + Request (application/json)
@@ -1313,7 +1313,7 @@ Configure camera recording to trigger based on motion or audio detection, or the
 + Attributes (object)
  + type: accel (string, required, default) - trigger type. Options: [accel, motion, audio]
  + sensitivity: 5 (number, required, default) - sensitivity of the trigger mechanism e.g. audio trigger requires a minimum volume to start recording. Range: 1~10
- + delay: 10 (number, required, sample) - Minimum allowed time, in seconds, between two trigger activations 
+ + delay: 10 (number, required, sample) - Minimum allowed time, in seconds, between two trigger activations
  + duration: 6 (number, required, sample) - Duration, in seconds, of triggered recordings
  + buffer: 3 (number, optional, sample) - Size of buffered video, in seconds. If omitted or null, video is not buffered.
 
@@ -1430,7 +1430,7 @@ Characteristic | Definition |   Parameter   |   Value
 * Note: `max_shutter` set point only available on Firefly (version 1.5) cameras.
 
 + Response 200 (application/json)
- + Body     
+ + Body
 
                         {
                                 "ae_lock":{
@@ -1504,7 +1504,7 @@ Reset **all** device tuning parameters to the default state.
 ## Scene [/360fly/camera/scenes/{name}]
 * **360fly 4K only**
 
-A camera tuning configuration. 
+A camera tuning configuration.
 
 + Attributes (object)
  + `ae_lock`: false (boolean, required)
@@ -1532,7 +1532,7 @@ A camera tuning configuration.
 
 ### Retrieve projection information [GET]
 
-Retrieves a JSON-encoded [PanoMeta](https://github.com/EyeSee360/panometa) projection information 
+Retrieves a JSON-encoded [PanoMeta](https://github.com/EyeSee360/panometa) projection information
 used by the 360Fly device. This information is embedded in the metadata for each mp4 video file generated.
 
 * The _retrieve projection information_ command requires **authentication**.
@@ -1594,7 +1594,7 @@ _panMax_        |   _**???**_               |   -180 to 180
 _panRange_      |   _**???**_               |   0 to 360
 _tiltMin_       |   _**???**_               |   _**???**_
 _tiltMax_       |   _**???**_               |   _**???**_
-_tiltRange_     |   _**???**_               |   _**???**_ 
+_tiltRange_     |   _**???**_               |   _**???**_
 
 + Request (application/json)
  + Attributes (Projection)
@@ -1652,24 +1652,24 @@ _offset_            |   Offset into video file listing                      |   
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "items": [
                     {
                         "type": "video"
-                        "modified": "2014-05-18T00:09:16Z", 
+                        "modified": "2014-05-18T00:09:16Z",
                         "duration": [
-                            12012120, 
+                            12012120,
                             1000000
-                        ], 
-                        "fileSize": 21074620, 
-                        "modification": 1400371756, 
-                        "name": "Record_0000002_000.mp4", 
-                        "id": "cc35a69c-db7b-4141-9cd0-e7b11e0e853c", 
-                        "download": "/360fly/video/file/Record_0000002_000.mp4", 
-                        "durationSeconds": 12.01212, 
-                        "instanceID": "36e1aa83-b186-4421-95d1-0029dbe96566", 
-                        "hasduration": true, 
+                        ],
+                        "fileSize": 21074620,
+                        "modification": 1400371756,
+                        "name": "Record_0000002_000.mp4",
+                        "id": "cc35a69c-db7b-4141-9cd0-e7b11e0e853c",
+                        "download": "/360fly/video/file/Record_0000002_000.mp4",
+                        "durationSeconds": 12.01212,
+                        "instanceID": "36e1aa83-b186-4421-95d1-0029dbe96566",
+                        "hasduration": true,
                     }
                 ]
                 "offset" : 0,
@@ -1677,10 +1677,10 @@ _offset_            |   Offset into video file listing                      |   
             }
 
 ## Retrieve Video Metadata - Method 2 [/360fly/video/meta]
-            
+
 ### List Video File Information Command [GET]
 
-Retrieves the same _response data_ information as the _**Retrieve Video Metadata - Method 1**_ section, 
+Retrieves the same _response data_ information as the _**Retrieve Video Metadata - Method 1**_ section,
 but also retrieves a JSON-encoded list of video/image files with metadata without concern for timeout.
 
 * The _list video file information_ command requires **authentication**.
@@ -1695,7 +1695,7 @@ _Range_ |   "Range: files 0-3"  |   0 to (total number videos on 360Fly device)
 + Request
 
     + Header
-    
+
             Range: files 0-3
 
 + Response 200
@@ -1719,7 +1719,7 @@ Only the metadata for the _**specified**_ video file is retrieved.
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "recording":"/video/file/Record_0000001_000.mp4",
             }
@@ -1800,12 +1800,12 @@ Delete a specific videoa and any related files from the 360Fly device.
 + Parameters
     + videoFile (required,string) ... The name of the video file to extract from.
     + start (required,integer) ... The start time of the clip to extract from `videoFile`
-    + duration (required, integer) ... The duration of the extracted clip       
+    + duration (required, integer) ... The duration of the extracted clip
     + timescale (required, integer) ... The time scale of `start` and `duration`
 
 ### Extract And Download A Video Clip Command [GET]
 
-A video clip is a specific segment of a video file with defined starting/ending boundaries. 
+A video clip is a specific segment of a video file with defined starting/ending boundaries.
 This service creates a video clip from a specific video file on the 360Fly device.
 
 * The _extract and download a video clip_ command requires **authentication**.
@@ -1832,7 +1832,7 @@ _timescale_ |   Timescale used for sampling                         |  _**???**_
 + Response 409  (text/html)
 
         Recording unavailable e.g. UMS
-        
+
 + Response 500
 
 
@@ -1873,7 +1873,7 @@ _timescale_ |   Timescale used for sampling                             |  _**??
 + Response 409  (text/html)
 
         Recordings unavailable e.g. UMS
-        
+
 + Response 500
 
 
@@ -1884,7 +1884,7 @@ _timescale_ |   Timescale used for sampling                             |  _**??
 
 + Parameters
     + mediaFilePath (required, string, `100_3FLY/FLY00201.jpg`)
-    
+
 + Attributes (object)
  + type: photo (string, required) - media file types: video, photo
  + modified: `2014-05-18T00:09:16Z` (string, required) - Time & date of last modification to media file (ISO 8601)
@@ -1907,7 +1907,7 @@ _timescale_ |   Timescale used for sampling                             |  _**??
 
 + Response 200 (application/json)
  + Attributes (Media Metadata)
- 
+
 
 ## Media File Collection [/360fly/media/file{?type,offset,limit}]
 * **360fly 4K only**
@@ -1923,42 +1923,42 @@ _limit_     |   0 to (total number videos on 360Fly device)
     + type (optional, string) ... Media file type: video, photo; if not specified, means all types
     + offset (optional, integer, `0`) ... Zero-based offset into the list of files to return.
     + limit (optional, integer, `50`) ... Maximum number of files to return per request.
- 
+
 ### Retrieve All Media Files [GET]
 
 
 + Response 200
     + Body
-    
+
             {
                 "items": [
                     {
                         "type": "video"
-                        "modified": "2014-05-18T00:09:16Z", 
+                        "modified": "2014-05-18T00:09:16Z",
                         "duration": [
-                            12012120, 
+                            12012120,
                             1000000
-                        ], 
-                        "fileSize": 21074620, 
-                        "modification": 1400371756, 
-                        "name": "100_3FLY/FLY00201.mp4", 
-                        "id": "cc35a69c-db7b-4141-9cd0-e7b11e0e853c", 
-                        "download": "/360fly/media/file/100_3FLY/FLY00201.mp4", 
-                        "durationSeconds": 12.01212, 
-                        "instanceID": "36e1aa83-b186-4421-95d1-0029dbe96566", 
-                        "hasduration": true, 
+                        ],
+                        "fileSize": 21074620,
+                        "modification": 1400371756,
+                        "name": "100_3FLY/FLY00201.mp4",
+                        "id": "cc35a69c-db7b-4141-9cd0-e7b11e0e853c",
+                        "download": "/360fly/media/file/100_3FLY/FLY00201.mp4",
+                        "durationSeconds": 12.01212,
+                        "instanceID": "36e1aa83-b186-4421-95d1-0029dbe96566",
+                        "hasduration": true,
                         "sessionCount": 1
                     }
                     {
                         "type": "photo"
-                        "modified": "2014-05-18T00:09:19Z", 
-                        "fileSize": 1104620, 
-                        "modification": 1400371759, 
-                        "name": "100_3FLY/FLY00101.jpg", 
-                        "id": "cc35a69c-db7b-4141-9cd0-e7b11e0e853c", 
-                        "download": "/360fly/media/file/100_3FLY/FLY00101.jpg", 
-                        "instanceID": "36e1aa83-b186-4421-95d1-0029dbe96566", 
-                        "hasduration": false, 
+                        "modified": "2014-05-18T00:09:19Z",
+                        "fileSize": 1104620,
+                        "modification": 1400371759,
+                        "name": "100_3FLY/FLY00101.jpg",
+                        "id": "cc35a69c-db7b-4141-9cd0-e7b11e0e853c",
+                        "download": "/360fly/media/file/100_3FLY/FLY00101.jpg",
+                        "instanceID": "36e1aa83-b186-4421-95d1-0029dbe96566",
+                        "hasduration": false,
                         "sessionCount": 1
                     }
                 ]
@@ -1998,21 +1998,21 @@ _relation_  |   ""  |   the relation type: "thumbnail", "session". If not specif
 
 + Response 200
     + Body
-    
+
                {
-                       "photo": "/360fly/media/file/100_3FLY/FLY00201.jpg", 
+                       "photo": "/360fly/media/file/100_3FLY/FLY00201.jpg",
                        "thumbnail": "/360fly/media/thumbnail/100_3FLY/FLY00501.jpg",
                        "session": [
                         {
-                         "photo": "/360fly/media/file/100_3FLY/FLY00201.jpg", 
+                         "photo": "/360fly/media/file/100_3FLY/FLY00201.jpg",
                          "thumbnail": "/360fly/media/thumbnail/100_3FLY/FLY00501.jpg"
                         },
                         {
-                         "photo": "/360fly/media/file/100_3FLY/FLY00202.jpg", 
+                         "photo": "/360fly/media/file/100_3FLY/FLY00202.jpg",
                          "thumbnail": "/360fly/media/thumbnail/100_3FLY/FLY00502.jpg"
                         },
                         {
-                         "photo": "/360fly/media/file/100_3FLY/FLY00203.jpg", 
+                         "photo": "/360fly/media/file/100_3FLY/FLY00203.jpg",
                          "thumbnail": "/360fly/media/thumbnail/100_3FLY/FLY00503.jpg"
                         }
                        ],
@@ -2024,27 +2024,27 @@ _relation_  |   ""  |   the relation type: "thumbnail", "session". If not specif
 
 + Response 200
     + Body
-    
+
                {
-                       "recording": "/360fly/media/file/100_3FLY/FLY00201.mp4", 
+                       "recording": "/360fly/media/file/100_3FLY/FLY00201.mp4",
                        "thumbnail": "/360fly/media/file/100_3FLY/FLY00201.thm",
                        "session": [
                         {
-                         "recording": "/360fly/media/file/100_3FLY/FLY00201.mp4", 
+                         "recording": "/360fly/media/file/100_3FLY/FLY00201.mp4",
                          "thumbnail": "/360fly/media/file/100_3FLY/FLY00201.thm"
                         },
                         {
-                         "recording": "/360fly/media/file/100_3FLY/FLY00202.mp4", 
+                         "recording": "/360fly/media/file/100_3FLY/FLY00202.mp4",
                          "thumbnail": "/360fly/media/file/100_3FLY/FLY00202.thm"
                         },
                         {
-                         "recording": "/360fly/media/file/100_3FLY/FLY00203.mp4", 
+                         "recording": "/360fly/media/file/100_3FLY/FLY00203.mp4",
                          "thumbnail": "/360fly/media/file/100_3FLY/FLY00203.thm"
                         }
                        ],
                        "sessionCount":3
                }
-               
+
 
 ### Delete Related Media Files [DELETE]
 
@@ -2068,7 +2068,7 @@ This section provides commands for downloading a media file on the 360Fly device
 
 ### Download A Specific Media File Command [GET]
 
-* The _download a specific media file_ command requires **authentication**. This is not the same as in Fly1.0. 
+* The _download a specific media file_ command requires **authentication**. This is not the same as in Fly1.0.
 * Device _cannot_ be in UMS mode to perform this action.
 * A single byte-range request is supported per http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35. The ability to request byte ranges is required by this endpoint for progressive downloading.
 * The media file is downloaded and stored in user's root directory.
@@ -2139,7 +2139,7 @@ This section provides commands for downloading thumbnail for a media file on the
 ## Access Point Interface [/360fly/network/interfaces/ap]
 * **360fly 4K only**
 
-* Control the AP network interface. `SSID`, `ipAddr`, and `error` are read-only properties. 
+* Control the AP network interface. `SSID`, `ipAddr`, and `error` are read-only properties.
 * `SSID` matches the 360fly's name. See `/360fly/id`.
 * AP password matches the 360fly's password. See `/360fly/id`.
 * `state` can only be set to `1` or `2` via `PUT` request.
@@ -2151,7 +2151,7 @@ This section provides commands for downloading thumbnail for a media file on the
         1 | AP Down | Access Point is not active
         2 | AP Up | Access Point is active
         3 | AP in Configuration | AP is being configured by another process
-        128 | AP Error | AP interface is down due to error. See `error` property. 
+        128 | AP Error | AP interface is down due to error. See `error` property.
 
  ##### __AP Interface Errors__
         Value | Description
@@ -2166,7 +2166,7 @@ This section provides commands for downloading thumbnail for a media file on the
  + security: WPA2 (string, required, default) - Network security type. Options: [NONE, WEP, WPA, WPA2]
  + ipAddr: 192.168.2.1 (string, required, default) - IP address of camera on the AP network. READ-ONLY
  + frequency: 2.4 (number, required, default) - WiFi AP operating frequency (GHz). Options: [2.4, 5.0]
- + channel (number, required, default) - WiFi AP channel. null indicates channel is chosen automatically. READ-ONLY (configurable in a future version) 
+ + channel (number, required, default) - WiFi AP channel. null indicates channel is chosen automatically. READ-ONLY (configurable in a future version)
  + error: 0 (number, required, default) - error code. See below for table of values. READ-ONLY
 
 ### Retrieve AP details [GET]
@@ -2197,7 +2197,7 @@ This section provides commands for downloading thumbnail for a media file on the
 ## Station Interface [/360fly/network/interfaces/station]
 * **360fly 4K only**
 
-* Control the station network interface. The `password` property is never returned, but can be used to connect to a secure AP via a `PUT` request. 
+* Control the station network interface. The `password` property is never returned, but can be used to connect to a secure AP via a `PUT` request.
 * `ipAddr`, `error`, and `RSSI` are read-only properties.
 * A connection request is made by setting `"state":2` and specifying `SSID`, `security`, `password`, and `saved` via `PUT`
 * If attempting to connect to a saved network (see `/360fly/network/saved`), then `security`, `password`, and `saved` may be omitted from connection request.
@@ -2213,7 +2213,7 @@ This section provides commands for downloading thumbnail for a media file on the
         2 | Station Connecting | Connection is initiated but not complete
         3 | Station Up | Station connected
         4 | Station in Configuration | Station interface is being configured by another process
-        128 | AP Error | AP interface error. See `error` property. 
+        128 | AP Error | AP interface error. See `error` property.
 
  ##### __Station Interface Errors__
         Value | Summary | Description
@@ -2341,7 +2341,7 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
  + connected: false (boolean, required, sample) - indicates 360fly is currently connected to this network
 
 + Parameters
- + id (required, number, `1`) ... id of the saved network 
+ + id (required, number, `1`) ... id of the saved network
 
 ### Retrieve saved network [GET]
 + Response 200 (application/json)
@@ -2396,7 +2396,7 @@ Scan for WiFi networks. Results are returned in order of signal strength (RSSI).
 ### Forget bonded device [DELETE]
 
 + Response 204
- 
+
 ## Bluetooth Connected Devices Collection [/360fly/bluetooth/connections]
 
 + Attributes (array)
@@ -2529,10 +2529,10 @@ Scan for advertising peripherals
  + Attributes (Bluetooth Scan Result)
 
 ### Connect/disconnect device [PUT]
-* Should always specify `connected`, and optionally specify `pin`.  All other properties are read-only 
+* Should always specify `connected`, and optionally specify `pin`.  All other properties are read-only
 * If number of connections is at maximum, the oldest connection will be dropped so this new connection can be made
 * Successful connections return a `Location` header with the newly connected device url
-* If possible, 360fly will attempt to pair/bond with the newly connected device. Newly paired/bonded peripherals are added to bonds collection (see `/360fly/bluetooth/bonds`). 
+* If possible, 360fly will attempt to pair/bond with the newly connected device. Newly paired/bonded peripherals are added to bonds collection (see `/360fly/bluetooth/bonds`).
 * Some peripherals require a `pin` for pairing/bonding. Previously bonded peripherals can pair without specifying `pin`.
 * If the bonds collection is at maximum, then the oldest bond is replaced by the new bond
 * Failed requests will return an error code. See table below
@@ -2596,3 +2596,56 @@ Scan for advertising peripherals
  + Header
 
                         Location: https://${HOST}/360fly/bluetooth/connections/0
+
+# Group Bluetooth LE
+## Bluetooth LE Scan Result [/360fly/ble/scan]
+* **360fly 4K only**
+* The 360fly will connect to one BLE device at a time.
+* **Supported Services are **
+* Heart Rate | 0x180D
+* Cycling Speed and Cadence | 0x1816
+* Cycling Power | 0x1818
+* Running Speed and Cadence | 0x1814
+* Blood Pressure | 0x1810
+* Health Thermometer | 0x1809
+
++ Attributes (object)
+ + macid: BA34567890 (string, required, sample) - MAC address of peripheral in scan results (see /360fly/ble/scan)
+ + name: HeartRate (string, required, sample) - name of advertising peripheral
+ + RSSI: 60 (number, required, sample) - signal strength of advertising peripheral, in dBm + 127
+ + services: 180A (string, required, sample) - Camera to list all service that the device has from the supported list
+
++ Parameters
+ + macid (required, string, `BA34567890`) ... index of peripheral in scan results (see `/360fly/ble/scan`)
+
+
+### Retrieve scan result [GET]
+* This request will trigger the 360fly to scan for BLE devices.
++ Response 200 (application/json)
+ + Attributes (object)
+        + macid: BA34567890 (string, required, sample)
+        + name: HeartRate (string, required, sample)
+        + services: 180A (string, required, sample)
+
+
+## Connect/disconnect device [PUT] [/360fly/ble/scan/macid]
+* If number of connections is at maximum, the oldest connection will be dropped so this new connection can be made
+* Failed requests will return an error code. See table below
+* This call should block (not return) right away.  Wait for x seconds, waiting for connection results.
+
++ Request (application/json)
+ + Attributes (object)
+        + macid: true (boolean, required, sample)
+        + services: 180A (string, required, sample) - Application to list services to listen to in this device
++ Response 200 (application/json)
+
+### Disconnect device [DELETE]
++ Request (application/json)
+ + Attributes (object)
+      + macid: true (boolean, required, sample)
++ Response 200 (application/json)
+
+## Retrieve all connected devices [GET] [/360fly/ble/connections]
++ Request (application/json)
++ Response 200 (application/json)
+ + Attributes (object)
